@@ -4,7 +4,7 @@ import java.security.InvalidParameterException;
 
 public class Config {
     // Enum
-    static Config DEFAULT = new Config (3, 1, 2, 8);
+    static Config DEFAULT() { return new Config (3, 1, 2, 8); }
 
     // Params
     private int nBots;
@@ -85,7 +85,7 @@ public class Config {
     // ----------------------------------
     
     private void computeSizeOfMap() {
-        int nCases = sizeOfDices*nDices;
+        int nCases = (sizeOfDices*nDices) - nDices + 1;
         int side = (int)Math.round(Math.sqrt((float)nCases));
 
         sizeOfMap = side;
