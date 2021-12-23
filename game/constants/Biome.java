@@ -1,4 +1,4 @@
-package game.utils;
+package game.constants;
 
 import java.security.InvalidParameterException;
 

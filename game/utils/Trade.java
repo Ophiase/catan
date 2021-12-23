@@ -1,6 +1,7 @@
 package game.utils;
 
 import java.util.Random;
+import game.constants.*;
 
 public class Trade {
 

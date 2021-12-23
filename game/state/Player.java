@@ -1,8 +1,6 @@
 package game.state;
 
-import game.utils.Developpement;
-import game.utils.Ressource;
-
+import game.constants.*;
 public class Player {
     
     private int     index;

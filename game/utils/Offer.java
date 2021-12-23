@@ -1,6 +1,7 @@
 package game.utils;
 
 import java.security.InvalidParameterException;
+import game.constants.*;
 
 public class Offer {
     public int p1;
