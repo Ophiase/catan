@@ -6,21 +6,29 @@ public class Config {
     // Enum
     static Config DEFAULT() { return new Config (3, 1, 2, 8); }
 
+    // Constants
+    private final int MIN_PLAYER = 1;
+    private final int MIN_BOT = 0;
+    private final int N_PARTICIPANTS = 4;
+    private final int MIN_N_DICES = 2;
+    private final int MIN_SIZE_OF_DICES = 4;
+
     // Params
     private int nBots;
     private int nPlayers;
     private int nDices;
     private int sizeOfDices;
 
+    private int nCases;
     private int sizeOfMap;
 
     public Config(int nBots, int nPlayers, int nDices, int sizeOfDices) throws InvalidParameterException
     {
         if (
-            (nBots+nPlayers != 4)
-            || (nPlayers < 1 || nBots < 0)
-            || (nDices < 1)
-            || (sizeOfDices < 1)
+            (nBots+nPlayers != N_PARTICIPANTS)
+            || (nPlayers < MIN_PLAYER || nBots < MIN_BOT)
+            || (nDices < MIN_N_DICES)
+            || (sizeOfDices < MIN_SIZE_OF_DICES)
         )
             throw new InvalidParameterException();
 
@@ -28,6 +36,8 @@ public class Config {
         this.nPlayers = nPlayers;
         this.nDices = nDices;
         this.sizeOfDices = sizeOfDices;
+
+        updateDependencies();
     }
 
     // ----------------------------------
@@ -36,28 +46,28 @@ public class Config {
         if (nBots < 0) throw new InvalidParameterException();
         
         this.nBots = nBots;
-        this.nPlayers = 4 - nBots;
+        this.nPlayers = N_PARTICIPANTS - nBots;
     }
 
     public void setnPlayers(int nPlayers) throws InvalidParameterException {
         if (nPlayers < 1) throw new InvalidParameterException();
 
         this.nPlayers = nPlayers;
-        this.nBots = 4 - nPlayers;
+        this.nBots = N_PARTICIPANTS - nPlayers;
     }
 
     public void setnDices(int nDices) throws InvalidParameterException {
-        if (nDices < 1) throw new InvalidParameterException();
+        if (nDices < MIN_N_DICES) throw new InvalidParameterException();
 
         this.nDices = nDices;
-        computeSizeOfMap();
+        updateDependencies();
     }
 
     public void setSizeOfDices(int sizeOfDices) throws InvalidParameterException {
-        if (sizeOfDices < 1) throw new InvalidParameterException();
+        if (sizeOfDices < MIN_SIZE_OF_DICES) throw new InvalidParameterException();
 
         this.sizeOfDices = sizeOfDices;
-        computeSizeOfMap();
+        updateDependencies();
     }
 
     // ----------------------------------
@@ -78,16 +88,26 @@ public class Config {
         return sizeOfDices;
     }
 
+    public int getnCases() {
+        return nCases;
+    }
+
     public int getSizeOfMap() {
         return sizeOfMap;
     }
 
     // ----------------------------------
-    
-    private void computeSizeOfMap() {
-        int nCases = (sizeOfDices*nDices) - nDices + 1;
-        int side = (int)Math.round(Math.sqrt((float)nCases));
 
-        sizeOfMap = side;
+    private void updateDependencies() {
+        computenCases();
+        computeSizeOfMap();
+    }
+
+    private void computenCases() {
+        nCases = (sizeOfDices*nDices) - nDices + 1;
+    }
+
+    private void computeSizeOfMap() {
+        sizeOfMap = (int)Math.round(Math.sqrt((float)nCases));
     }
 }

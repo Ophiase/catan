@@ -1,10 +1,6 @@
 package game.utils;
 
-import java.util.Random;
-
 public class Dices {
-
-    private Random rnd = new Random();
 
     private int nDices;
     private int sizeOfDices;
@@ -18,7 +14,7 @@ public class Dices {
         int res = 0;
 
         for (int i = 0; i < nDices; i++)
-            res += 1 + rnd.nextInt(sizeOfDices);
+            res += 1 + Fnc.rand(sizeOfDices);
 
         return res;
     }

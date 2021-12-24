@@ -32,4 +32,8 @@ public class State {
     public Player getPlayer(int i) {
         return players[i];
     }
+
+    public Map getMap() {
+        return map;
+    }
 }

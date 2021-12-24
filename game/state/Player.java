@@ -1,12 +1,18 @@
 package game.state;
 
+import java.util.ArrayList;
+
 import game.constants.*;
+
 public class Player {
     
     private int     index;
     private boolean isBot;
     private int[]   ressources      = new int[Ressource.nRessources];
     private int[]   developpements  = new int[Developpement.nDeveloppements];
+    
+    private ArrayList<Integer> colonies  = new ArrayList<Integer>();
+    private ArrayList<Integer> cities    = new ArrayList<Integer>();
 
     // ---------------
 
@@ -14,6 +20,22 @@ public class Player {
         this.isBot = isBot;
 
         ressources[Ressource.POINT] = 2;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public boolean isBot() {
+        return isBot;
+    }
+
+    public ArrayList<Integer> getColonies() {
+        return colonies;
+    }
+
+    public ArrayList<Integer> getCities() {
+        return cities;
     }
 
     // ---------------

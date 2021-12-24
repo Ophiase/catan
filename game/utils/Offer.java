@@ -17,7 +17,7 @@ public class Offer {
     }
 
     // exemple: makeRessource(Ressource.WOOD, 2, Ressource.STONE, 3)
-    public static int[] makeRessource (int... data) {
+    public static int[] makeRessources (int... data) {
         if ((data.length&1) == 1) throw new InvalidParameterException();
 
         int[] ressources = new int[Ressource.nRessources];

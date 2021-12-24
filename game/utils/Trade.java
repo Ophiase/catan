@@ -17,7 +17,7 @@ public class Trade {
 
     public boolean canBuyDevelop(int who) {
         return state.getPlayer(who).hasRessources(
-            Offer.makeRessource(
+            Offer.makeRessources(
                 Ressource.WHEAT, 1,
                 Ressource.SHEEP, 1,
                 Ressource.ROCK, 1
@@ -25,42 +25,64 @@ public class Trade {
         );
     }
 
-    public boolean canBuyRoad(int who) {
+    public boolean canBuyRoad(int who, boolean horizontal, int x, int y) {
+        if (x < 0 || y < 0) 
+            return false;
+
+        if (horizontal) {
+            if (
+                x >= state.getMap().getSize() || 
+                y >= state.getMap().getSizePP()
+            ) return false;
+        } else { 
+            if (
+                x >= state.getMap().getSizePP() || 
+                y >= state.getMap().getSize()
+            ) return false;
+        }
+        
         if (!state.getPlayer(who).hasRessources(
-            Offer.makeRessource(
+            Offer.makeRessources(
                 Ressource.BRICK, 1,
                 Ressource.WOOD, 1
             ))) return false;
 
-        // ETC ...
-
-        return true;
+        return state.getMap().canBuyRoad(who, horizontal, x, y);
     }
 
-    public boolean canBuyColony(int who) {
+    public boolean canBuyColony(int who, int x, int y) {
+        if (x < 0 || 
+            y < 0 || 
+            x > state.getMap().getSizePP() || 
+            y > state.getMap().getSizePP()
+            ) return false;
+
         if (!state.getPlayer(who).hasRessources(
-            Offer.makeRessource(
+            Offer.makeRessources(
                 Ressource.BRICK, 1,
                 Ressource.WOOD, 1,
                 Ressource.SHEEP, 1,
                 Ressource.WHEAT, 1
             ))) return false;
 
-        // ETC ...
-
-        return true;
+        return state.getMap().canBuyColony(who, x, y);
     }
 
-    public boolean canImproveColony(int who) {
+    public boolean canImproveColony(int who, int x, int y) {
+        if (x < 0 || 
+        y < 0 || 
+        x > state.getMap().getSizePP() || 
+        y > state.getMap().getSizePP()
+        ) return false;
+
+
         if (!state.getPlayer(who).hasRessources(
-            Offer.makeRessource(
+            Offer.makeRessources(
                 Ressource.ROCK, 4,
                 Ressource.WHEAT, 2
             ))) return false;
 
-        // ETC ...
-
-        return true;
+        return state.getMap().canImproveColony(who, x, y);
     }
 
     public boolean canTrade(Offer offer) {
