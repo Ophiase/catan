@@ -2,6 +2,7 @@ package game.utils;
 
 import java.util.Random;
 import game.constants.*;
+import game.state.Map;
 
 public class Trade {
 
@@ -102,11 +103,11 @@ public class Trade {
      */
 
     public void buyDevelop(int who) {
-        int[] r = state.getPlayer(who).getRessources();
-
-        r[Ressource.WHEAT]--;
-        r[Ressource.SHEEP]--;
-        r[Ressource.ROCK]--;
+        Offer.lose(state.getPlayer(who), Offer.makeRessources(
+                Ressource.WHEAT, 1,
+                Ressource.SHEEP, 1,
+                Ressource.ROCK, 1
+            ));
 
         // carte developpement aleatoire
         int developpement = rnd.nextInt(Developpement.nDeveloppements);
@@ -114,20 +115,46 @@ public class Trade {
 
     }
 
-    public void buyRoad(int who) {
-        
+    public void buyRoad(int who, boolean horizontal, int x, int y) {
+        // pay
+        Offer.lose(state.getPlayer(who), Offer.makeRessources(
+                Ressource.BRICK, 1,
+                Ressource.WOOD, 1
+            ));
+
+        //action
+        if (horizontal)
+            state.getMap().getRoadsH()[x][y] = who;
+        else
+            state.getMap().getRoadsV()[x][y] = who;
     }
 
-    public void buyColony(int who) {
-        
+    public void buyColony(int who, int x, int y) {
+        // pay
+        Offer.lose(state.getPlayer(who), Offer.makeRessources(
+                Ressource.BRICK, 1,
+                Ressource.WOOD, 1,
+                Ressource.SHEEP, 1,
+                Ressource.WHEAT, 1
+            ));
+
+        // action
+        state.getMap().getColonies()[x][y] = Map.makeColony(false, who);
     }
 
-    public void improveColony(int who) {
-        
+    public void improveColony(int who, int x, int y) {
+        // pay
+        Offer.lose(state.getPlayer(who), Offer.makeRessources(
+            Ressource.ROCK, 4,
+            Ressource.WHEAT, 2
+        ));
+
+        // action
+        state.getMap().getColonies()[x][y] = Map.makeColony(true, who);
     }
 
     public void trade(Offer offer) {
-        
+        offer.proceed(state);
     }
 
 }

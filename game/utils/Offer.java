@@ -2,6 +2,7 @@ package game.utils;
 
 import java.security.InvalidParameterException;
 import game.constants.*;
+import game.state.Player;
 
 public class Offer {
     public int p1;
@@ -15,6 +16,8 @@ public class Offer {
         this.r1 = r1;
         this.r2 = r2;
     }
+
+    // -------------------------------------
 
     // exemple: makeRessource(Ressource.WOOD, 2, Ressource.STONE, 3)
     public static int[] makeRessources (int... data) {
@@ -45,5 +48,31 @@ public class Offer {
             return false;
 
         return true;
+    }
+
+    // -------------------------------------
+    // ACTIONS
+
+    public void proceed(game.state.State state) {
+        give(state, p1, p2, r1);
+        give(state, p2, p1, r2);
+    }
+
+    public static void give(game.state.State state, int from, int to, int[] r) {
+        if (from != -1)
+            lose(state.getPlayer(from), r);
+        
+        if (to != -1)
+            receive(state.getPlayer(to), r);
+    }
+
+    public static void receive(Player p, int[] r) {
+        for (int i = 0; i < r.length; i++)
+            p.getRessources()[i] += r[i];
+    }
+
+    public static void lose(Player p, int[] r) {
+        for (int i = 0; i < r.length; i++)
+            p.getRessources()[i] -= r[i];
     }
 }

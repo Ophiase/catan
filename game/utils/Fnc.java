@@ -1,10 +1,6 @@
 package game.utils;
 
-/**
- * 
- * A list of utility functions
- * 
- */
+// UTILITY FUNCTIONS
 
 import java.util.Random;
 

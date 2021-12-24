@@ -124,6 +124,10 @@ public class Map {
     }
 
     private boolean canBuyRoadH(int who, int x, int y) {
+        if (hasRoadH(x, y))
+            return false;
+
+
         // COLONIES ADJACENTES
         if (hasColony(who, x, y)) 
             return true;
@@ -153,6 +157,9 @@ public class Map {
     }
 
     private boolean canBuyRoadV(int who, int x, int y) {
+        if (hasRoadV(x, y))
+            return false;
+
         // COLONIES ADJACENTES
         if (hasColony(who, x, y)) 
             return true;
@@ -182,15 +189,60 @@ public class Map {
     }
 
     public boolean canBuyColony(int who, int x, int y) {
+        if (hasColony(x, y))
+            return false;
+
+        if (!hasNearPath(who, x, y))
+            return false;
+
+        if (hasNearHouse(who, x, y))
+            return false;
+
         return false;
     }
 
     public boolean canImproveColony(int who, int x, int y) {
-        return false;
+        return hasColony(who, x, y) && !hasCity(who, x, y);
     }
 
     // --------------------
     // Map informations using bitwise operators
+
+    private boolean hasNearPath(int who, int x, int y) {
+        if ((x+1)<size && hasRoadH(who, x, y))
+            return true;
+        if ((y+1)<size && hasRoadV(who, x, y))
+            return true;
+
+        if (x>0 && hasRoadH(who, x, y))
+            return true;
+        if (y>0 && hasRoadV(who, x, y))
+            return true;
+
+        return false;
+    }
+
+    private boolean hasNearHouse(int who, int x, int y) {
+        if (x>0 && hasColony(who, x-1, y))
+            return true;
+        if (y>0 && hasColony(who, x, y-1))
+            return true;
+        
+        if (x<size && hasColony(who, x+1, y))
+            return true;
+        if (y<size && hasColony(who, x, y+1))
+            return true;
+
+        return false;
+    }
+
+    public static int makeColony(boolean city, int who) {
+        return (1) + ((city?1:0)<<1) + (who<<2);
+    }
+
+    private boolean hasColony(int x, int y) {
+        return colonies[x][y]>0;
+    }
 
     private boolean hasColony(int who, int x, int y) {
         return (colonies[x][y]>0) && ((colonies[x][y]>>2) == who);
@@ -200,8 +252,16 @@ public class Map {
         return ((colonies[x][y]&2)==2) && ((colonies[x][y]>>2) == who);
     }
 
+    private boolean hasRoadH(int x, int y) {
+        return roadsH[x][y] != -1;
+    }
+
     private boolean hasRoadH(int who, int x, int y) {
         return roadsH[x][y] == who;
+    }
+
+    private boolean hasRoadV(int x, int y) {
+        return roadsV[x][y] != -1;
     }
 
     private boolean hasRoadV(int who, int x, int y) {
