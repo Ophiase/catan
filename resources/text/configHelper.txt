@@ -1,0 +1,15 @@
+config [nPlayers]
+config [nPlayers] [nDices] [sizeOfDices]
+preset [preset]
+
+contraints :
+1 <= nPlayers <= 4
+2 <= nDices
+4 <= sizeOfDices
+
+list of presets :
+- default
+
+exemple :
+> config 2 2 8
+> preset default

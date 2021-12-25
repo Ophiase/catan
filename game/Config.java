@@ -4,14 +4,14 @@ import java.security.InvalidParameterException;
 
 public class Config {
     // Enum
-    static Config DEFAULT() { return new Config (3, 1, 2, 8); }
+    public static Config DEFAULT() { return new Config (3, 1, 2, 8); }
 
     // Constants
-    private final int MIN_PLAYER = 1;
-    private final int MIN_BOT = 0;
-    private final int N_PARTICIPANTS = 4;
-    private final int MIN_N_DICES = 2;
-    private final int MIN_SIZE_OF_DICES = 4;
+    public static final int MIN_PLAYER = 1;
+    public static final int MIN_BOT = 0;
+    public static final int N_PARTICIPANTS = 4;
+    public static final int MIN_N_DICES = 2;
+    public static final int MIN_SIZE_OF_DICES = 4;
 
     // Params
     private int nBots;

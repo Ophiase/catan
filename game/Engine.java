@@ -25,6 +25,33 @@ public class Engine {
 
         // ----------------
 
+        /**
+         * TODO (dans l'interface):
+         * 
+         * Pour chaque joueur placer première colonie/route
+         * Pour chaque joueur placer deuxième colonie/route
+         * Distribution 1ere vague de ressource
+         * 
+         * Peut commencer le jeu tour par tour :
+         * 
+         * roll() ?
+         * 
+         * if (roll == 7)
+         * {
+         *  <j1 where fief
+         *      
+         * }
+         * else {
+         *  distribute
+         * }
+         * 
+         * 
+         * 
+         * won() ?
+         * time++;
+         * 
+         */
+
     }
 
     // ---------------------------
@@ -51,4 +78,11 @@ public class Engine {
 
     // ---------------------------
     
+    public void endTurn() {
+        state.endturn();
+    }
+
+    public int won() {
+        return state.won();
+    }
 }

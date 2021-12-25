@@ -123,10 +123,7 @@ public class Trade {
             ));
 
         //action
-        if (horizontal)
-            state.getMap().getRoadsH()[x][y] = who;
-        else
-            state.getMap().getRoadsV()[x][y] = who;
+        state.addRoad(who, horizontal, x, y);
     }
 
     public void buyColony(int who, int x, int y) {
@@ -139,7 +136,7 @@ public class Trade {
             ));
 
         // action
-        state.getMap().getColonies()[x][y] = Map.makeColony(false, who);
+        state.addColony(who, x, y);
     }
 
     public void improveColony(int who, int x, int y) {
@@ -150,7 +147,7 @@ public class Trade {
         ));
 
         // action
-        state.getMap().getColonies()[x][y] = Map.makeColony(true, who);
+        state.improveColony(who, x, y);
     }
 
     public void trade(Offer offer) {

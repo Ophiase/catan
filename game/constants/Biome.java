@@ -11,7 +11,7 @@ public class Biome {
     public static final int ROCK    = 5;
     public static final int nBiomes = 6;
 
-    static String toString(int i) {
+    public static String toString(int i) {
         switch (i) {
             case 0: return "DESERT";
             case 1: return "WOOD";

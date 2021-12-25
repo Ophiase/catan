@@ -11,7 +11,7 @@ public class Ressource {
     public static final int ROCK   = 5;
     public static final int nRessources = 6;
 
-    static String toString(int i) {
+    public static String toString(int i) {
         switch (i) {
             case 0: return "POINT";
             case 1: return "WOOD";

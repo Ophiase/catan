@@ -10,7 +10,7 @@ public class Developpement {
     public static final int POINT       = 4; // 1 additional point of victory
     public static final int nDeveloppements = 5;
 
-    static String toString(int i) {
+    public static String toString(int i) {
         switch (i) {
             case 0: return "KNIGHT";
             case 1: return "ROAD";
