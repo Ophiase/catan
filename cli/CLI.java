@@ -106,9 +106,13 @@ public class CLI {
     }
 
     private boolean gameloop() {
-        if (sc.nextLine().equals("exit"))
-            Utils.exit();
+        if (engine.getState().focusOnBot()) {
+            boolean interupt = engine.getAI().play();
 
+        } else {
+            if (sc.nextLine().equals("exit")) Utils.exit();
+
+        }
         // -------------------------------------
 
         int won = engine.won();

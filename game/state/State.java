@@ -62,6 +62,12 @@ public class State {
 
     // ------------------------------
 
+    public void collect(int score) {
+        /**
+         * TODO
+         */
+    }
+
     public int won() {
         for (Player p: players)
             if (p.getRessource(Ressource.POINT) >= 10)
@@ -76,5 +82,9 @@ public class State {
             focus = 0;
 
         time++;
+    }
+
+    public boolean focusOnBot() {
+        return players[focus].isBot();
     }
 }

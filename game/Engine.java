@@ -12,6 +12,7 @@ public class Engine {
     private State state;
     private Dices dices;
     private Trade trade;
+    private AI ai;
 
 
     // LAUNCH THE GAME
@@ -22,6 +23,7 @@ public class Engine {
         this.map    = new Map(conf);
         this.state  = new State(conf, map);
         this.trade  = new Trade(state);
+        this.ai     = new AI(state, trade, dices);
 
         // ----------------
 
@@ -74,6 +76,10 @@ public class Engine {
 
     public Trade getTrade() {
         return trade;
+    }
+
+    public AI getAI() {
+        return ai;
     }
 
     // ---------------------------
