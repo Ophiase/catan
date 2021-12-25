@@ -41,6 +41,10 @@ public class State {
         return map;
     }
 
+    public int getTime() {
+        return time;
+    }
+
     // ------------------------------
 
     public void addRoad(int who, boolean horizontal, int x, int y) {

@@ -2,7 +2,7 @@ config [nPlayers]
 config [nPlayers] [nDices] [sizeOfDices]
 preset [preset]
 
-contraints :
+constraints :
 1 <= nPlayers <= 4
 2 <= nDices
 4 <= sizeOfDices

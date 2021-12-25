@@ -13,6 +13,7 @@ public class CLI {
 
     public CLI() {
         while (true) {
+            Utils.clear();
 
             play();
 
@@ -39,7 +40,8 @@ public class CLI {
         initConfig();
         initEngine();
 
-        while (gameloop()) {}
+        GameLoop gl = new GameLoop(this);
+        while (gl.gameloop());
     }
 
     private void initConfig() {
@@ -47,7 +49,7 @@ public class CLI {
         
         while (!validConfig)
         {
-            System.out.println(Utils.readAll("configHelper.txt"));
+            System.out.println(Utils.readAll("config_helper.txt"));
             Utils.delim();
             System.out.println("Enter your config :");
             System.out.print("> ");
@@ -95,34 +97,16 @@ public class CLI {
 
         // ---------------
 
+        System.out.println();
         resume.showMap();
+        System.out.println();
+        Utils.delim();
 
         // ---------------
 
         // Pour chaque joueur placer première colonie/route
-        for (int i = 0; i < game.Config.MIN_PLAYER; i++) {
-            
+        for (int i = 0; i < game.Config.N_PARTICIPANTS; i++) {
+            System.out.println("Do something ...");
         }
-    }
-
-    private boolean gameloop() {
-        if (engine.getState().focusOnBot()) {
-            boolean interupt = engine.getAI().play();
-
-        } else {
-            if (sc.nextLine().equals("exit")) Utils.exit();
-
-        }
-        // -------------------------------------
-
-        int won = engine.won();
-        if (won != -1) {
-            System.out.println("Player " + won + " won !!!");
-            return false;
-        }
-
-        engine.endTurn();
-
-        return true;
     }
 }

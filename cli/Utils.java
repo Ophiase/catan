@@ -5,8 +5,12 @@ import java.util.Scanner;
 
 public class Utils {
     
+    private static final boolean CLEAR_ENABLED = false;
+
+    // ------------------------------------------
+
     public static void delim() {
-        delim(30, '-', true);
+        delim(60, '-', true);
     }
 
     public static void delim(int length, char c, boolean b) {
@@ -22,8 +26,16 @@ public class Utils {
 
     public static void help() {
         delim();
-        readAll("gameHelper.txt");
+        System.out.println(readAll("game_helper.txt"));
         delim();
+    }
+
+    public static void clear() {
+        if (CLEAR_ENABLED)
+        {
+            System.out.print("\033[H\033[2J");  
+            System.out.flush();
+        }
     }
 
     public static void exit() {

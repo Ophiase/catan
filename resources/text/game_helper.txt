@@ -1,0 +1,37 @@
+Type an action
+    > resume
+        Resume the state of the game.
+
+    > inventory
+        It lists all the card you have.
+    > use {cardIndex}
+        It consum a card that you have.
+    > pick
+        It pick a random card.
+        Cost : 1 WHEAT, 1 SHEEP, 1 ROCK
+    
+    > road {horizontal} {x} {y}
+        It build a road.
+        Cost : 1 BRICK, 1 WOOD
+    > colony {x} {y}
+        It build a colony.
+        Cost : 1 BRICK, 1 WOOD, 1 SHEEP, 1 WHEAT
+
+    > city {x} {y}
+        It improve a colony.
+        Cost : 4 ROCK, 2 WHEAT
+
+    > trade {N_RESSOURCE}... against {N_RESSOURCE}
+        Proprose to other players a trade of ressources.
+        exemple :
+            > trade 2_WHEAT 1_BRICK against 1_ROCK
+    > buy {N_RESSOURCE}... against {RESSOURCE}
+        Buy to the bank
+        exemple :
+            > buy 1_WHEAT 3_ROCK against BRICK 
+
+    > end
+        End the turn.
+    > help
+    > exit
+        Quit the game.

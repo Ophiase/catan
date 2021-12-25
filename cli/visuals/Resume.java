@@ -9,6 +9,14 @@ public class Resume {
     public Resume(Engine engine) {
         this.engine = engine;
     }
+    
+    // ------------------------
+    
+    public void resume(int who) {
+    }
+
+    public void showInventory(int who) {
+    }
 
     // ------------------------
     
@@ -18,6 +26,7 @@ public class Resume {
 
 
         System.out.print("Map resume :");
+        System.out.println();
         System.out.println();
 
         System.out.print("\t");
