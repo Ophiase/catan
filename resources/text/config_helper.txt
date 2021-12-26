@@ -1,9 +1,11 @@
-config [nPlayers]
-config [nPlayers] [nDices] [sizeOfDices]
+config [nPlayers] [nBots]
+config [nPlayers] [nBots] [nDices] [sizeOfDices]
 preset [preset]
 
 constraints :
-1 <= nPlayers <= 4
+1 <= nPlayers
+0 <= nBots
+3 <= nPlayers + nBots <= 4
 2 <= nDices
 4 <= sizeOfDices
 

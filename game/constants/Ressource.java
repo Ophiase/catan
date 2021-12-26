@@ -2,6 +2,8 @@ package game.constants;
 
 import java.security.InvalidParameterException;
 
+import game.state.Player;
+
 public class Ressource {
     public static final int POINT  = 0;
     public static final int WOOD   = 1;
@@ -22,5 +24,23 @@ public class Ressource {
         }
 
         throw new InvalidParameterException();
+    }
+
+    public static int priceOf(int[] r2, Player player) {
+        int which = -1;
+        for (int i = 0; i < nRessources; i++)
+            if (r2[i] == 1)
+                which = i;
+
+        if (which==-1) 
+            throw new Error("Price of invalid ressource.");
+
+        // ------------------
+
+        if (player.hasPort(which))
+            return 2;
+        if (player.hasPort(Port.DEFAULT))
+            return 3;
+        return 4;
     }
 }

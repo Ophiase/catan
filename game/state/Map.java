@@ -4,7 +4,10 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+
+import cli.Utils;
 import game.constants.Biome;
+import game.constants.Port;
 import game.utils.Fnc;
 
 public class Map {
@@ -12,11 +15,9 @@ public class Map {
     private int size;
     private int sizePP;
 
-    private int fiefIndex;
-    private int fiefX;
-    private int fiefY;
+    private int robberIndex = -1;
+    private int robberPosition = -1;
 
-    
     /**
      * Encodage des colonies :
      * 2 premier bits   <=> 00 vide / 01 colonie /  11 ville
@@ -32,6 +33,7 @@ public class Map {
     private int[][] colonies;       // colonies
     private int[][] roadsH;         // routes horizontals
     private int[][] roadsV;         // routes verticles
+    private int[][] ports;          // ports
     
     // --------------------
 
@@ -44,6 +46,7 @@ public class Map {
         colonies        = new int[sizePP][sizePP];
         roadsH          = new int[size  ][sizePP];
         roadsV          = new int[sizePP][size  ];
+        ports           = new int[Port.nTypes][];
 
         // ----------------
         // fill indexes and biomes
@@ -70,6 +73,89 @@ public class Map {
         for (int[] row: roadsV)
             Arrays.fill(row, -1);
 
+
+        // ---------------
+        /* Fill ports
+         *
+         * Chaque port correspond à une bordure
+         * Pour chaque port il y a donc 2 positions
+         * de ville qui peuvent lui correspondre
+         * 
+         * Pour simplifier le travail
+         * J'ai décidé d'avoir nDefaults instances 
+         * du port par défaut (3:1)
+         * Mais une seul instance des autres ports
+         * (2:1) {ressource} 
+         * 
+         */
+
+        ports[Port.DEFAULT] = new int[Port.nDefault*2];
+        for (int i = 1; i < Port.nTypes; i++)
+            ports[i] = new int[2];
+
+        int nBorder = 4*size;
+        int[] rndArray2 = Fnc.randomIndexArray(nBorder);
+
+        for (int i = 0, defaultPointer = 0; i < nBorder; i++) {
+            // Determiner le port correspondant au bord courant
+            int port = Port.reduceSpace(rndArray2[i]);
+            if (port == -1) continue;
+
+            // Determiner les 2 1d-positions encodés du bord courant
+            int x1 = 0;
+            int y1 = 0;
+            int x2 = 0;
+            int y2 = 0;
+
+            int d = i/size;
+            int r = i%size;
+            switch (d) {
+                case 0:
+                    x1 = r;
+                    y1 = 0;
+
+                    x2 = x1+1;
+                    y2 = y1;
+                    break;
+                case 1:
+                    x1 = r;
+                    y1 = size;
+
+                    x2 = x1+1;
+                    y2 = y1;
+                    break;
+                case 2:
+                    x1 = 0;
+                    y1 = r;
+
+                    x2 = x1;
+                    y2 = y1+1;
+                break;
+                case 3:
+                    x1 = size;
+                    y1 = r;
+
+                    x2 = x1;
+                    y2 = y1+1;
+                    break;
+
+                default :
+                    throw new Error("Invalid port : i="+i+"d="+d);
+            }
+
+            // Appliquer
+            if (port == Port.DEFAULT)
+            {
+                ports[Port.DEFAULT][defaultPointer++] = Fnc.conv2dto1d(x1, y1, size);
+                ports[Port.DEFAULT][defaultPointer++] = Fnc.conv2dto1d(x2, y2, size);
+            }
+            else
+            {
+                ports[port][0] = Fnc.conv2dto1d(x1, y1, size);
+                ports[port][1] = Fnc.conv2dto1d(x2, y2, size);
+            }
+        }
+
     }
 
     // --------------------
@@ -84,18 +170,13 @@ public class Map {
     }
 
 
-    public int getFiefIndex() {
-        return fiefIndex;
+    public int getRobberIndex() {
+        return robberIndex;
     }
 
-    public int getFiefX() {
-        return fiefX;
+    public int getRobberPosition() {
+        return robberPosition;
     }
-
-    public int getFiefY() {
-        return fiefY;
-    }
-
 
     public int[][] getDiceIndexes() {
         return diceIndexes;
@@ -269,5 +350,14 @@ public class Map {
     }
 
     // --------------------
+    // Other
+
+    // It gives the ports availibles on 1d-encoded position to player p
+    public void givePorts(int position, Player p) {
+        for (int i = 0; i < ports.length; i++)
+            for (int j : ports[i])
+                if (j==position)    
+                    p.addPort(i);
+	}
 
 }

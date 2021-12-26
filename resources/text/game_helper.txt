@@ -20,6 +20,8 @@ Type an action
     > city {x} {y}
         It improve a colony.
         Cost : 4 ROCK, 2 WHEAT
+        exemple : 
+            > city 2 3
 
     > trade {N_RESSOURCE}... against {N_RESSOURCE}
         Proprose to other players a trade of ressources.

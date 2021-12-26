@@ -40,7 +40,7 @@ public class Engine {
          * 
          * if (roll == 7)
          * {
-         *  <j1 where fief
+         *  <j1 where robber
          *      
          * }
          * else {

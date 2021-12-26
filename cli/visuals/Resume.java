@@ -50,7 +50,8 @@ public class Resume {
         System.out.println();
 
         for (int y = 0; y < dices[0].length; y++) {
-            System.out.print((char)((int)'A'+y)+"|");
+            //System.out.print((char)((int)'A'+y)+"|");
+            System.out.print(y+"|");
             System.out.print("\t");
 
             for (int x = 0; x < dices[0].length; x++)

@@ -9,7 +9,7 @@ public class State {
     private int time;
     private int focus;
     private Map map;
-    private Player[] players = new Player[4];
+    private Player[] players;
 
     // --------------------
 
@@ -17,6 +17,7 @@ public class State {
         this.time = 0;
         this.map = map;
 
+        this.players = new Player[conf.getnParticipants()];
         for (int i = 0; i < 4; i++) {
             boolean isBot = i >= conf.getnPlayers();
             
@@ -37,6 +38,10 @@ public class State {
         return players[i];
     }
 
+    public int getnPlayers() {
+        return players.length;
+    }
+
     public Map getMap() {
         return map;
     }
@@ -55,8 +60,12 @@ public class State {
     }
 
     public void addColony(int who, int x, int y) {
+        int position = Fnc.conv2dto1d(x, y, map.getSize());
+        Player p = players[who];
+        
         map.getColonies()[x][y] = Map.makeColony(false, who);
-        players[who].getColonies().add(Fnc.conv2dto1d(x, y, map.getSize()));
+        p.getColonies().add(position);
+        map.givePorts(position, p);
     }
 
     public void improveColony (int who, int x, int y) {
@@ -82,7 +91,7 @@ public class State {
 
     public void endturn() {
         focus++;
-        if (focus == Config.N_PARTICIPANTS)
+        if (focus == getnPlayers())
             focus = 0;
 
         time++;

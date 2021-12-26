@@ -4,12 +4,13 @@ import java.security.InvalidParameterException;
 
 public class Config {
     // Enum
-    public static Config DEFAULT() { return new Config (3, 1, 2, 8); }
+    public static Config DEFAULT() { return new Config (1, 3, 2, 8); }
 
     // Constants
     public static final int MIN_PLAYER = 1;
     public static final int MIN_BOT = 0;
-    public static final int N_PARTICIPANTS = 4;
+    public static final int MIN_N_PARTICIPANTS = 3;
+    public static final int MAX_N_PARTICIPANTS = 4;
     public static final int MIN_N_DICES = 2;
     public static final int MIN_SIZE_OF_DICES = 4;
 
@@ -19,13 +20,15 @@ public class Config {
     private int nDices;
     private int sizeOfDices;
 
+    private int nParticipants;
     private int nCases;
     private int sizeOfMap;
 
-    public Config(int nBots, int nPlayers, int nDices, int sizeOfDices) throws InvalidParameterException
+    public Config(int nPlayers, int nBots, int nDices, int sizeOfDices) throws InvalidParameterException
     {
         if (
-            (nBots+nPlayers != N_PARTICIPANTS)
+               (nBots+nPlayers) < MIN_N_PARTICIPANTS 
+            || (nBots+nPlayers) > MAX_N_PARTICIPANTS
             || (nPlayers < MIN_PLAYER || nBots < MIN_BOT)
             || (nDices < MIN_N_DICES)
             || (sizeOfDices < MIN_SIZE_OF_DICES)
@@ -46,14 +49,14 @@ public class Config {
         if (nBots < 0) throw new InvalidParameterException();
         
         this.nBots = nBots;
-        this.nPlayers = N_PARTICIPANTS - nBots;
+        this.nPlayers = nParticipants - nBots;
     }
 
     public void setnPlayers(int nPlayers) throws InvalidParameterException {
         if (nPlayers < 1) throw new InvalidParameterException();
 
         this.nPlayers = nPlayers;
-        this.nBots = N_PARTICIPANTS - nPlayers;
+        this.nBots = nParticipants - nPlayers;
     }
 
     public void setnDices(int nDices) throws InvalidParameterException {
@@ -96,14 +99,23 @@ public class Config {
         return sizeOfMap;
     }
 
+    public int getnParticipants() {
+        return nParticipants;
+    }
+
     // ----------------------------------
 
     private void updateDependencies() {
-        computenCases();
+        computeNParticipants();
+        computeNCases();
         computeSizeOfMap();
     }
 
-    private void computenCases() {
+    private void computeNParticipants() {
+        this.nParticipants = nBots + nPlayers;
+    }
+
+    private void computeNCases() {
         nCases = (sizeOfDices*nDices) - nDices + 1;
     }
 

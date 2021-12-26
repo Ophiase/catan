@@ -3,13 +3,15 @@ package game.state;
 import java.util.ArrayList;
 
 import game.constants.*;
+import game.utils.Fnc;
 
 public class Player {
     
-    private int     index;
-    private boolean isBot;
-    private int[]   ressources      = new int[Ressource.nRessources];
-    private int[]   developpements  = new int[Developpement.nDeveloppements];
+    private int         index;
+    private boolean     isBot;
+    private int[]       ressources      = new int       [Ressource.nRessources];
+    private int[]       developpements  = new int       [Developpement.nDeveloppements];
+    private boolean[]   ports           = new boolean   [Port.nTypes];
     
     private ArrayList<Integer> colonies  = new ArrayList<Integer>();
     private ArrayList<Integer> cities    = new ArrayList<Integer>();
@@ -29,6 +31,8 @@ public class Player {
     public boolean isBot() {
         return isBot;
     }
+
+    // ---------------
 
     public ArrayList<Integer> getColonies() {
         return colonies;
@@ -68,6 +72,16 @@ public class Player {
 
     public void addDeveloppement(int developpement) {
         developpements[developpement] ++;
+    }
+
+    // ---------------
+
+    public boolean hasPort(int p) {
+        return ports[p];
+    }
+
+    public void addPort(int p) {
+        ports[p] = true;
     }
 
     // ---------------

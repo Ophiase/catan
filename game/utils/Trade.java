@@ -89,6 +89,10 @@ public class Trade {
         return offer.isValidOffer(state);
     }
 
+    public boolean canBuy(Offer offer) {
+        return offer.isValidPurchase(state);
+    }
+
     // -------------------------
     // Action section
 
@@ -150,6 +154,10 @@ public class Trade {
     }
 
     public void trade(Offer offer) {
+        offer.proceed(state);
+    }
+
+    public void buy(Offer offer) {
         offer.proceed(state);
     }
 

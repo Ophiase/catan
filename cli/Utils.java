@@ -68,4 +68,35 @@ public class Utils {
     }
 
     // ------------------------------------------
+    // Conversions
+
+    public static String xyToAlphabet(int x, int y) {
+        throw new Error("Not implemented");
+    }
+
+    public static int alphabetToX(String alphabet) {
+        throw new Error("Not implemented");
+    }
+
+    public static int alphabetToY(String alphabet) {
+        throw new Error("Not implemented");
+    }
+
+    // ------------------------------------------
+    // Debug
+
+    
+    public static void printArray(int[] array) {
+        System.out.print("[ ");
+        for (int e : array)
+            System.out.print(e + ", ");
+        System.out.println("]");
+    }
+    
+    public static <T> void printArray(T[] array) {
+        System.out.print("[ ");
+        for (T e : array)
+            System.out.print(e + ", ");
+        System.out.println("]");
+    }
 }

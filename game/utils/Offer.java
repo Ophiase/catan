@@ -38,7 +38,7 @@ public class Offer {
         if (p2 == p1)
             return false;
         
-        if (p2 < -1 || p2 > 3)
+        if (p2 < 0 || p2 >= state.getnPlayers())
             return false;
         
         if (!state.getPlayer(p1).hasRessources(r1))
@@ -48,6 +48,40 @@ public class Offer {
             return false;
 
         return true;
+    }
+
+    public boolean isValidPurchase(game.state.State state) {
+        if (state.getFocus() != p1)
+            return false;
+        
+        if (-1 != p2)
+            return false;
+
+        if (!state.getPlayer(p1).hasRessources(r1))
+            return false;
+
+        if (countRessources(r2) != 1)
+            return false;
+
+        if (r2[0] != 0)
+            return false;
+
+        // -----------
+
+        if (countRessources(r1) != Ressource.priceOf(r2, state.getPlayer(p1)))
+            return false;
+
+        // -----------
+        
+        return true;
+    }
+
+    private static int countRessources(int[] ressources) {
+        int c = 0;
+        for (int i: ressources)
+            c += i;
+
+        return c;
     }
 
     // -------------------------------------

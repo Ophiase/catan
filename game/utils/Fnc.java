@@ -36,10 +36,9 @@ public class Fnc {
             // swap avec un index random
             int j = Fnc.rand(length);
             
-            // xor swap
-            arr[i] = arr[i] ^ arr[j];
-            arr[j] = arr[i] ^ arr[j];
-            arr[i] = arr[i] ^ arr[j];
+            int ti = arr[i];
+            arr[i] = arr[j];
+            arr[j] = ti;
         }
 
         return arr;

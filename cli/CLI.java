@@ -58,8 +58,11 @@ public class CLI {
             try {
                 if (arg.startsWith("exit"))
                     Utils.exit();
-
-                if (arg.startsWith("preset")) {
+                
+                if (arg.isBlank()) {
+                    System.out.println("You choose default config.");
+                    config = Config.DEFAULT();
+                } else if (arg.startsWith("preset")) {
 
                     switch (arg.split(" ")[1].toUpperCase()) {                        
                         case "DEFAULT": config = Config.DEFAULT(); break;
@@ -70,7 +73,7 @@ public class CLI {
                     
                     String[] args = arg.split(" ");
                     config = new Config(
-                        game.Config.N_PARTICIPANTS - Integer.parseInt(args[1]), 
+                        Integer.parseInt(args[0]), 
                         Integer.parseInt(args[1]), 
                         Integer.parseInt(args[2]), 
                         Integer.parseInt(args[3])
@@ -105,7 +108,7 @@ public class CLI {
         // ---------------
 
         // Pour chaque joueur placer première colonie/route
-        for (int i = 0; i < game.Config.N_PARTICIPANTS; i++) {
+        for (int i = 0; i < config.getnParticipants(); i++) {
             System.out.println("Do something ...");
         }
     }
