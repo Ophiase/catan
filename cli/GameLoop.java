@@ -63,7 +63,7 @@ public class GameLoop {
         int who = engine.getState().getFocus();
         
         System.out.println("Enter any key to roll");
-        System.out.print("> "); sc.nextLine();
+        Utils.input();
 
         int score = engine.getDices().roll();
         System.out.println("Dices gave : " + score);
@@ -78,8 +78,8 @@ public class GameLoop {
 
         while (true) {
             System.out.println("Enter an action. Type help to have more Information.");
-            System.out.print("> ");
-            String[] args = sc.nextLine().split(" ");
+            String[] args = Utils.input().split(" ");
+
             try {
                 if (args.length > 0) switch(args[0]) {
 
@@ -93,31 +93,41 @@ public class GameLoop {
                         cli.resume.showInventory(who);
                         break;
                     case "use" :
-                        actions.use();
+                        actions.use(who, Integer.parseInt(args[1]));
                         break;
                     case "pick" :
-                        actions.pick();
+                        actions.pick(who);
                         break;
 
                     // ----------------
 
                     case "road":
-                        actions.road();
+                        actions.road(
+                            who, 
+                            args[0], 
+                            Integer.parseInt(args[1]), 
+                            Integer.parseInt(args[2]));
                         break;
                     case "colony":
-                        actions.colony();
+                        actions.colony(
+                            who,
+                            Integer.parseInt(args[0]), 
+                            Integer.parseInt(args[1]));
                         break;
                     case "city":
-                        actions.city();
+                        actions.city(
+                            who,
+                            Integer.parseInt(args[0]), 
+                            Integer.parseInt(args[1]));
                         break;
 
                     // ----------------
                     
                     case "trade":
-                        actions.trade();
+                        actions.trade(who, args);
                         break;
                     case "buy":
-                        actions.buy();
+                        actions.buy(who, args);
                         break;
 
                     // ----------------

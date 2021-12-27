@@ -60,6 +60,11 @@ public class Utils {
         System.out.println("Error as occured. Try Again");
     }
 
+    public static String input() {
+        System.out.print("> ");
+        return CLI.sc.nextLine();
+    }
+
     // ------------------------------------------
 
     public static String readAll(String resource) { 

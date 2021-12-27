@@ -105,7 +105,7 @@ public class Trade {
      * 
      */
 
-    public void buyDevelop(int who) {
+    public int buyDevelop(int who) {
         Offer.lose(state.getPlayer(who), Offer.makeRessources(
                 Ressource.WHEAT, 1,
                 Ressource.SHEEP, 1,
@@ -115,7 +115,7 @@ public class Trade {
         // carte developpement aleatoire
         int developpement = rnd.nextInt(Developpement.nDeveloppements);
         state.getPlayer(who).addDeveloppement(developpement);
-
+        return developpement;
     }
 
     public void buyRoad(int who, boolean horizontal, int x, int y) {

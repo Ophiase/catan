@@ -177,6 +177,19 @@ public class Map {
         return sizePP;
     }
 
+    public boolean canMoveRobber(int x, int y) {
+        if (x < 0) return false;
+        if (y < 0) return false;
+        if (x > size) return false;
+        if (y > size) return false;
+
+        return true;
+    }
+
+    public void moveRobber(int x, int y) {
+        robberPosition = Fnc.conv2dto1d(x, y, size);
+        robberIndex = diceIndexes[x][y];
+    }
 
     public int getRobberIndex() {
         return robberIndex;
@@ -405,5 +418,4 @@ public class Map {
         if (x < size && y > 0 && (diceIndexes[x][y-1] != -1))
             p.getDices()[x][y-1]++;
 	}
-
 }

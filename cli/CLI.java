@@ -20,7 +20,7 @@ public class CLI {
 
             System.out.println();
             System.out.println("Do you want to play again ? (y/n)");
-            String r = sc.nextLine();
+            String r = Utils.input();
 
             if (r.isEmpty() || !(r.toLowerCase().charAt(0) == 'y'))
                 break;
@@ -52,8 +52,7 @@ public class CLI {
             System.out.println(Utils.readAll("config_helper.txt"));
             Utils.delim();
             System.out.println("Enter your config :");
-            System.out.print("> ");
-            String arg = sc.nextLine();
+            String arg = Utils.input();
 
             try {
                 if (arg.startsWith("exit"))
@@ -143,8 +142,7 @@ public class CLI {
         while (true)
         {
             try {
-                System.out.print("> ");
-                String[] args = sc.nextLine().split(" ");
+                String[] args = Utils.input().split(" ");
 
                 if (args[0].startsWith("exit"))
                     Utils.exit();
@@ -171,8 +169,7 @@ public class CLI {
         while (true)
         {
             try {
-                System.out.print("> ");
-                String[] args = sc.nextLine().split(" ");
+                String[] args = Utils.input().split(" ");
 
                 if (args[0].startsWith("exit"))
                     Utils.exit();
