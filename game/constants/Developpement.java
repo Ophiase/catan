@@ -10,15 +10,19 @@ public class Developpement {
     public static final int POINT       = 4; // 1 additional point of victory
     public static final int nDeveloppements = 5;
 
-    public static String toString(int i) {
-        switch (i) {
-            case 0: return "KNIGHT";
-            case 1: return "ROAD";
-            case 2: return "PLENTY";
-            case 3: return "MONOPOLY";
-            case 4: return "POINT";
-        }
+    public static String[] names = new String[] {
+        "KNIGHT", "ROAD", "PLENTY", "MONOPOLY", "POINT"
+    };
 
-        throw new InvalidParameterException();
+    public static String toString(int i) {
+        return names[i];
+    }
+
+    public static int StringToInt(String str) {
+        for (int i = 0; i < nDeveloppements; i++)
+            if (names[i].equals(str))
+                return i;
+
+        throw new InvalidParameterException(); 
     }
 }

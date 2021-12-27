@@ -23,10 +23,10 @@ Type an action
         exemple : 
             > city 2 3
 
-    > trade {N_RESSOURCE}... against {N_RESSOURCE}
-        Proprose to other players a trade of ressources.
+    > trade {player index} {N_RESSOURCE (from you)}... against {N_RESSOURCE}
+        Proprose to a player a trade of ressources.
         exemple :
-            > trade 2_WHEAT 1_BRICK against 1_ROCK
+            > trade 2 2_WHEAT 1_BRICK against 1_ROCK
     > buy {N_RESSOURCE}... against {RESSOURCE}
         Buy to the bank
         exemple :

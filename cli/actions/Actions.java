@@ -1,7 +1,9 @@
 package cli.actions;
 
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.Flow.Subscriber;
 
 import cli.Utils;
 import game.Engine;
@@ -55,10 +57,10 @@ public class Actions {
                 map.moveRobber(x, y);
             } break;
             case Developpement.ROAD: {
-
+                
             } break;
             case Developpement.PLENTY: {
-            
+                
             } break;
             case Developpement.MONOPOLY: {
 
@@ -122,11 +124,100 @@ public class Actions {
     }
 
     public void trade(int who, String[] args) {
+        // build/parse offer
+        ArrayList<Integer> r1 = new ArrayList<Integer>();
+        ArrayList<Integer> r2 = new ArrayList<Integer>();
 
+        boolean begin = true;
+        for (int i = 2; i < args.length; i++)
+        {
+            if (begin) {
+                String[] arg = args[i].split("_");
+                r1.add(Ressource.StringToInt(arg[1]));
+                r1.add(Integer  .parseInt   (arg[0]));
+                
+                if (args[i].toUpperCase().equals("against"))
+                    begin = false;
+            } else {
+                String[] arg = args[i].split("_");
+                r2.add(Ressource.StringToInt(arg[1]));
+                r2.add(Integer  .parseInt   (arg[0]));
+            }
+        }
+
+        game.utils.Offer offer = new game.utils.Offer(
+            who, Integer.parseInt(args[1]), 
+            r1.stream().mapToInt(i -> i).toArray(), 
+            r2.stream().mapToInt(i -> i).toArray()
+            );
+
+        // is valid offer
+
+        if (!trade.canTrade(offer))
+        {
+            System.out.println("Invalid offer.");
+            return;
+        }
+
+        // ask user
+        Player p2 = state.getPlayer(offer.p2);
+        System.out.println("Doe "+p2+" consent to the offer? (y/n)");
+        boolean consent = false;
+        if (p2.isBot())
+            consent = engine.getAI().consent(p2, offer);
+        else
+            consent = Utils.input().toUpperCase().equals("Y");
+        
+        if (!consent)
+        {
+            System.out.println(p2+" refused your trade.");
+            return;
+        }
+
+        // proceed
+
+        trade.trade(offer);
+        System.out.println("Successfull exchange.");
     }
 
     public void buy(int who, String[] args) {
-        
+        // build/parse offer
+        ArrayList<Integer> r1 = new ArrayList<Integer>();
+        ArrayList<Integer> r2 = new ArrayList<Integer>();
+
+        boolean begin = true;
+        for (int i = 2; i < args.length; i++)
+        {
+            if (begin) {
+                String[] arg = args[i].split("_");
+                r1.add(Ressource.StringToInt(arg[1]));
+                r1.add(Integer  .parseInt   (arg[0]));
+                
+                if (args[i].toUpperCase().equals("against"))
+                    begin = false;
+            } else {
+                r2.add(Ressource.StringToInt(args[i]));
+                r2.add(1);
+            }
+        }
+
+        game.utils.Offer purchase = new game.utils.Offer(
+            who, Integer.parseInt(args[1]), 
+            r1.stream().mapToInt(i -> i).toArray(), 
+            r2.stream().mapToInt(i -> i).toArray()
+            );
+
+        // is valid offer
+
+        if (!trade.canBuy(purchase)) {
+            System.out.println("Transaction refused.");
+            return;
+        }
+
+        // proceed
+
+        trade.buy(purchase);
+        System.out.println("Successfull transaction.");
     }
 
     // -------------------------------------------

@@ -387,7 +387,7 @@ public class Map {
 	}
 
     // obsolète
-	public ArrayList<Integer> nearDicesIdx(int x, int y) {
+    public ArrayList<Integer> nearDicesIdx(int x, int y) {
         ArrayList<Integer> ndi = new ArrayList<Integer>();
 
         if (x < size && y < size && (diceIndexes[x][y] != -1))
@@ -402,10 +402,10 @@ public class Map {
         if (x < size && y > 0 && (diceIndexes[x][y-1] != -1))
             ndi.add(diceIndexes[x][y-1]);
 
-		return ndi;
-	}
+        return ndi;
+    }
 
-	public void nearDicesToPlayer(Player p, int x, int y) {
+    public void nearDicesToPlayer(Player p, int x, int y) {
         if (x < size && y < size && (diceIndexes[x][y] != -1))
             p.getDices()[x][y]++;
 
@@ -417,5 +417,5 @@ public class Map {
 
         if (x < size && y > 0 && (diceIndexes[x][y-1] != -1))
             p.getDices()[x][y-1]++;
-	}
+    }
 }

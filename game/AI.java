@@ -1,8 +1,10 @@
 package game;
 
+import game.state.Player;
 import game.state.State;
 import game.utils.Trade;
 import game.utils.Dices;
+import game.utils.Offer;
 
 public class AI {
 
@@ -17,6 +19,10 @@ public class AI {
     }
 
     public boolean play() {
+        return false;
+    }
+
+    public boolean consent(Player p2, Offer offer) {
         return false;
     }
     

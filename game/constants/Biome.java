@@ -11,16 +11,19 @@ public class Biome {
     public static final int ROCK    = 5;
     public static final int nBiomes = 6;
 
-    public static String toString(int i) {
-        switch (i) {
-            case 0: return "DESERT";
-            case 1: return "WOOD";
-            case 2: return "SHEEP";
-            case 3: return "WHEAT";
-            case 4: return "BRICK";
-            case 5: return "ROCK";
-        }
+    public static String[] names = new String[] {
+        "DESERT", "WOOD", "SHEEP", "WHEAT", "BRICK", "ROCK"
+    };
 
-        throw new InvalidParameterException();
+    public static String toString(int i) {
+        return names[i];
+    }
+
+    public static int StringToInt(String str) {
+        for (int i = 0; i < nBiomes; i++)
+            if (names[i].equals(str))
+                return i;
+
+        throw new InvalidParameterException(); 
     }
 }

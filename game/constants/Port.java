@@ -14,17 +14,21 @@ public class Port {
     public static final int nDefault = 3;
     public static final int nPorts = nTypes + (-1 + nDefault);
 
-    public static String toString(int i) {
-        switch (i) {
-            case 0: return "DEFAULT";
-            case 1: return "WOOD";
-            case 2: return "SHEEP";
-            case 3: return "WHEAT";
-            case 4: return "BRICK";
-            case 5: return "ROCK";
-        }
+    
+    public static String[] names = new String[] {
+        "DEFAULT", "WOOD", "SHEEP", "WHEAT", "BRICK", "ROCK"
+    };
 
-        throw new InvalidParameterException();
+    public static String toString(int i) {
+        return names[i];
+    }
+
+    public static int StringToInt(String str) {
+        for (int i = 0; i < nTypes; i++)
+            if (names[i].equals(str))
+                return i;
+
+        throw new InvalidParameterException(); 
     }
 
     public static int reduceSpace (int i) {
