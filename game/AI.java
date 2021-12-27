@@ -17,12 +17,6 @@ public class AI {
     }
 
     public boolean play() {
-        int d = dices.roll();
-
-        if (d == 7) {
-            return true;
-        }
-
         return false;
     }
     

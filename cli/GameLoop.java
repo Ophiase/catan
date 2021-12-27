@@ -34,7 +34,7 @@ public class GameLoop {
         System.out.println("Time : " + time);
         System.out.println("Focus : " + (isBot ? "Bot" : "Player") + " (" + focus + ")");
         System.out.println();
-        cli.resume.resume(focus);
+        cli.resume.resume();
         System.out.println();
 
         // -------------------------------------
@@ -73,62 +73,82 @@ public class GameLoop {
             // retribution
 
         } else {
-
-            // distribution
-
+            engine.getState().collect(score);
         }
 
         while (true) {
             System.out.println("Enter an action. Type help to have more Information.");
             System.out.print("> ");
             String[] args = sc.nextLine().split(" ");
-            if (args.length > 0) switch(args[0]) {
+            try {
+                if (args.length > 0) switch(args[0]) {
 
-                case "resume":
-                    cli.resume.resume(who);
-                    break;
+                    case "resume":
+                        cli.resume.resume();
+                        break;
 
-                // ----------------
+                    // ----------------
 
-                case "inventory":
-                    cli.resume.showInventory(who);
-                    break;
-                case "use" :
-                    break;
-                case "pick" :
-                    break;
+                    case "inventory":
+                        cli.resume.showInventory(who);
+                        break;
+                    case "use" :
+                        actions.use();
+                        break;
+                    case "pick" :
+                        actions.pick();
+                        break;
 
-                // ----------------
+                    // ----------------
 
-                case "road":
-                    break;
-                case "colony":
-                    break;
-                case "city":
-                    break;
+                    case "road":
+                        actions.road();
+                        break;
+                    case "colony":
+                        actions.colony();
+                        break;
+                    case "city":
+                        actions.city();
+                        break;
 
-                // ----------------
-                
-                case "trade":
-                    break;
-                case "buy":
-                    break;
+                    // ----------------
+                    
+                    case "trade":
+                        actions.trade();
+                        break;
+                    case "buy":
+                        actions.buy();
+                        break;
 
-                // ----------------
+                    // ----------------
 
-                case "end":
-                    return;
-                case "help":
-                    Utils.clear();
-                    Utils.help();
-                    break;
-                case "exit":
-                    Utils.exit();
-            }
+                    case "end":
+                        return;
+                    case "help":
+                        Utils.clear();
+                        Utils.help();
+                        break;
+                    case "exit":
+                        Utils.exit();
+                }
+            } catch (Exception e) { Utils.error(); }
         }
     }
 
     private void botTurn() {
+        int who = engine.getState().getFocus();
+        
+        int score = engine.getDices().roll();
+        System.out.println("Dices gave : " + score);
+        
+        if (score == engine.getDices().getRobberDice()) { // DEFAULT = 7
+
+            // retribution
+
+        } else {
+            engine.getState().collect(score);
+        }
+
         boolean interupt = engine.getAI().play();
     }
 }

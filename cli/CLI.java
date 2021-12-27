@@ -32,7 +32,6 @@ public class CLI {
     Config config;
     Engine engine;
 
-    Put put;
     Resume resume;
 
     // --------------------------------
@@ -96,7 +95,6 @@ public class CLI {
 
     private void initEngine() {
         engine  = new Engine(config);
-        put     = new Put(engine);
         resume  = new Resume(engine);
 
         // ---------------
@@ -112,6 +110,7 @@ public class CLI {
                 askUserFirstCity(p);
 
             engine.endTurn();
+            Utils.delim();
         }
 
         // Pour chaque joueur placer seconde colonie/route
@@ -125,26 +124,21 @@ public class CLI {
                 askUserFirstCity(p);
 
             engine.endTurn();
+            Utils.delim();
         }
-
-        System.out.println();
-        resume.showMap();
-        System.out.println();
-        Utils.delim();
     }
 
     private void askUserFirstCity(Player p) {
         System.out.println();
-        resume.showMap();
-        System.out.println();
-        Utils.delim();
+        resume.resume();
 
         game.state.Map map = engine.getMap();
+        int who = p.getIndex();
 
         System.out.println("Enter a location for your colony.");
-        System.out.println("> {x} {y}");
-        System.out.println("Exemple:");
-        System.out.println("> 1 3");
+        System.out.println("\t> {x} {y}");
+        System.out.println("\tExemple:");
+        System.out.println("\t\t> 1 3");
 
         while (true)
         {
@@ -155,14 +149,13 @@ public class CLI {
                 if (args[0].startsWith("exit"))
                     Utils.exit();
 
-                int who = p.getIndex();
                 int x = Integer.parseInt(args[0]);
                 int y = Integer.parseInt(args[1]);
 
-                if (!map.canBuyColony(who, x, y)) 
+                if (map.hasColony(x, y) || map.hasNearColony(who, x, y)) 
                     throw new Exception();
 
-                map.canBuyColony(who, x, y);
+                engine.getState().addColony(who, x, y);
 
                 break;
             } catch (Exception e) {
@@ -171,9 +164,9 @@ public class CLI {
         }
 
         System.out.println("Enter a location for your road.");
-        System.out.println("> (h/v) {x} {y}");
-        System.out.println("Exemple:");
-        System.out.println("> h 1 3");
+        System.out.println("\t> (h/v) {x} {y}");
+        System.out.println("\tExemple:");
+        System.out.println("\t\t> h 1 3");
 
         while (true)
         {
@@ -184,7 +177,6 @@ public class CLI {
                 if (args[0].startsWith("exit"))
                     Utils.exit();
 
-                int who = p.getIndex();
                 boolean horizontal = args[0].toUpperCase().equals("H");
                 int x = Integer.parseInt(args[1]);
                 int y = Integer.parseInt(args[2]);
@@ -192,7 +184,7 @@ public class CLI {
                 if (!map.canBuyRoad(who, horizontal, x, y)) 
                     throw new Exception();
 
-                map.canBuyRoad(who, horizontal, x, y);
+                engine.getState().addRoad(who, horizontal, x, y);
 
                 break;
             } catch (Exception e) {

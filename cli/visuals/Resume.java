@@ -5,6 +5,7 @@ import java.util.Set;
 import cli.Utils;
 import game.Engine;
 import game.constants.Developpement;
+import game.constants.Ressource;
 import game.state.Player;
 import game.utils.Fnc;
 
@@ -18,7 +19,7 @@ public class Resume {
     
     // ------------------------
     
-    public void resume(int who) {
+    public void resume() {
         Utils.delim();
         System.out.println("Resume :");
         System.out.println();
@@ -36,6 +37,8 @@ public class Resume {
         for (Player p: engine.getState().getPlayers()) {
             System.out.println(p + " has :");
             
+            System.out.println("\tpoints: " + p.getRessource(Ressource.POINT));
+
             System.out.print("\troad H : ");
             for (int coord: p.getRoadH())
                 System.out.print(
@@ -43,7 +46,7 @@ public class Resume {
                     Fnc.conv1dto2d_x(coord, size)+
                     ", "+
                     Fnc.conv1dto2d_y(coord, size)+
-                    ") ");
+                    "), ");
             System.out.println();
 
             System.out.print("\troad V : ");
@@ -53,7 +56,7 @@ public class Resume {
                     Fnc.conv1dto2d_x(coord, size)+
                     ", "+
                     Fnc.conv1dto2d_y(coord, size)+
-                    ") ");
+                    "), ");
             System.out.println();
 
             System.out.print("\tcolonies : ");
@@ -63,7 +66,7 @@ public class Resume {
                     Fnc.conv1dto2d_x(coord, size)+
                     ", "+
                     Fnc.conv1dto2d_y(coord, size)+
-                    ") ");
+                    "), ");
             System.out.println();
 
             System.out.print("\tcities : ");
@@ -73,14 +76,14 @@ public class Resume {
                     Fnc.conv1dto2d_x(coord, size)+
                     ", "+
                     Fnc.conv1dto2d_y(coord, size)+
-                    ") ");
+                    "), ");
             System.out.println();
 
             System.out.print("\tdices indexes : ");
             for (int i: p.getDicesIdx())
                 System.out.print(i+ ", ");
             System.out.println();
-            
+
             System.out.println();
         }
     }
@@ -95,8 +98,16 @@ public class Resume {
         for (int i = 0; i < Developpement.nDeveloppements; i++)
             if (player.hasDeveloppement(i))
                 System.out.println(" - " + developpements[i] + "x" + Utils.makeFirstWord(Developpement.toString(i))+" (code="+i+")");
-
         System.out.println();
+
+        System.out.println("Ressources of " + player + " :");
+        int[] ressources = player.getRessources();
+        for (int i = 0; i < Ressource.nRessources; i++)
+            if (ressources[i] > 0)
+                System.out.println(" - " + ressources[i] + "x" + Utils.makeFirstWord(Ressource.toString(i))+" (code="+i+")");
+        System.out.println();
+
+
     }
 
     // ------------------------

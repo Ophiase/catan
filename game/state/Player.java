@@ -17,6 +17,7 @@ public class Player {
     private boolean[]   ports           = new boolean   [Port.nTypes];
     
     private Set<Integer> dicesIdx       = new HashSet<Integer>();
+    private int[][] dices;
     private ArrayList<Integer> roadH    = new ArrayList<Integer>();
     private ArrayList<Integer> roadV    = new ArrayList<Integer>();
     private ArrayList<Integer> colonies = new ArrayList<Integer>();
@@ -24,11 +25,12 @@ public class Player {
 
     // ---------------
 
-    public Player(int index, boolean isBot) {
+    public Player(int index, boolean isBot, int mapSize) {
         this.isBot = isBot;
         this.name = (isBot ? "Bot" : "Player" ) + " (" + index + ")";
+        this.dices = new int[mapSize][mapSize];
 
-        ressources[Ressource.POINT] = 2;
+        ressources[Ressource.POINT] = 0;
     }
 
     @Override
@@ -58,9 +60,11 @@ public class Player {
         return cities;
     }
 
-    public Set<Integer> getDicesIdx() {
-        return dicesIdx;
+    public int[][] getDices() {
+        return dices;
     }
+
+    public Set<Integer> getDicesIdx() { return dicesIdx; }
 
     public ArrayList<Integer> getRoadH() {
         return roadH;

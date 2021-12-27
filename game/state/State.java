@@ -21,7 +21,7 @@ public class State {
         for (int i = 0; i < 4; i++) {
             boolean isBot = i >= conf.getnPlayers();
             
-            players[i] = new Player(i, isBot);
+            players[i] = new Player(i, isBot, map.getSize());
         }
 
     }
@@ -73,20 +73,36 @@ public class State {
         p.getColonies().add(position);
         map.givePorts(position, p);
 
-        p.getDicesIdx().addAll(map.nearDicesIdx(x, y));
+        p.getDicesIdx().addAll(map.nearDicesIdx(x, y)); // obsolète
+        map.nearDicesToPlayer(p, x, y);
+
+        p.getRessources()[0]++;
     }
 
     public void improveColony (int who, int x, int y) {
+        Player p = players[who];
+
         map.getColonies()[x][y] = Map.makeColony(true, who);
-        players[who].getCities().add(Fnc.conv2dto1d(x, y, map.getSize()));
+        p.getCities().add(Fnc.conv2dto1d(x, y, map.getSize()));
+        
+        map.nearDicesToPlayer(p, x, y);
+
+        p.getRessources()[0]++;
     }
 
     // ------------------------------
 
     public void collect(int score) {
-        /**
-         * TODO
-         */
+        if (score == map.getRobberIndex())
+            return;
+
+        for (Player p: players)
+        {
+            int x = map.getDicesX()[score];
+            int y = map.getDicesY()[score];
+
+            p.getRessources()[map.getBiomes()[x][y]] += p.getDices()[x][y];
+        }
     }
 
     public int won() {

@@ -6,6 +6,7 @@ import java.util.Scanner;
 public class Utils {
     
     private static final boolean CLEAR_ENABLED = false;
+    private static final boolean DEBUG_ENABLED = true;
 
     // ------------------------------------------
 
@@ -55,6 +56,10 @@ public class Utils {
         System.exit(0);
     }
 
+    public static void error() {
+        System.out.println("Error as occured. Try Again");
+    }
+
     // ------------------------------------------
 
     public static String readAll(String resource) { 
@@ -93,6 +98,11 @@ public class Utils {
 
     // ------------------------------------------
     // Debug
+
+    public static void debug(String str) {
+        if (DEBUG_ENABLED)
+            System.out.println(str);
+    }
 
     public static void printArray(int[] array) {
         System.out.print("[ ");

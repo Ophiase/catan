@@ -28,7 +28,10 @@ public class Map {
      *      et une ville car 11(2) = 2
     */
 
-    private int[][] diceIndexes;    // nombres aux dés
+    private int[] dicesX;           // coordonnée X des dés
+    private int[] dicesY;           // coordonnée Y des dés
+    private int[][] diceIndexes;    // nombres aux dés en X;Y
+    
     private int[][] biomes;         // biomes
     private int[][] colonies;       // colonies
     private int[][] roadsH;         // routes horizontals
@@ -40,6 +43,9 @@ public class Map {
     public Map(game.Config conf) {
         this.size   = conf.getSizeOfMap();
         this.sizePP = size+1;
+
+        dicesX = new int[conf.getnCases()+conf.getnDices()];
+        dicesY = new int[conf.getnCases()+conf.getnDices()];
 
         diceIndexes     = new int[size  ][size  ];
         biomes          = new int[size  ][size  ];
@@ -63,6 +69,8 @@ public class Map {
 
             biomes      [x][y] = j;
             diceIndexes [x][y] = i + conf.getnDices();
+            dicesX[i+conf.getnDices()] = x;
+            dicesY[i+conf.getnDices()] = y;
         }
 
         // ----------------
@@ -178,6 +186,15 @@ public class Map {
         return robberPosition;
     }
 
+
+    public int[] getDicesX() {
+        return dicesX;
+    }
+
+    public int[] getDicesY() {
+        return dicesY;
+    }
+
     public int[][] getDiceIndexes() {
         return diceIndexes;
     }
@@ -207,7 +224,6 @@ public class Map {
     private boolean canBuyRoadH(int who, int x, int y) {
         if (hasRoadH(x, y))
             return false;
-
 
         // COLONIES ADJACENTES
         if (hasColony(who, x, y)) 
@@ -272,14 +288,11 @@ public class Map {
     public boolean canBuyColony(int who, int x, int y) {
         if (hasColony(x, y))
             return false;
-
         if (!hasNearPath(who, x, y))
             return false;
-
-        if (hasNearHouse(who, x, y))
+        if (hasNearColony(who, x, y))
             return false;
-
-        return false;
+        return true;
     }
 
     public boolean canImproveColony(int who, int x, int y) {
@@ -303,7 +316,7 @@ public class Map {
         return false;
     }
 
-    private boolean hasNearHouse(int who, int x, int y) {
+    public boolean hasNearColony(int who, int x, int y) {
         if (x>0 && hasColony(who, x-1, y))
             return true;
         if (y>0 && hasColony(who, x, y-1))
@@ -321,7 +334,7 @@ public class Map {
         return (1) + ((city?1:0)<<1) + (who<<2);
     }
 
-    private boolean hasColony(int x, int y) {
+    public boolean hasColony(int x, int y) {
         return colonies[x][y]>0;
     }
 
@@ -360,22 +373,37 @@ public class Map {
                     p.addPort(i);
 	}
 
+    // obsolète
 	public ArrayList<Integer> nearDicesIdx(int x, int y) {
         ArrayList<Integer> ndi = new ArrayList<Integer>();
 
-        if (x < size && y < size)
+        if (x < size && y < size && (diceIndexes[x][y] != -1))
             ndi.add(diceIndexes[x][y]);
 
-        if (x > 0 && y > 0)
+        if (x > 0 && y > 0 && (diceIndexes[x-1][y-1] != -1))
             ndi.add(diceIndexes[x-1][y-1]);
 
-        if (x > 0 && y < size)
+        if (x > 0 && y < size && (diceIndexes[x-1][y] != -1))
             ndi.add(diceIndexes[x-1][y]);
 
-        if (x < size && y > 0)
+        if (x < size && y > 0 && (diceIndexes[x][y-1] != -1))
             ndi.add(diceIndexes[x][y-1]);
 
 		return ndi;
+	}
+
+	public void nearDicesToPlayer(Player p, int x, int y) {
+        if (x < size && y < size && (diceIndexes[x][y] != -1))
+            p.getDices()[x][y]++;
+
+        if (x > 0 && y > 0 && (diceIndexes[x-1][y-1] != -1))
+            p.getDices()[x-1][y-1]++;
+
+        if (x > 0 && y < size && (diceIndexes[x-1][y] != -1))
+            p.getDices()[x-1][y]++;
+
+        if (x < size && y > 0 && (diceIndexes[x][y-1] != -1))
+            p.getDices()[x][y-1]++;
 	}
 
 }
