@@ -9,6 +9,14 @@ public class Utils {
 
     // ------------------------------------------
 
+    public static String makeFirstWord(String word) {
+        char[] newWord = word.toLowerCase().toCharArray();
+        newWord[0] = Character.toUpperCase(newWord[0]);
+        return new String(newWord);
+    }
+
+    // ------------------------------------------
+
     public static void delim() {
         delim(60, '-', true);
     }
@@ -29,6 +37,7 @@ public class Utils {
         System.out.println(readAll("game_helper.txt"));
         delim();
     }
+
 
     public static void clear() {
         if (CLEAR_ENABLED)
@@ -85,7 +94,6 @@ public class Utils {
     // ------------------------------------------
     // Debug
 
-    
     public static void printArray(int[] array) {
         System.out.print("[ ");
         for (int e : array)

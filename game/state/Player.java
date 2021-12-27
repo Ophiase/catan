@@ -1,6 +1,8 @@
 package game.state;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import game.constants.*;
 import game.utils.Fnc;
@@ -9,19 +11,33 @@ public class Player {
     
     private int         index;
     private boolean     isBot;
+    private String      name;
     private int[]       ressources      = new int       [Ressource.nRessources];
     private int[]       developpements  = new int       [Developpement.nDeveloppements];
     private boolean[]   ports           = new boolean   [Port.nTypes];
     
-    private ArrayList<Integer> colonies  = new ArrayList<Integer>();
-    private ArrayList<Integer> cities    = new ArrayList<Integer>();
+    private Set<Integer> dicesIdx       = new HashSet<Integer>();
+    private ArrayList<Integer> roadH    = new ArrayList<Integer>();
+    private ArrayList<Integer> roadV    = new ArrayList<Integer>();
+    private ArrayList<Integer> colonies = new ArrayList<Integer>();
+    private ArrayList<Integer> cities   = new ArrayList<Integer>();
 
     // ---------------
 
     public Player(int index, boolean isBot) {
         this.isBot = isBot;
+        this.name = (isBot ? "Bot" : "Player" ) + " (" + index + ")";
 
         ressources[Ressource.POINT] = 2;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public int getIndex() {
@@ -40,6 +56,18 @@ public class Player {
 
     public ArrayList<Integer> getCities() {
         return cities;
+    }
+
+    public Set<Integer> getDicesIdx() {
+        return dicesIdx;
+    }
+
+    public ArrayList<Integer> getRoadH() {
+        return roadH;
+    }
+
+    public ArrayList<Integer> getRoadV() {
+        return roadV;
     }
 
     // ---------------
@@ -61,6 +89,10 @@ public class Player {
     }
 
     // ---------------
+
+    public int[] getDeveloppements() {
+        return developpements;
+    }
 
     public boolean hasDeveloppement(int developpementAsked) {
         return developpements[developpementAsked] > 0;
@@ -87,16 +119,7 @@ public class Player {
     // ---------------
 
     public int nCards() {
-        int nCards = 0;
-
-        // on compte à 1 car la ressource point ne compte pas
-        for (int i = 1; i < ressources.length; i++)
-            nCards += ressources[i];
-
-        for (int i = 0; i < developpements.length; i++)
-            nCards += developpements.length;
-
-        return nCards;
+        return Fnc.arrSum(developpements) + Fnc.arrSum(ressources) - ressources[0];
     }
 
 }

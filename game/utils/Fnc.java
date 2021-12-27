@@ -44,4 +44,11 @@ public class Fnc {
         return arr;
     }
 
+    public static int arrSum(int[] arr) {
+        int s = 0;
+        for (int i: arr)
+            s += i;
+        return s;
+    }
+
 }

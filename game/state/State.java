@@ -54,9 +54,15 @@ public class State {
 
     public void addRoad(int who, boolean horizontal, int x, int y) {
         if (horizontal)
+        {
             map.getRoadsH()[x][y] = who;
+            players[who].getRoadH().add(Fnc.conv2dto1d(x, y, map.getSize()));
+        }
         else
+        {
             map.getRoadsV()[x][y] = who;
+            players[who].getRoadV().add(Fnc.conv2dto1d(x, y, map.getSize()));
+        }
     }
 
     public void addColony(int who, int x, int y) {
@@ -66,6 +72,8 @@ public class State {
         map.getColonies()[x][y] = Map.makeColony(false, who);
         p.getColonies().add(position);
         map.givePorts(position, p);
+
+        p.getDicesIdx().addAll(map.nearDicesIdx(x, y));
     }
 
     public void improveColony (int who, int x, int y) {

@@ -360,4 +360,22 @@ public class Map {
                     p.addPort(i);
 	}
 
+	public ArrayList<Integer> nearDicesIdx(int x, int y) {
+        ArrayList<Integer> ndi = new ArrayList<Integer>();
+
+        if (x < size && y < size)
+            ndi.add(diceIndexes[x][y]);
+
+        if (x > 0 && y > 0)
+            ndi.add(diceIndexes[x-1][y-1]);
+
+        if (x > 0 && y < size)
+            ndi.add(diceIndexes[x-1][y]);
+
+        if (x < size && y > 0)
+            ndi.add(diceIndexes[x][y-1]);
+
+		return ndi;
+	}
+
 }

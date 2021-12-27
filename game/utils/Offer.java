@@ -77,11 +77,7 @@ public class Offer {
     }
 
     private static int countRessources(int[] ressources) {
-        int c = 0;
-        for (int i: ressources)
-            c += i;
-
-        return c;
+        return Fnc.arrSum(ressources);
     }
 
     // -------------------------------------
