@@ -4,6 +4,7 @@ import java.util.Set;
 
 import cli.Utils;
 import game.Engine;
+import game.constants.Biome;
 import game.constants.Developpement;
 import game.constants.Ressource;
 import game.state.Player;
@@ -108,6 +109,14 @@ public class Resume {
         System.out.println();
 
 
+    }
+
+    public void metadata() {
+        Utils.delim();
+        System.out.println("List of Cards      : " + Developpement.resume());
+        System.out.println("List of Biomes     : " + Biome.resume());
+        System.out.println("List of Ressources : " + Ressource.resume());
+        Utils.delim();
     }
 
     // ------------------------

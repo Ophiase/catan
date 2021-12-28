@@ -22,7 +22,9 @@ public class Ressource {
     }
 
     public static int StringToInt(String str) {
-        for (int i = 0; i < nRessources; i++)
+        str = str.toUpperCase();
+
+        for (int i = 0; i < names.length; i++)
             if (names[i].equals(str))
                 return i;
 
@@ -45,5 +47,20 @@ public class Ressource {
         if (player.hasPort(Port.DEFAULT))
             return 3;
         return 4;
+    }
+
+    // --------------------------------
+
+    public static String resume() {
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < names.length; i++)
+        {
+            s.append(names[i]);
+            s.append(" (");
+            s.append(i);
+            s.append("), ");
+        }
+
+        return s.toString();
     }
 }

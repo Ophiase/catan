@@ -3,7 +3,6 @@ package cli.actions;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.concurrent.Flow.Subscriber;
 
 import cli.Utils;
 import game.Engine;
@@ -13,6 +12,13 @@ import game.state.Map;
 import game.state.Player;
 import game.state.State;
 import game.utils.Trade;
+
+/**TODO:
+ * void use :
+ *      implements ROAD
+ *      implements PLENTY
+ *      implements MONOPOLY
+ * */
 
 public class Actions {
 
@@ -70,6 +76,8 @@ public class Actions {
                 System.out.println("Now you have " + (++p.getRessources()[Ressource.POINT]) + " points !");
             } break;            
         }
+
+        p.useDeveloppement(card);
     }
 
     public void pick(int who) {

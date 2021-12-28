@@ -4,8 +4,10 @@ Type an action
 
     > inventory
         It lists all the card you have.
-    > use {cardIndex}
+    > use {card}
         It consum a card that you have.
+        exemple: 
+            > use knight
     > pick
         It pick a random card.
         Cost : 1 WHEAT, 1 SHEEP, 1 ROCK
@@ -34,6 +36,8 @@ Type an action
 
     > end
         End the turn.
+    > metadata
+        Indexes.
     > help
     > exit
         Quit the game.

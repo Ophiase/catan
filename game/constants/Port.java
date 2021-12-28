@@ -24,7 +24,9 @@ public class Port {
     }
 
     public static int StringToInt(String str) {
-        for (int i = 0; i < nTypes; i++)
+        str = str.toUpperCase();
+
+        for (int i = 0; i < names.length; i++)
             if (names[i].equals(str))
                 return i;
 
@@ -39,5 +41,20 @@ public class Port {
             return -1;
 
         return i >= nTypes ? DEFAULT : i;
+    }
+
+    // --------------------------------
+
+    public static String resume() {
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < names.length; i++)
+        {
+            s.append(names[i]);
+            s.append(" (");
+            s.append(i);
+            s.append("), ");
+        }
+
+        return s.toString();
     }
 }

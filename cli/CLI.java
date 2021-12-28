@@ -8,6 +8,9 @@ import game.state.Player;
 import cli.actions.*;
 import cli.visuals.*;
 
+/**
+ * Define an instance of the game playing in command line.
+ */
 public class CLI {
 
     public static Scanner sc = new Scanner(System.in);

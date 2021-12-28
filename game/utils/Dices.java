@@ -5,13 +5,13 @@ public class Dices {
     private int nDices;
     private int sizeOfDices;
 
-    private final int robberDice;// DEFAULT = 7
+    private final int robberDice; // DEFAULT = 7
 
     public Dices(game.Config conf) {
         this.nDices = conf.getnDices();
         this.sizeOfDices = conf.getSizeOfDices();
 
-        this.robberDice = sizeOfDices + 1;
+        this.robberDice = sizeOfDices - 1;
     }
 
     public int roll() {

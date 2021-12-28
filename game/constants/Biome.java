@@ -20,10 +20,27 @@ public class Biome {
     }
 
     public static int StringToInt(String str) {
-        for (int i = 0; i < nBiomes; i++)
+        str = str.toUpperCase();
+
+        for (int i = 0; i < names.length; i++)
             if (names[i].equals(str))
                 return i;
 
         throw new InvalidParameterException(); 
+    }
+
+    // --------------------------------
+
+    public static String resume() {
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < names.length; i++)
+        {
+            s.append(names[i]);
+            s.append(" (");
+            s.append(i);
+            s.append("), ");
+        }
+
+        return s.toString();
     }
 }
