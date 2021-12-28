@@ -137,65 +137,88 @@ public class CLI {
         game.state.Map map = engine.getMap();
         int who = p.getIndex();
 
-        System.out.println("Enter a location for your colony.");
-        System.out.println("\t> {x} {y}");
-        System.out.println("\tExemple:");
-        System.out.println("\t\t> 1 3");
+        while (true) try {
+            // INPUTS
+                System.out.println("Enter a location for your colony.");
+                System.out.println("\t> {x} {y}");
+                System.out.println("\tExemple:");
+                System.out.println("\t\t> 1 3");
 
-        while (true)
-        {
-            try {
-                String[] args = Utils.input().split(" ");
+                String[] args1 = Utils.input().split(" ");
+                if (args1[0].startsWith("exit"))
+                            Utils.exit();
 
-                if (args[0].startsWith("exit"))
-                    Utils.exit();
+                System.out.println("Enter a location for your road.");
+                System.out.println("\t> (h/v) {x} {y}");
+                System.out.println("\tExemple:");
+                System.out.println("\t\t> h 1 3");
 
-                int x = Integer.parseInt(args[0]);
-                int y = Integer.parseInt(args[1]);
+                String[] args2 = Utils.input().split(" ");
+                if (args2[0].startsWith("exit"))
+                            Utils.exit();
 
-                if (map.hasColony(x, y) || map.hasNearColony(who, x, y)) 
+
+            // STORE INPUTS
+                int x1 = Integer.parseInt(args1[0]);
+                int y1 = Integer.parseInt(args1[1]);
+                boolean horizontal = args2[0].toUpperCase().equals("H");
+                int x2 = Integer.parseInt(args2[1]);
+                int y2 = Integer.parseInt(args2[2]);
+
+            // VERIFIY INPUTS
+                if (map.hasColony(x1, y1) || map.hasNearColony(who, x1, y1)) 
                     throw new Exception();
 
-                engine.getState().addColony(who, x, y);
-
-                break;
-            } catch (Exception e) {
-                System.out.println("Error, try again.");
-            }
-        }
-
-        System.out.println("Enter a location for your road.");
-        System.out.println("\t> (h/v) {x} {y}");
-        System.out.println("\tExemple:");
-        System.out.println("\t\t> h 1 3");
-
-        while (true)
-        {
-            try {
-                String[] args = Utils.input().split(" ");
-
-                if (args[0].startsWith("exit"))
-                    Utils.exit();
-
-                boolean horizontal = args[0].toUpperCase().equals("H");
-                int x = Integer.parseInt(args[1]);
-                int y = Integer.parseInt(args[2]);
-
-                if (!map.canBuyRoad(who, horizontal, x, y)) 
+                
+                // placer la colonie temporairement (pour verif)
+                map.getColonies()[x1][y1] = map.makeColony(false, who);
+                if (!map.canBuyRoad(who, horizontal, x2, y2)) 
                     throw new Exception();
+                // retirer la colonie de verification
+                map.getColonies()[x1][y1] = 0;
 
-                engine.getState().addRoad(who, horizontal, x, y);
+            // ACTION        
+                engine.getState().addColony(who, x1, y1);
+                engine.getState().addRoad(who, horizontal, x2, y2);
 
-                break;
-            } catch (Exception e) {
-                System.out.println("Error, try again.");
-            }
+            break;
+        } catch (Exception e) {
+            System.out.println("Error, try again.");
         }
 
     }
 
+    //TODO
     private void askBotFirstCity(Player p) {
-        
+        int who = p.getIndex();
+        int sizepp = engine.getMap().getSizePP();
+        int[] priority = game.utils.Fnc.randomIndexArray(sizepp);
+        game.state.Map map = engine.getMap();
+
+        for (int i = 0; i < priority.length; i++)
+        {
+            int cx = game.utils.Fnc.conv1dto2d_x(priority[i], sizepp);
+            int cy = game.utils.Fnc.conv1dto2d_y(priority[i], sizepp);
+            if (map.hasColony(cx, cy) || map.hasNearColony(p.getIndex(), cx, cy))
+                continue;
+
+            
+            boolean foundRoad = false;
+            boolean h = false;
+            int rx = 0;
+            int ry = 0;
+            map.getColonies()[cx][cy] = map.makeColony(false, who);
+            
+            map.getColonies()[cx][cy] = 0;
+            if (!foundRoad)
+                continue;
+
+            // ACTION
+            engine.getState().addColony(who, cx, cy);
+            engine.getState().addRoad(who, h, rx, ry);
+
+            break;
+        }
         
         System.out.println(p + " played ...");
     }

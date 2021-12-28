@@ -10,6 +10,10 @@ import game.constants.Biome;
 import game.constants.Port;
 import game.utils.Fnc;
 
+/**
+ * This class store the elements over the board
+ * and properties of the board.
+ */
 public class Map {
 
     private int size;

@@ -92,6 +92,11 @@ public class Player {
         return ressources[index];
     }
 
+    public void addRessources(int[] rsc) {
+        for (int i = 0; i < rsc.length; i++)
+            ressources[i] += rsc[i];
+    }
+
     // ---------------
 
     public int[] getDeveloppements() {

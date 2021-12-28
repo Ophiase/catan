@@ -11,6 +11,7 @@ import game.constants.Ressource;
 import game.state.Map;
 import game.state.Player;
 import game.state.State;
+import game.utils.Offer;
 import game.utils.Trade;
 
 /**TODO:
@@ -63,13 +64,65 @@ public class Actions {
                 map.moveRobber(x, y);
             } break;
             case Developpement.ROAD: {
-                
+                System.out.print("Enter first road :");
+                String[] r1 = Utils.input().split(" ");
+                System.out.println("Enter second road : ");
+                String[] r2 = Utils.input().split(" ");
+
+                boolean h1 = r1[0].toUpperCase().equals("H");
+                boolean h2 = r2[0].toUpperCase().equals("H");;
+                int x1 = Integer.parseInt(r1[1]);
+                int x2 = Integer.parseInt(r2[1]);
+                int y1 = Integer.parseInt(r1[2]);
+                int y2 = Integer.parseInt(r2[2]);
+
+                if (!engine.getMap().canBuyRoad(who, h1, x1, y1) 
+                ||  !engine.getMap().canBuyRoad(who, h2, x2, y2)) {
+                    System.out.println("You can't take those roads");
+                    return;
+                }
+
+                state.addRoad(who, h1, x1, y1);
+                state.addRoad(who, h2, x2, y2);
             } break;
             case Developpement.PLENTY: {
+                System.out.println("Choose two ressources : ");
+                System.out.println("\tExemple :");
+                System.out.println("\t\t> SHEEP SHEEP");
+                String[] args = Utils.input().split(" ");
                 
+                int[] rsc = Offer.makeRessources(
+                    Ressource.StringToInt(args[0]), 1, 
+                    Ressource.StringToInt(args[1]), 1
+                    );
+
+                if ((rsc[Ressource.POINT] != 0) || 
+                    (Offer.countRessources(rsc) != 2)
+                ) {
+                    System.out.println("Incorrect request.");
+                    return ;
+                }
+
+                p.addRessources(rsc);
             } break;
             case Developpement.MONOPOLY: {
+                System.out.println("Choose a type.");
+                int type = Ressource.StringToInt(Utils.input());
+                if (type == Ressource.POINT)
+                {
+                    System.out.println("Invalid type.");
+                    return;
+                }
 
+                for (Player k: state.getPlayers()) if (k!=p) {
+                    // steal the ressource
+                    int[] rsc = k.getRessources();
+                    System.out.println(
+                        p+" steals "+rsc[type]+"x"+Utils.makeFirstWord(Ressource.toString(type))+
+                        " to"+k+".");
+                    p.getRessources()[type] += rsc[type];
+                    rsc[type] = 0;
+                }
             } break;
             case Developpement.POINT: {
                 System.out.println("You gained one point.");
@@ -78,6 +131,7 @@ public class Actions {
         }
 
         p.useDeveloppement(card);
+        System.out.println(p+" used "+Developpement.toString(card).toLowerCase()+".");
     }
 
     public void pick(int who) {

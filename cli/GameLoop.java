@@ -78,17 +78,7 @@ public class GameLoop {
         
         System.out.println("Enter any key to roll");
         Utils.input();
-
-        int score = engine.getDices().roll();
-        System.out.println("Dices gave : " + score);
-        
-        if (score == engine.getDices().getRobberDice()) { // DEFAULT = 7
-
-            // retribution
-            retribution();
-        } else {
-            engine.getState().collect(score);
-        }
+        int score = dicesRoll(who);
 
         while (true) {
             System.out.println("Enter an action. Type help to have more Information.");
@@ -164,21 +154,22 @@ public class GameLoop {
 
     private void botTurn() {
         int who = engine.getState().getFocus();
-        
+        int score = dicesRoll(who);
+        engine.getAI().play();
+    }
+
+    private int dicesRoll(int who) {
         int score = engine.getDices().roll();
         System.out.println("Dices gave : " + score);
         
         if (score == engine.getDices().getRobberDice()) { // DEFAULT = 7
-
-            // retribution
             retribution();
             steal(who);
-
         } else {
             engine.getState().collect(score);
         }
 
-        boolean interupt = engine.getAI().play();
+        return score;
     }
 
 
@@ -188,7 +179,13 @@ public class GameLoop {
      * has to abandon half of them.
      */
     private void retribution() {
-        for (Player p: engine.getState().getPlayers()) if (p.nCards() > 7) {
+        for (Player p: engine.getState().getPlayers()) if (p.nCards() > engine.getDices().getRobberDice()) {
+            if (p.isBot())
+            {
+                engine.getAI().retribution(p);
+                continue;
+            }
+
             boolean asking = true;
 
             while (asking)
@@ -248,6 +245,13 @@ public class GameLoop {
      * And get steal a ressource.
      */
     private void steal(int who) {
+        Player currentPlayer = engine.getState().getPlayer(who);
+        if (currentPlayer.isBot())
+        {
+            engine.getAI().steal(currentPlayer);
+            return;
+        }
+
         while (true) try {
             // move robber
             System.out.println("Put the robber somewhere. {x} {y}");
@@ -262,7 +266,6 @@ public class GameLoop {
             int idx = map.getRobberIndex();
 
             // choose a victim
-            Player currentPlayer = engine.getState().getPlayer(who);
             ArrayList<Player> victims = new ArrayList<Player>();
             for(Player p: engine.getState().getPlayers())
                 if (p != currentPlayer && p.getDicesIdx().contains(idx))

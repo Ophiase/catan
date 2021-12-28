@@ -25,17 +25,22 @@ public class AI {
         this.dices = dices;
     }
 
-    public boolean play() {
+    /** TODO: echanges spontanés */
+    public void play() {
+    }
+
+    /**This method Returns true when bot p2 consent to the offer.*/
+    public boolean consent(Player bot, Offer offer) {
         return false;
     }
 
-    /**
-     * This method Returns true when bot p2 consent to the offer.
-     * 
-     * @param p2 Bot
-     */
-    public boolean consent(Player p2, Offer offer) {
-        return false;
+    /** Choose cards to abandon */
+    public void retribution(Player bot) {
+
+    }
+
+    /** Chose where to place the robber */
+    public void steal(Player bot) {
     }
     
 }

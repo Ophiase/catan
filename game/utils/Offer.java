@@ -76,7 +76,7 @@ public class Offer {
         return true;
     }
 
-    private static int countRessources(int[] ressources) {
+    public static int countRessources(int[] ressources) {
         return Fnc.arrSum(ressources);
     }
 
