@@ -181,7 +181,7 @@ public class CLI {
                 engine.getState().addColony(who, x1, y1);
                 engine.getState().addRoad(who, horizontal, x2, y2);
 
-            break;
+            return;
         } catch (Exception e) {
             System.out.println("Error, try again.");
         }
@@ -191,24 +191,53 @@ public class CLI {
     //TODO
     private void askBotFirstCity(Player p) {
         int who = p.getIndex();
-        int sizepp = engine.getMap().getSizePP();
-        int[] priority = game.utils.Fnc.randomIndexArray(sizepp);
         game.state.Map map = engine.getMap();
+        int sizepp = map.getSizePP();
+        int size = map.getSize();
+        int[] priority = game.utils.Fnc.randomIndexArray(sizepp*sizepp);
+        Utils.printArray(priority);
 
         for (int i = 0; i < priority.length; i++)
         {
             int cx = game.utils.Fnc.conv1dto2d_x(priority[i], sizepp);
             int cy = game.utils.Fnc.conv1dto2d_y(priority[i], sizepp);
-            if (map.hasColony(cx, cy) || map.hasNearColony(p.getIndex(), cx, cy))
+            if (map.hasColony(cx, cy) || map.hasNearColony(who, cx, cy))
                 continue;
-
-            
+   
             boolean foundRoad = false;
             boolean h = false;
             int rx = 0;
             int ry = 0;
             map.getColonies()[cx][cy] = map.makeColony(false, who);
-            
+            for (int j = 0; j < 4; j++) try { 
+                switch (j) {
+                    case 0: if (cx < size) {
+                        h = true;
+                        rx = cx;
+                        ry = cy;
+                    } break;
+                    case 1: if (cx > 0) {
+                        h = true;
+                        rx = cx-1;
+                        ry = cy;
+                    } break;
+                    case 2: if (cy < size) {
+                        h = false;
+                        rx = cx;
+                        ry = cy;
+                    } break;
+                    case 3: if (cy > 0) {
+                        h = false;
+                        rx = cx;
+                        ry = cy-1;
+                    } break;
+                }
+                
+                if (map.canBuyRoad(who, h, rx, ry)) {
+                    foundRoad = true;
+                    break;
+                }
+            } catch (Exception e) {}
             map.getColonies()[cx][cy] = 0;
             if (!foundRoad)
                 continue;
@@ -216,10 +245,12 @@ public class CLI {
             // ACTION
             engine.getState().addColony(who, cx, cy);
             engine.getState().addRoad(who, h, rx, ry);
+            
+            System.out.println(p + " played.");
+            System.out.println("colony : "+cx +";"+cy);
+            System.out.println("road : "+(h?"horizontal":"vertical")+" "+rx+";"+ry);
 
             break;
         }
-        
-        System.out.println(p + " played ...");
     }
 }

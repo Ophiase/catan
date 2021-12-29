@@ -155,7 +155,7 @@ public class GameLoop {
     private void botTurn() {
         int who = engine.getState().getFocus();
         int score = dicesRoll(who);
-        engine.getAI().play();
+        engine.getAI().play(engine.getState().getPlayer(who));
     }
 
     private int dicesRoll(int who) {

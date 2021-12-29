@@ -26,6 +26,7 @@ public class Player {
     // ---------------
 
     public Player(int index, boolean isBot, int mapSize) {
+        this.index = index;
         this.isBot = isBot;
         this.name = (isBot ? "Bot" : "Player" ) + " (" + index + ")";
         this.dices = new int[mapSize][mapSize];
@@ -128,7 +129,7 @@ public class Player {
     // ---------------
 
     public int nCards() {
-        return Fnc.arrSum(developpements) + Fnc.arrSum(ressources) - ressources[0];
+        return Fnc.arrSum(developpements) + Fnc.arrSum(ressources) - ressources[Ressource.POINT];
     }
 
 }
