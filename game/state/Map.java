@@ -325,9 +325,9 @@ public class Map {
         if ((y+1)<size && hasRoadV(who, x, y))
             return true;
 
-        if (x>0 && hasRoadH(who, x, y))
+        if (x>0 && hasRoadH(who, x-1, y))
             return true;
-        if (y>0 && hasRoadV(who, x, y))
+        if (y>0 && hasRoadV(who, x, y-1))
             return true;
 
         return false;

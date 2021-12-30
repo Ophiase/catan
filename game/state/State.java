@@ -62,7 +62,7 @@ public class State {
         else
         {
             map.getRoadsV()[x][y] = who;
-            players[who].getRoadV().add(Fnc.conv2dto1d(x, y, map.getSize()));
+            players[who].getRoadV().add(Fnc.conv2dto1d(x, y, map.getSizePP()));
         }
     }
 

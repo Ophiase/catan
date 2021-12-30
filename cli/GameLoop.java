@@ -108,21 +108,21 @@ public class GameLoop {
                     case "road":
                         actions.road(
                             who, 
-                            args[0], 
-                            Integer.parseInt(args[1]), 
-                            Integer.parseInt(args[2]));
+                            args[1], 
+                            Integer.parseInt(args[2]), 
+                            Integer.parseInt(args[3]));
                         break;
                     case "colony":
                         actions.colony(
                             who,
-                            Integer.parseInt(args[0]), 
-                            Integer.parseInt(args[1]));
+                            Integer.parseInt(args[1]), 
+                            Integer.parseInt(args[2]));
                         break;
                     case "city":
                         actions.city(
                             who,
-                            Integer.parseInt(args[0]), 
-                            Integer.parseInt(args[1]));
+                            Integer.parseInt(args[1]), 
+                            Integer.parseInt(args[2]));
                         break;
 
                     // ----------------
@@ -136,7 +136,7 @@ public class GameLoop {
 
                     // ----------------
 
-                    case "end":
+                    case "end": case ""/**ça facilite le debug*/:
                         return;
                     case "metadata":
                         cli.resume.metadata();
@@ -148,7 +148,10 @@ public class GameLoop {
                     case "exit":
                         Utils.exit();
                 }
-            } catch (Exception e) { Utils.error(); }
+            } catch (Exception e) {
+                Utils.debug(e.toString()); 
+                Utils.error();
+            }
         }
     }
 
@@ -191,6 +194,9 @@ public class GameLoop {
             while (asking)
             {
                 try {
+                    // show inventory :
+                    cli.resume.showInventory(p.getIndex());
+
                     System.out.println("Choose "+(p.nCards()/2)+" cards to abandon");
                     System.out.println("\texemple: ");
                     System.out.println("\t\t> KNIGHT ROCK SHEEP");
@@ -199,6 +205,9 @@ public class GameLoop {
                     ArrayList<Integer> rsc = new ArrayList<Integer>();
                     ArrayList<Integer> devs = new ArrayList<Integer>();
                     
+                    if (args[0].startsWith("exit"))
+                        Utils.exit();
+
                     if (args.length != (p.nCards()/2))
                         throw new Exception();
 
@@ -246,49 +255,49 @@ public class GameLoop {
      */
     private void steal(int who) {
         Player currentPlayer = engine.getState().getPlayer(who);
+        Map map = engine.getMap();
+                
         if (currentPlayer.isBot())
-        {
             engine.getAI().steal(currentPlayer);
-            return;
+        else {
+            boolean choosingRobber = true;
+            while (choosingRobber) try {
+                // move robber
+                System.out.println("Put the robber somewhere. {x} {y}");
+                String[] args = Utils.input().split(" ");
+                int x = Integer.parseInt(args[0]);
+                int y = Integer.parseInt(args[1]);
+                if (!engine.getMap().canMoveRobber(x, y))
+                    throw new Exception();
+
+                map.moveRobber(x, y);
+                choosingRobber = false;
+            } catch (Exception e) {}
         }
 
-        while (true) try {
-            // move robber
-            System.out.println("Put the robber somewhere. {x} {y}");
-            String[] args = Utils.input().split(" ");
-            int x = Integer.parseInt(args[0]);
-            int y = Integer.parseInt(args[1]);
-            if (!engine.getMap().canMoveRobber(x, y))
-                throw new Exception();
+        int idx = map.getRobberIndex();
 
-            Map map = engine.getMap();
-            map.moveRobber(x, y);
-            int idx = map.getRobberIndex();
+        // choose a victim
+        ArrayList<Player> victims = new ArrayList<Player>();
+        for(Player p: engine.getState().getPlayers())
+            if (p != currentPlayer && p.getDicesIdx().contains(idx))
+                victims.add(p);
 
-            // choose a victim
-            ArrayList<Player> victims = new ArrayList<Player>();
-            for(Player p: engine.getState().getPlayers())
-                if (p != currentPlayer && p.getDicesIdx().contains(idx))
-                    victims.add(p);
-
-            if (victims.isEmpty())
-                return;
-
-            // stole him
-            Player victim = victims.get(Fnc.rand(victims.size()));
-            int[] rsc = victim.getRessources();
-            int[] priority = Fnc.randomIndexArray(rsc.length-1);
-            for (int i = 0, r = 0; i < priority.length; i++)
-                if (rsc[r=(priority[i]+1)]!=0)
-                {
-                    rsc[r]--;
-                    currentPlayer.getRessources()[r]++;
-                    
-                    System.out.println(currentPlayer+" stole "+Ressource.toString(r).toLowerCase()+" to "+victim+".");
-                    return;
-                }
-
+        if (victims.isEmpty())
             return;
-        } catch (Exception e) {}
+
+        // stole him
+        Player victim = victims.get(Fnc.rand(victims.size()));
+        int[] rsc = victim.getRessources();
+        int[] priority = Fnc.randomIndexArray(rsc.length-1);
+        for (int i = 0, r = 0; i < priority.length; i++)
+            if (rsc[r=(priority[i]+1)]!=0)
+            {
+                rsc[r]--;
+                currentPlayer.getRessources()[r]++;
+                
+                System.out.println(currentPlayer+" stole "+Ressource.toString(r).toLowerCase()+" to "+victim+".");
+                return;
+            }
     }
 }

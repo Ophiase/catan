@@ -194,12 +194,15 @@ public class Actions {
         for (int i = 2; i < args.length; i++)
         {
             if (begin) {
+                if (args[i].toUpperCase().equals("against"))
+                {
+                    begin = false;
+                    continue;
+                }
+
                 String[] arg = args[i].split("_");
                 r1.add(Ressource.StringToInt(arg[1]));
                 r1.add(Integer  .parseInt   (arg[0]));
-                
-                if (args[i].toUpperCase().equals("against"))
-                    begin = false;
             } else {
                 String[] arg = args[i].split("_");
                 r2.add(Ressource.StringToInt(arg[1]));
@@ -213,8 +216,9 @@ public class Actions {
             r2.stream().mapToInt(i -> i).toArray()
             );
 
-        // is valid offer
+        Utils.debug("Offer was parsed properly.");
 
+        // is valid offer
         if (!trade.canTrade(offer))
         {
             System.out.println("Invalid offer.");
@@ -248,15 +252,18 @@ public class Actions {
         ArrayList<Integer> r2 = new ArrayList<Integer>();
 
         boolean begin = true;
-        for (int i = 2; i < args.length; i++)
+        for (int i = 1; i < args.length; i++)
         {
             if (begin) {
+                if (args[i].toUpperCase().equals("against"))
+                {
+                    begin = false;
+                    continue;
+                }
+
                 String[] arg = args[i].split("_");
                 r1.add(Ressource.StringToInt(arg[1]));
                 r1.add(Integer  .parseInt   (arg[0]));
-                
-                if (args[i].toUpperCase().equals("against"))
-                    begin = false;
             } else {
                 r2.add(Ressource.StringToInt(args[i]));
                 r2.add(1);
@@ -268,6 +275,8 @@ public class Actions {
             r1.stream().mapToInt(i -> i).toArray(), 
             r2.stream().mapToInt(i -> i).toArray()
             );
+
+        Utils.debug("Offer was parsed properly.");
 
         // is valid offer
 

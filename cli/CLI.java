@@ -188,14 +188,12 @@ public class CLI {
 
     }
 
-    //TODO
     private void askBotFirstCity(Player p) {
         int who = p.getIndex();
         game.state.Map map = engine.getMap();
         int sizepp = map.getSizePP();
         int size = map.getSize();
         int[] priority = game.utils.Fnc.randomIndexArray(sizepp*sizepp);
-        Utils.printArray(priority);
 
         for (int i = 0; i < priority.length; i++)
         {
@@ -204,51 +202,19 @@ public class CLI {
             if (map.hasColony(cx, cy) || map.hasNearColony(who, cx, cy))
                 continue;
    
-            boolean foundRoad = false;
-            boolean h = false;
-            int rx = 0;
-            int ry = 0;
             map.getColonies()[cx][cy] = map.makeColony(false, who);
-            for (int j = 0; j < 4; j++) try { 
-                switch (j) {
-                    case 0: if (cx < size) {
-                        h = true;
-                        rx = cx;
-                        ry = cy;
-                    } break;
-                    case 1: if (cx > 0) {
-                        h = true;
-                        rx = cx-1;
-                        ry = cy;
-                    } break;
-                    case 2: if (cy < size) {
-                        h = false;
-                        rx = cx;
-                        ry = cy;
-                    } break;
-                    case 3: if (cy > 0) {
-                        h = false;
-                        rx = cx;
-                        ry = cy-1;
-                    } break;
-                }
-                
-                if (map.canBuyRoad(who, h, rx, ry)) {
-                    foundRoad = true;
-                    break;
-                }
-            } catch (Exception e) {}
+            game.AI.RoadResponse road = engine.getAI().roadOnLocation(who, cx, cy);
             map.getColonies()[cx][cy] = 0;
-            if (!foundRoad)
+            if (!road.valid)
                 continue;
 
             // ACTION
             engine.getState().addColony(who, cx, cy);
-            engine.getState().addRoad(who, h, rx, ry);
+            engine.getState().addRoad(who, road.h, road.x, road.y);
             
             System.out.println(p + " played.");
             System.out.println("colony : "+cx +";"+cy);
-            System.out.println("road : "+(h?"horizontal":"vertical")+" "+rx+";"+ry);
+            System.out.println("road : "+(road.h?"horizontal":"vertical")+" "+road.x+";"+road.y);
 
             break;
         }
