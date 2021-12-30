@@ -21,7 +21,26 @@ public class Offer {
 
     // -------------------------------------
 
-    // exemple: makeRessource(Ressource.WOOD, 2, Ressource.STONE, 3)
+    /** For debug purpose. */
+    @Override
+    public String toString() {
+        String otp = "from "+p1+" to "+p2+"\n";
+        for (int i = 0; i < r1.length; i++)
+            otp += "("+r1[i]+") "+Ressource.toString(i)+", ";
+        otp += "\n";
+        for (int i = 0; i < r2.length; i++)
+            otp += "("+r2[i]+") "+Ressource.toString(i)+", ";
+        otp += "\n";
+        return otp;
+    }
+
+    // -------------------------------------
+
+    /**exemple: 
+     *  makeRessource(
+     *      Ressource.WOOD, 2, 
+     *      Ressource.STONE, 3
+     *  ) */
     public static int[] makeRessources (int... data) {
         if ((data.length&1) == 1) throw new InvalidParameterException();
 
@@ -52,29 +71,21 @@ public class Offer {
         return true;
     }
 
-    public boolean isValidPurchase(game.state.State state) {
-        Utils.debug("is Valid Purchase ?"); int d=0;
-        
+    public boolean isValidPurchase(game.state.State state) {        
         if (state.getFocus() != p1)
             return false;
-        Utils.debug("\t"+(d++));
         if (-1 != p2)
             return false;
-        Utils.debug("\t"+(d++));
         if (!state.getPlayer(p1).hasRessources(r1))
             return false;
-        Utils.debug("\t"+(d++));
         if (countRessources(r2) != 1)
             return false;
-        Utils.debug("\t"+(d++));
         if (r2[0] != 0)
             return false;
-        Utils.debug("\t"+(d++));
         // -----------
 
         if (countRessources(r1) != Ressource.priceOf(r2, state.getPlayer(p1)))
             return false;
-        Utils.debug("\t"+(d++));
         // -----------
         
         return true;

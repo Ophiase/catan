@@ -187,8 +187,8 @@ public class Actions {
 
     public void trade(int who, String[] args) {
         // build/parse offer
-        ArrayList<Integer> r1 = new ArrayList<Integer>();
-        ArrayList<Integer> r2 = new ArrayList<Integer>();
+        int[] r1 = new int[Ressource.nRessources];
+        int[] r2 = new int[Ressource.nRessources];
 
         boolean begin = true;
         for (int i = 2; i < args.length; i++)
@@ -201,20 +201,14 @@ public class Actions {
                 }
 
                 String[] arg = args[i].split("_");
-                r1.add(Ressource.StringToInt(arg[1]));
-                r1.add(Integer  .parseInt   (arg[0]));
+                r1[Ressource.StringToInt(arg[1])] += Integer.parseInt(arg[0]);
             } else {
                 String[] arg = args[i].split("_");
-                r2.add(Ressource.StringToInt(arg[1]));
-                r2.add(Integer  .parseInt   (arg[0]));
+                r2[Ressource.StringToInt(arg[1])] += Integer.parseInt(arg[0]);
             }
         }
 
-        game.utils.Offer offer = new game.utils.Offer(
-            who, Integer.parseInt(args[1]), 
-            r1.stream().mapToInt(i -> i).toArray(), 
-            r2.stream().mapToInt(i -> i).toArray()
-            );
+        game.utils.Offer offer = new game.utils.Offer(who, Integer.parseInt(args[1]), r1, r2);
 
         Utils.debug("Offer was parsed properly.");
 
@@ -248,39 +242,27 @@ public class Actions {
 
     public void buy(int who, String[] args) {
         // build/parse offer
-        ArrayList<Integer> r1 = new ArrayList<Integer>();
-        ArrayList<Integer> r2 = new ArrayList<Integer>();
+        int[] r1 = new int[Ressource.nRessources];
+        int[] r2 = new int[Ressource.nRessources];
 
         boolean begin = true;
         for (int i = 1; i < args.length; i++)
         {
-            Utils.debug("Parsing : "+i+" "+args[i]+" "+begin);
             if (begin) {
                 if (args[i].toLowerCase().equals("against"))
                 {
-                    Utils.debug("phase");
                     begin = false;
                     continue;
                 }
 
-                Utils.debug("$");
                 String[] arg = args[i].split("_");
-                r1.add(Ressource.StringToInt(arg[1]));
-                r1.add(Integer  .parseInt   (arg[0]));
+                r1[Ressource.StringToInt(arg[1])] += Integer.parseInt(arg[0]);
             } else {
-                Utils.debug("*");
-                r2.add(Ressource.StringToInt(args[i]));
-                r2.add(1);
+                r2[Ressource.StringToInt(args[i])]++;
             }
         }
-
-        Utils.debug("Parsing 90% ...");
-
         game.utils.Offer purchase = new game.utils.Offer(
-            who, -1, 
-            r1.stream().mapToInt(i -> i).toArray(), 
-            r2.stream().mapToInt(i -> i).toArray()
-            );
+            who, -1, r1, r2);
 
         Utils.debug("Offer was parsed properly.");
 
