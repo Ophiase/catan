@@ -255,18 +255,20 @@ public class Map {
             return true;
 
         // ROUTE VERTICALES
-        if (y>0)
+        if (y>0) {
             if (hasRoadV(who, x, y-1))
                 return true;
             if (hasRoadV(who, x+1, y-1))
                 return true;
+        }
 
-        if (y<size)
+        if (y<size) {
             if (hasRoadV(who, x, y+1))
                 return true;
             if (hasRoadV(who, x+1, y+1))
                 return true;
-            
+        }   
+        
         return false;
     }
 
@@ -287,18 +289,20 @@ public class Map {
             return true;
 
         // ROUTE HORIZONTALES ADJACENTE
-        if (x>0)
+        if (x>0) {
             if (hasRoadH(who, x-1, y))
                 return true;
             if (hasRoadH(who, x-1, y+1))
                 return true;
-
-        if (x<size)
+        }
+        
+        if (x<size) {
             if (hasRoadH(who, x, y))
                 return true;
             if (hasRoadH(who, x, y+1))
                 return true;
-            
+        }
+        
         return false;
     }
 

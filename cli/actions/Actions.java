@@ -194,7 +194,7 @@ public class Actions {
         for (int i = 2; i < args.length; i++)
         {
             if (begin) {
-                if (args[i].toUpperCase().equals("against"))
+                if (args[i].toLowerCase().equals("against"))
                 {
                     begin = false;
                     continue;
@@ -254,24 +254,30 @@ public class Actions {
         boolean begin = true;
         for (int i = 1; i < args.length; i++)
         {
+            Utils.debug("Parsing : "+i+" "+args[i]+" "+begin);
             if (begin) {
-                if (args[i].toUpperCase().equals("against"))
+                if (args[i].toLowerCase().equals("against"))
                 {
+                    Utils.debug("phase");
                     begin = false;
                     continue;
                 }
 
+                Utils.debug("$");
                 String[] arg = args[i].split("_");
                 r1.add(Ressource.StringToInt(arg[1]));
                 r1.add(Integer  .parseInt   (arg[0]));
             } else {
+                Utils.debug("*");
                 r2.add(Ressource.StringToInt(args[i]));
                 r2.add(1);
             }
         }
 
+        Utils.debug("Parsing 90% ...");
+
         game.utils.Offer purchase = new game.utils.Offer(
-            who, Integer.parseInt(args[1]), 
+            who, -1, 
             r1.stream().mapToInt(i -> i).toArray(), 
             r2.stream().mapToInt(i -> i).toArray()
             );
