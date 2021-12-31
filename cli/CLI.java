@@ -28,6 +28,8 @@ public class CLI {
             if (r.isEmpty() || !(r.toLowerCase().charAt(0) == 'y'))
                 break;
         }
+
+        Utils.exit();
     }
 
     // --------------------------------

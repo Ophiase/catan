@@ -73,73 +73,77 @@ public class AI {
         int sizepp = map.getSizePP();
         int size = map.getSize();
 
-        // try around roadsH
-        List<Integer> roadsH = bot.getRoadH();
-        int[] priority = Fnc.randomIndexArray(roadsH.size());
-        for (int i = 0; i < roadsH.size(); i++) {
-            int x = Fnc.conv1dto2d_x(roadsH.get(priority[i]), size);
-            int y = Fnc.conv1dto2d_y(roadsH.get(priority[i]), size);
+        int[] lookUpPriority = Fnc.randomIndexArray(3);
+        for (int l = 0; l < 3; l++) switch (lookUpPriority[l]) {
+            case 0: // try around roadsH
+                List<Integer> roadsH = bot.getRoadH();
+                int[] priority = Fnc.randomIndexArray(roadsH.size());
+                for (int i = 0; i < roadsH.size(); i++) {
+                    int x = Fnc.conv1dto2d_x(roadsH.get(priority[i]), size);
+                    int y = Fnc.conv1dto2d_y(roadsH.get(priority[i]), size);
 
-            RoadResponse road;
-            if ((road = roadOnLocation(who, x, y)).valid)
-            {
-                trade.buyRoad(who, road.h, road.x, road.y);
-                System.out.println(bot+" has built the road on "+(
-                    road.h?"horizontal":"vertical")+" "+road.x+";"+road.y+".");
-                return true;
-            }
-            if ((road = roadOnLocation(who, x+1, y)).valid)
-            {
-                trade.buyRoad(who, road.h, road.x, road.y);
-                System.out.println(bot+" has built the road on "+(
-                    road.h?"horizontal":"vertical")+" "+road.x+";"+road.y+".");
-                return true;
-            }
+                    RoadResponse road;
+                    if ((road = roadOnLocation(who, x, y)).valid)
+                    {
+                        trade.buyRoad(who, road.h, road.x, road.y);
+                        System.out.println(bot+" has built the road on "+(
+                            road.h?"horizontal":"vertical")+" "+road.x+";"+road.y+".");
+                        return true;
+                    }
+                    if ((road = roadOnLocation(who, x+1, y)).valid)
+                    {
+                        trade.buyRoad(who, road.h, road.x, road.y);
+                        System.out.println(bot+" has built the road on "+(
+                            road.h?"horizontal":"vertical")+" "+road.x+";"+road.y+".");
+                        return true;
+                    }
+                }
+                break;
+            
+            case 1: // try around roadsV
+                List<Integer> roadsV = bot.getRoadV();
+                priority = Fnc.randomIndexArray(roadsV.size());
+                for (int i = 0; i < roadsV.size(); i++) {
+                    int x = Fnc.conv1dto2d_x(roadsV.get(priority[i]), sizepp);
+                    int y = Fnc.conv1dto2d_y(roadsV.get(priority[i]), sizepp);
+
+                    RoadResponse road;
+                    if ((road = roadOnLocation(who, x, y)).valid)
+                    {
+                        trade.buyRoad(who, road.h, road.x, road.y);
+                        System.out.println(bot+" has built the road on "+(
+                            road.h?"horizontal":"vertical")+" "+road.x+";"+road.y+".");
+                        return true;
+                    }
+                    if ((road = roadOnLocation(who, x, y+1)).valid)
+                    {
+                        trade.buyRoad(who, road.h, road.x, road.y);
+                        System.out.println(bot+" has built the road on "+(
+                            road.h?"horizontal":"vertical")+" "+road.x+";"+road.y+".");
+                        return true;
+                    }
+                }
+                break;
+
+            case 2: // try around colonies
+                List<Integer> colonies = bot.getColonies();
+                priority = Fnc.randomIndexArray(colonies.size());
+                for (int i = 0; i < colonies.size(); i++) {
+                    int x = Fnc.conv1dto2d_x(colonies.get(priority[i]), sizepp);
+                    int y = Fnc.conv1dto2d_y(colonies.get(priority[i]), sizepp);
+
+                    RoadResponse road = roadOnLocation(who, x, y);
+
+                    if (road.valid)
+                    {
+                        trade.buyRoad(who, road.h, road.x, road.y);
+                        System.out.println(bot+" has built the road on "+(
+                            road.h?"horizontal":"vertical")+" "+road.x+";"+road.y+".");
+                        return true;
+                    }
+                }
+                break;
         }
-        
-        // try around roadsV
-        List<Integer> roadsV = bot.getRoadV();
-        priority = Fnc.randomIndexArray(roadsV.size());
-        for (int i = 0; i < roadsV.size(); i++) {
-            int x = Fnc.conv1dto2d_x(roadsV.get(priority[i]), sizepp);
-            int y = Fnc.conv1dto2d_y(roadsV.get(priority[i]), sizepp);
-
-            RoadResponse road;
-            if ((road = roadOnLocation(who, x, y)).valid)
-            {
-                trade.buyRoad(who, road.h, road.x, road.y);
-                System.out.println(bot+" has built the road on "+(
-                    road.h?"horizontal":"vertical")+" "+road.x+";"+road.y+".");
-                return true;
-            }
-            if ((road = roadOnLocation(who, x, y+1)).valid)
-            {
-                trade.buyRoad(who, road.h, road.x, road.y);
-                System.out.println(bot+" has built the road on "+(
-                    road.h?"horizontal":"vertical")+" "+road.x+";"+road.y+".");
-                return true;
-            }
-        }
-
-        // try around colonies
-
-        List<Integer> colonies = bot.getColonies();
-        priority = Fnc.randomIndexArray(colonies.size());
-        for (int i = 0; i < colonies.size(); i++) {
-            int x = Fnc.conv1dto2d_x(colonies.get(priority[i]), sizepp);
-            int y = Fnc.conv1dto2d_y(colonies.get(priority[i]), sizepp);
-
-            RoadResponse road = roadOnLocation(who, x, y);
-
-            if (road.valid)
-            {
-                trade.buyRoad(who, road.h, road.x, road.y);
-                System.out.println(bot+" has built the road on "+(
-                    road.h?"horizontal":"vertical")+" "+road.x+";"+road.y+".");
-                return true;
-            }
-        }
-
 
         return false;
     }

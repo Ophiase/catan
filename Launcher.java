@@ -1,6 +1,9 @@
 import java.net.URL;
 import java.util.Scanner;
 
+import javax.swing.*;
+import java.awt.*;
+
 public class Launcher {
     public static Scanner sc = cli.CLI.sc;
 
@@ -15,8 +18,6 @@ public class Launcher {
         System.out.println();
         
         prompt();
-
-        cli.Utils.exit();
     }
 
     static void credit() {
