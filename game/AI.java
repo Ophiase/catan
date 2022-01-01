@@ -48,6 +48,7 @@ public class AI {
          * - buy random road
          * */
         boolean hasPriorActions;
+        boolean needRoads = false;
         do {
             int nRoad   = bot.getRoadH().size() + bot.getRoadV().size(),
                 nColony = bot.getColonies().size(),
@@ -60,7 +61,7 @@ public class AI {
             int tryBuyColony = buyRandomColony(bot);
             hasPriorActions |= tryBuyColony == 1;
 
-            boolean needRoads = tryBuyColony==2;
+            needRoads = tryBuyColony==2;
             if ((needRoads) || nRoad<(3*nCity)) // sinon il gaspille trop ses ressources en roads
                 hasPriorActions |= buyRandomRoad(bot);
         } while (hasPriorActions);
@@ -103,14 +104,13 @@ public class AI {
         int[] priorityRessources = new int[3];
         if (nColony < 4)
             priorityRessources = new int[] {pColony, pCity, pRoad} ;
-        //else if (nRoad < 3)
-        //  priorityRessources = new int[] {pRoad, pCity, pColony} ;
+        else if (needRoads)
+          priorityRessources = new int[] {pRoad, pCity, pColony} ;
         else if (canHavePort(bot))
             priorityRessources = new int[] {pRoad, pCity, pColony} ;
         else
             priorityRessources = new int[] {pCity, pColony, pRoad} ;
 
-        boolean needRoads = false;
         for (int i = 0; i < 3; i++) switch(priorityRessources[i]) {
             case 0: /*road*/ {
                 optimizeRessource(bot, Offer.makeRessources(
