@@ -6,11 +6,14 @@ import java.awt.*;
 public class GUI {
     public MainWindow mainWindow;
 
-    /** Define an instance of the game 
+    /** Define an instance of the game
      * using a graphical interface  */
-    public GUI() {
+    public static void runGUI() {
+        new GUI().initGUI();
+    }
+    private void initGUI() {
         System.out.println("Launching the graphical user interface ...");
-        
+
         // load assets
         new Thread(
             () -> Assets.load()
@@ -25,7 +28,6 @@ public class GUI {
             } catch (Exception e) {}
 
             new MainWindow();
-            cli.Utils.exit();
         });
     }
 }

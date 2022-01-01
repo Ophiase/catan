@@ -2,6 +2,7 @@ package gui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
 import game.*;
 import gui.Assets.Menu;
@@ -17,9 +18,15 @@ public class MainWindow extends JFrame {
         cli.Utils.debug("Window constructor.");
 
         this.setTitle("Catan");
-        this.setMinimumSize(new Dimension(600, 300));
+        this.setMinimumSize(new Dimension(700, 600));
+        cli.Utils.debug(""+this.getInsets());
         this.setPreferredSize(new Dimension(1280, 720));
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                dispose();
+                cli.Utils.exit();
+            }
+        });
         this.setLayout(null);
         // ---------------
         menuPanel = new MenuPanel(this);

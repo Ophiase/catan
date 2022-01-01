@@ -1,5 +1,6 @@
 import java.net.URL;
 import java.util.Scanner;
+import java.util.Set;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,8 +35,8 @@ public class Launcher {
         System.out.println();
 
         if (!r.isEmpty() && r.toLowerCase().charAt(0) == 'y') 
-            new cli.CLI();
+            cli.CLI.runCLI();
         else 
-            new gui.GUI();
+            gui.GUI.runGUI();
     }
 }

@@ -15,7 +15,10 @@ public class CLI {
 
     public static Scanner sc = new Scanner(System.in);
 
-    public CLI() {
+    public static void runCLI() {
+        new CLI().initCLI();
+    }
+    private void initCLI() {
         while (true) {
             Utils.clear();
 

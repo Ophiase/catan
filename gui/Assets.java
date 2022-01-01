@@ -1,5 +1,8 @@
 package gui;
 
+import java.awt.*;
+import javax.swing.*;
+
 public class Assets {
     static public boolean loading = false;
     static public boolean loaded  = false;

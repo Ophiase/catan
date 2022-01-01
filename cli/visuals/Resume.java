@@ -6,6 +6,7 @@ import cli.Utils;
 import game.Engine;
 import game.constants.Biome;
 import game.constants.Developpement;
+import game.constants.Port;
 import game.constants.Ressource;
 import game.state.Player;
 import game.utils.Fnc;
@@ -34,6 +35,23 @@ public class Resume {
 
     private void showRCC() {
         int size = engine.getMap().getSize();
+        int sizepp = size+1;
+
+        System.out.println("Ports:");
+        int[][] ports = engine.getMap().getPorts();
+        for (int i = 0; i < ports.length; i++)
+        {
+            System.out.print("\t" + Port.toString(i) + " : ");
+            for (int j = 0; j < ports[i].length; j++)
+                System.out.print("("+
+                Fnc.conv1dto2d_x(ports[i][j], sizepp) +";"+
+                Fnc.conv1dto2d_y(ports[i][j], sizepp) +") "
+                );
+
+            System.out.println();
+        }
+
+        Utils.delim(10, '-', false);
 
         for (Player p: engine.getState().getPlayers()) {
             System.out.println(p + " has :");
@@ -125,9 +143,7 @@ public class Resume {
         int[][] dices = engine.getMap().getDiceIndexes();
         int[][] biomes = engine.getMap().getBiomes();
 
-
-        System.out.print("Map resume :");
-        System.out.println();
+        System.out.println("Map resume :");
         System.out.println();
 
         System.out.print("\t");

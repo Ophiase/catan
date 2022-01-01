@@ -17,6 +17,10 @@ import game.utils.Offer;
  */
 public class GameLoop {
 
+    private static boolean ROBBER_ENABLED = true; // false for debug purpose (view bot vs bot)
+
+    // --------------------------------
+
     CLI cli;
 
     Engine engine;
@@ -161,7 +165,6 @@ public class GameLoop {
         engine.getAI().play(engine.getState().getPlayer(who));
     }
 
-    private static boolean ROBBER_ENABLED = false; // false for debug purpose
     private int dicesRoll(int who) {
         int score = engine.getDices().roll();
         System.out.println("Dices gave : " + score);

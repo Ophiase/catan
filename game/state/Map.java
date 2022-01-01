@@ -173,6 +173,10 @@ public class Map {
     // --------------------
     // GETTERS
 
+    public int[][] getPorts() {
+        return ports;
+    }
+
     public int getSize() {
         return size;
     }
@@ -413,6 +417,9 @@ public class Map {
         return ndi;
     }
 
+    /**
+     * This function increase the multiplier of a dice for a player.
+     */
     public void nearDicesToPlayer(Player p, int x, int y) {
         if (x < size && y < size && (diceIndexes[x][y] != -1))
             p.getDices()[x][y]++;
