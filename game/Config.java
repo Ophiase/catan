@@ -4,7 +4,8 @@ import java.security.InvalidParameterException;
 
 public class Config {
     // Enum
-    public static Config DEFAULT() { return new Config (1, 3, 2, 8); }
+    public static Config DEFAULT() { return new Config (1, 2, 2, 8); }
+    public static Config THREE_BOT()  { return new Config (1, 3, 3, 8); }
 
     // Constants
     public static final int MIN_PLAYER = 1;

@@ -60,9 +60,9 @@ public class GameLoop {
 
         // -------------------------------------
 
-        int won = engine.won();
-        if (won != -1) {
-            System.out.println("Player " + won + " won !!!");
+        Player winner = engine.won();
+        if (winner != null) {
+            System.out.println(winner + " won !!!");
             return false;
         }
 
@@ -161,11 +161,12 @@ public class GameLoop {
         engine.getAI().play(engine.getState().getPlayer(who));
     }
 
+    private static boolean ROBBER_ENABLED = false; // false for debug purpose
     private int dicesRoll(int who) {
         int score = engine.getDices().roll();
         System.out.println("Dices gave : " + score);
         
-        if (score == engine.getDices().getRobberDice()) { // DEFAULT = 7
+        if (ROBBER_ENABLED && score == engine.getDices().getRobberDice()) { // DEFAULT = 7
             retribution();
             steal(who);
         } else {

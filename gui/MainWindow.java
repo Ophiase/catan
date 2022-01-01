@@ -17,8 +17,10 @@ public class MainWindow extends JFrame {
         cli.Utils.debug("Window constructor.");
 
         this.setTitle("Catan");
+        this.setMinimumSize(new Dimension(600, 300));
+        this.setPreferredSize(new Dimension(1280, 720));
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setLayout(new BorderLayout());
+        this.setLayout(null);
         // ---------------
         menuPanel = new MenuPanel(this);
         gamePanel = new GamePanel(this);

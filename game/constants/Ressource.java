@@ -49,6 +49,14 @@ public class Ressource {
         return 4;
     }
 
+    public static int priceOf(int ressource, Player player) {
+        if (player.hasPort(ressource))
+        return 2;
+        if (player.hasPort(Port.DEFAULT))
+            return 3;
+        return 4;
+    }
+
     // --------------------------------
 
     public static String resume() {

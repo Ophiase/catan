@@ -106,7 +106,10 @@ public class Utils {
 
     public static void debug(String str) {
         if (DEBUG_ENABLED)
+        {
+            System.out.print("<debug> ");
             System.out.println(str);
+        }
     }
 
     public static void printArray(int[] array) {

@@ -19,7 +19,7 @@ public class State {
         this.map = map;
 
         this.players = new Player[conf.getnParticipants()];
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < players.length; i++) {
             boolean isBot = i >= conf.getnPlayers();
             
             players[i] = new Player(i, isBot, map.getSize());
@@ -106,12 +106,12 @@ public class State {
         }
     }
 
-    public int won() {
+    public Player won() {
         for (Player p: players)
             if (p.getRessource(Ressource.POINT) >= 10)
-                return p.getIndex();
+                return p;
 
-        return -1;
+        return null;
     }
 
     public void endturn() {

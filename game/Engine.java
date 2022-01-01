@@ -88,7 +88,7 @@ public class Engine {
         state.endturn();
     }
 
-    public int won() {
+    public Player won() {
         return state.won();
     }
 }

@@ -51,4 +51,10 @@ public class Fnc {
         return s;
     }
 
+    public static int[] oneShotEncoding(int i, int k) {
+        int[] arr = new int[k];
+        arr[i] = 1;
+        return arr;
+    }
+
 }

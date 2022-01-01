@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import cli.Utils;
 import game.constants.Ressource;
 import game.state.Map;
 import game.state.Player;
@@ -32,32 +33,172 @@ public class AI {
         this.dices = dices;
     }
 
-    /** 
+    /**
+     * This function simulate the behavior of a bot 
+     * (after he rolled the dices).
+     *  
      * TODO: echanges spontanés 
-     * 
-     * priority of actions:
-     * - improve random colony
-     * - buy random colony
-     * - buy random road
-     * 
      * 
      * */
     public void play(Player bot) {
-        // loop on priority actions
+        /** loop on priority actions
+         * priority of actions:
+         * - improve random colony
+         * - buy random colony
+         * - buy random road
+         * */
         boolean hasPriorActions;
         do {
-            
+            int nRoad   = bot.getRoadH().size() + bot.getRoadV().size(),
+                nColony = bot.getColonies().size(),
+                nCity   = bot.getCities().size();
+
             hasPriorActions = false;
 
             hasPriorActions |= improveRandomColony(bot);
-            hasPriorActions |= buyRandomColony(bot);
-            hasPriorActions |= buyRandomRoad(bot);
+            
+            int tryBuyColony = buyRandomColony(bot);
+            hasPriorActions |= tryBuyColony == 1;
 
+            boolean needRoads = tryBuyColony==2;
+            if ((needRoads) || nRoad<(3*nCity)) // sinon il gaspille trop ses ressources en roads
+                hasPriorActions |= buyRandomRoad(bot);
         } while (hasPriorActions);
 
-        // try to find ressources
+        /** try to find ressources
+         * 
+         * make an order of priority between roads/colonies/cities
+         * 
+         * -------------------------------------------
+         * priority order:
+         * 
+         * at beginning you need at least (4?) colonies to 
+         * have enough ressources so you can buy
+         * 
+         * if you already have this number of colonies
+         * your next ambition is to have ports
+         * with a normal sized map with (5?) random road you
+         * should have a road that lead to a port
+         * 
+         * if you can have a colony on a port
+         * buy it
+         * 
+         * when you have those you can start to prioritise cities
+         * 
+         * -------------------------------------------
+         * following the order:
+         * 
+         * is there colony to improve?
+         *  seek ressources to improve colony
+         * is there colony to build?
+         *  seek ressources to build colony
+         * is there road to build?
+         *  seek ressources to build road
+         */
 
-        // plus tard
+        int pRoad  = 0, pColony = 1, pCity = 2; // priority
+        int nRoad   = bot.getRoadH().size() + bot.getRoadV().size(),
+            nColony = bot.getColonies().size(),
+            nCity   = bot.getCities().size();
+        int[] priorityRessources = new int[3];
+        if (nColony < 4)
+            priorityRessources = new int[] {pColony, pCity, pRoad} ;
+        //else if (nRoad < 3)
+        //  priorityRessources = new int[] {pRoad, pCity, pColony} ;
+        else if (canHavePort(bot))
+            priorityRessources = new int[] {pRoad, pCity, pColony} ;
+        else
+            priorityRessources = new int[] {pCity, pColony, pRoad} ;
+
+        boolean needRoads = false;
+        for (int i = 0; i < 3; i++) switch(priorityRessources[i]) {
+            case 0: /*road*/ {
+                optimizeRessource(bot, Offer.makeRessources(
+                    Ressource.BRICK, 1,
+                    Ressource.WOOD, 1
+                )); 
+                
+                if (needRoads || nRoad<(3*nColony)) // eviter gaspillage
+                    buyRandomRoad(bot);
+            } break;
+            case 1: /*colony*/ {
+                optimizeRessource(bot, Offer.makeRessources(
+                    Ressource.BRICK, 1,
+                    Ressource.WOOD, 1,
+                    Ressource.SHEEP, 1,
+                    Ressource.WHEAT, 1
+                )); 
+                
+                needRoads = buyRandomColony(bot) == 2;
+            } break;
+            case 2: /*city*/ {
+                optimizeRessource(bot, Offer.makeRessources(
+                    Ressource.ROCK, 4,
+                    Ressource.WHEAT, 2
+                )); improveRandomColony(bot);
+            } break;
+        }
+    }
+
+    private boolean canHavePort(Player bot) {
+        /**
+         * TODO:
+         * check if one of its road leads to a port
+         * where he can put a colony
+         */
+        return false;
+    }
+
+    private void optimizeRessource(Player bot, int[] toOptimize) {
+        int[] rsc = bot.getRessources();
+        for (int i = 0; i < toOptimize.length; i++)
+        {
+            if (rsc[i] >= toOptimize[i])
+                continue; // ressource already fullfilled
+
+            int[] freeRessources = getFreeRessources(rsc, toOptimize);
+            int price = Ressource.priceOf(i, bot);
+
+            if (price>Fnc.arrSum(freeRessources))
+                continue;
+
+            // choose n ressources (price) in usables ressources (freeRessources)
+            int[] losse = new int[toOptimize.length];
+            for (int p = 0, j = 1; p < price;)
+                if (freeRessources[j]>0)
+                {
+                    freeRessources[j]--;
+                    losse[j]++;
+                    p++;
+                } else j++;
+
+            // -------
+
+            Offer offer = new Offer(
+                bot.getIndex(), -1, 
+                losse, Fnc.oneShotEncoding(i, toOptimize.length)
+                );
+
+            if (!trade.canBuy(offer))
+            {
+                Utils.debug(offer.toString());
+                Utils.debug("Error, a purchase has been refused to a bot.");
+                continue;
+            }
+            
+            trade.buy(offer);
+        }
+    }
+
+    /**Which ressources can be used to buy other ressources*/
+    private int[] getFreeRessources(int[] rsc, int[] toOptimize) {
+        int[] free = new int[rsc.length];
+        for (int i = 1; i < rsc.length; i++)
+        {
+            int surplus = rsc[i]-toOptimize[i];
+            free[i] = surplus > 0 ? surplus : 0;
+        }
+        return free;
     }
 
     private boolean buyRandomRoad(Player bot) {
@@ -172,8 +313,9 @@ public class AI {
 
         int size = state.getMap().getSize();
         
+        int[] priority = Fnc.randomIndexArray(4);
         for (int j = 0; j < 4; j++) { 
-            switch (j) {
+            switch (priority[j]) {
                 case 0: if (x < size) {
                     h = true;
                     rx = x;
@@ -204,7 +346,14 @@ public class AI {
         return new RoadResponse();
     }
 
-    private boolean buyRandomColony(Player bot) {
+    /**
+     *
+     * return : </br>
+     *  0: don't have ressources </br>
+     *  1: successful </br>
+     *  2: nowhere to build </br>
+     */
+    private int buyRandomColony(Player bot) {
         int who = bot.getIndex();
 
         if (!state.getPlayer(who).hasRessources(
@@ -213,7 +362,7 @@ public class AI {
                 Ressource.WOOD, 1,
                 Ressource.SHEEP, 1,
                 Ressource.WHEAT, 1
-            ))) return false;
+            ))) return 0;
 
         // find valid xy
         Map map = state.getMap();
@@ -229,12 +378,12 @@ public class AI {
             if (trade.canBuyColony(who, cx, cy)) {
                 trade.buyColony(who, cx, cy);
                 System.out.println(bot+" has built the colony on "+cx+";"+cy+".");
-                return true;
+                return 1;
             }
         }
 
         // if not found
-        return false;
+        return 2;
     }
 
     private boolean improveRandomColony(Player bot) {

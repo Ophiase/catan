@@ -69,7 +69,8 @@ public class CLI {
                 } else if (arg.startsWith("preset")) {
 
                     switch (arg.split(" ")[1].toUpperCase()) {                        
-                        case "DEFAULT": config = Config.DEFAULT(); break;
+                        case "DEFAULT": case "D":   config = Config.DEFAULT(); break;
+                        case "3BOTS":   case "3B":  config = Config.THREE_BOT(); break;
                         default: throw new Exception();
                     }
                 

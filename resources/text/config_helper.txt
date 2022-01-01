@@ -10,8 +10,10 @@ constraints :
 4 <= sizeOfDices
 
 list of presets :
-- default
+- default d
+- 3bots 3b
 
 exemple :
-> config 2 2 8
+> config 1 2 2 8
 > preset default
+> preset d

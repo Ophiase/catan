@@ -23,6 +23,7 @@ public class MenuPanel extends JPanel{
         {
             cli.Utils.debug("!!!");
         });
+        test.setVisible(true);
 
         this.add(test);
         
