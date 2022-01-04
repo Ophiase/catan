@@ -21,7 +21,7 @@ public class MainWindow extends JFrame {
 
         this.setTitle("Catan");
 
-        this.setMinimumSize(new Dimension(700, 800));
+        this.setMinimumSize(new Dimension(1000, 800));
         this.setPreferredSize(new Dimension(1280, 900));
         this.setMaximumSize(new Dimension(1920, 1080));
         

@@ -41,7 +41,7 @@ public class BtnMinus extends JComponent {
         final int y = (int)(cy-(s/2.0));
 
         g.drawImage(
-            hover ? (Assets.Menu.btn_minus_click) : (Assets.Menu.btn_minus),
+            hover ? (Assets.Menu.btn_minus) : (Assets.Menu.btn_minus_click),
             x,y,s,s,
             this
         );

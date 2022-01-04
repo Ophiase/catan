@@ -97,8 +97,19 @@ public class MenuPanel extends JPanel{
                     (int)(x+(tsx*1)), (int)y,
                     (int)tsx, (int)tsy,
                     this);
+                }
 
-                    memy = y;
+                // menu panel
+
+                {
+                    final BufferedImage menu = Assets.Menu.background_menu_2;
+                    final int lsy = 300, lsx = (int)(lsy*1.28);
+
+                    final double py = (sy*0.58) - lsy;
+
+                    g.drawImage(menu, (int)(cx-lsx), (int)(py), (2*lsx), (2*lsy), this);
+                    memy = py;
+
                 }
 
                 // logo
@@ -110,22 +121,12 @@ public class MenuPanel extends JPanel{
                     final double tcy = (tsy)/2;
 
                     final double x = (int)(cx-tcx);
-                    final double y = 70+(int)((memy/2.0));
+                    final double y = 20 + (int)((memy*0.5)-tcy);
 
                     g.drawImage(logo, 
                     (int)x, (int)y,
                     (int)tsx, (int)tsy,
                     this);
-                }
-
-                // menu panel
-
-                {
-                    final BufferedImage menu = Assets.Menu.background_menu;
-                    final int lsx = 300, lsy = 300;
-
-                    g.drawImage(menu, (int)(cx-lsx), (int)(cy-lsy), (2*lsx), (2*lsy), this);
-
                 }
 
             }
@@ -214,7 +215,9 @@ public class MenuPanel extends JPanel{
 
             layerSDices.add(lessSDicesBtn = new BtnMinus());
             layerSDices.add(sDicesText  = new JComponent() {
-                
+                // FAIRE UNE CLASS COUNTER !!!! LIS MOI AARON
+                // NE DORS PAS JEXSKITE SOUVEINS TOI
+                // FAIT UNE CLASSE ET PAS UN JCOMPONENNTNNTNTNTNT !!!!!!
             });
             layerSDices.add(moreSDicesBtn = new BtnPlus());
         
@@ -248,14 +251,14 @@ public class MenuPanel extends JPanel{
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D)g;
 
-        int sx = this.getSize().width;
-        int sy = this.getSize().height;
+        final int sx = this.getSize().width;
+        final int sy = this.getSize().height;
 
-        int cx = sx/2;
-        int cy = sy/2;
+        final int cx = sx/2;
+        final int cy = sy/2;
 
-        int lsx = 250, lsy = 250;
-        layer.setBounds(cx-lsx, cy-lsy, 2*lsx, 2*lsy);
+        final int lsx = 400, lsy = 250;
+        layer.setBounds(cx-lsx, (int)(sy*0.58)-lsy, 2*lsx, 2*lsy);
         background.setBounds(0, 0, sx, sy);
 
         // ----------------

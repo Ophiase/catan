@@ -40,7 +40,7 @@ public class BtnPlus extends JComponent {
         final int y = (int)(cy-(s/2.0));
 
         g.drawImage(
-            hover ? (Assets.Menu.btn_plus_click) : (Assets.Menu.btn_plus),
+            hover ? (Assets.Menu.btn_plus) : (Assets.Menu.btn_plus_click) ,
             x,y,s,s,
             this
         );

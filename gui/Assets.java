@@ -34,6 +34,7 @@ public class Assets {
         public static BufferedImage background_main;
         public static BufferedImage background_main_blur;
         public static BufferedImage background_menu;
+        public static BufferedImage background_menu_2;
 
         public static BufferedImage digit_0;
         public static BufferedImage digit_1;
@@ -65,6 +66,7 @@ public class Assets {
             background_main         = loadImg("menu background main");
             background_main_blur    = loadImg("menu background main_blur");
             background_menu         = loadImg("menu background menu");
+            background_menu_2       = loadImg("menu background menu_2");
     
             digit_0 = loadImg("menu digit d0");
             digit_1 = loadImg("menu digit d1");
