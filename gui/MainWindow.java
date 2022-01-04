@@ -19,7 +19,6 @@ public class MainWindow extends JFrame {
 
         this.setTitle("Catan");
         this.setMinimumSize(new Dimension(700, 600));
-        cli.Utils.debug(""+this.getInsets());
         this.setPreferredSize(new Dimension(1280, 720));
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -28,6 +27,7 @@ public class MainWindow extends JFrame {
             }
         });
         this.setLayout(null);
+        //System.setProperty("sun.awt.noerasebackground", "true");
         // ---------------
         menuPanel = new MenuPanel(this);
         gamePanel = new GamePanel(this);
