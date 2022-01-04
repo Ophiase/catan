@@ -2,6 +2,7 @@ package gui.menupanel;
 
 import java.awt.*;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.util.function.Consumer;
@@ -10,7 +11,7 @@ import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.text.JTextComponent;
 
-import org.w3c.dom.events.MouseEvent;
+import com.ibm.jvm.trace.format.api.Component;
 
 import cli.Utils;
 
@@ -24,30 +25,30 @@ public class MenuPanel extends JPanel{
     MainWindow mainWindow;
 
     JComponent  background;
-    JPanel  layer;
+    JComponent  layer;
 
-    JPanel layerNPlayers;
+    JComponent layerNPlayers;
     JComponent nPlayersText;
     JComponent lessPlayerBtn;
     JComponent morePlayerBtn;
 
 
-    JPanel layerNBots;
-    JTextArea nBotsText;
+    JComponent layerNBots;
+    JComponent nBotsText;
     JComponent lessBotsBtn;
     JComponent moreBotsBtn;
     
-    JPanel layerNdices;
+    JComponent layerNdices;
     JComponent nDicesText;
     JComponent moreNDicesBtn;
     JComponent lessNDicesBtn;
     
-    JPanel layerSDices;
+    JComponent layerSDices;
     JComponent sDicesText;
     JComponent moreSDicesBtn;
     JComponent lessSDicesBtn;
 
-    JButton playBtn;
+    JComponent playBtn;
 
     public MenuPanel(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
@@ -130,16 +131,53 @@ public class MenuPanel extends JPanel{
             }
         };
 
-        layer = new JPanel();
+        layer = new JComponent() {};
         layer.setLayout(new GridLayout(5, 1));
 
-        layerNPlayers = new JPanel();
-        layerNBots = new JPanel();
-        layerNdices = new JPanel();
-        layerSDices = new JPanel();
-        playBtn = new JButton("Play");
+        layerNPlayers   = new JComponent() {};
+        layerNBots      = new JComponent() {};
+        layerNdices     = new JComponent() {};
+        layerSDices     = new JComponent() {};
+        playBtn = new JComponent() {
+            {
+                addMouseListener(new MouseInputAdapter() {
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                        hover = true;
+                        repaint();
+                    }
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        hover = false;
+                        repaint();
+                    }
+                });
+            }
+
+            public boolean hover = false;
+
+            @Override
+            public void paint(Graphics g) {
+                final BufferedImage b0 = Assets.Menu.btn_play;
+                final BufferedImage b1 = Assets.Menu.btn_play_click;
+                
+                final int sx = this.getSize().width;
+                final int sy = this.getSize().height;
+                final double cx = sx/2.0;
+                final double cy = sy/2.0;
         
-        GridLayout glh = new GridLayout(1, 3);
+                final int ssx = (int)((double)b0.getWidth()*( (double)sy/(double)b0.getHeight() ));
+                final int x = (int)(cx-(ssx/2.0));
+                
+                g.drawImage(
+                    hover ? (b1) : (b0),
+                    x,0,ssx,sy,
+                    this
+                );
+            }
+        };
+        
+        LayoutManager glh = new GridLayout(1, 3);
         for (JComponent j: new JComponent[] {
             layerNPlayers, layerNBots, layerNdices, layerSDices, playBtn
         }) {
@@ -150,13 +188,46 @@ public class MenuPanel extends JPanel{
 
         // -------------------
 
+            layerNPlayers.add(lessPlayerBtn = new BtnMinus());
+            layerNPlayers.add(nPlayersText  = new JComponent() {
+                
+            });
+            layerNPlayers.add(morePlayerBtn = new BtnPlus());
+        
+            // -----------
+            
+            layerNBots.add(lessBotsBtn = new BtnMinus());
+            layerNBots.add(nBotsText = new JComponent() {
+                
+            });
+            layerNBots.add(moreBotsBtn = new BtnPlus());
+        
+            // -----------
+
+            layerNdices.add(lessNDicesBtn = new BtnMinus());
+            layerNdices.add(nDicesText  = new JComponent() {
+                
+            });
+            layerNdices.add(moreNDicesBtn = new BtnPlus());
+        
+            // -----------
+
+            layerSDices.add(lessSDicesBtn = new BtnMinus());
+            layerSDices.add(sDicesText  = new JComponent() {
+                
+            });
+            layerSDices.add(moreSDicesBtn = new BtnPlus());
+        
+
+        // -------------------
+
         layerNPlayers   .setBackground(Color.RED);
         layerNBots      .setBackground(Color.BLACK);
         layerNdices     .setBackground(Color.BLUE);
         layerSDices     .setBackground(Color.GREEN);
 
         // -------------------
-        layer.setBackground(new Color(70, 60, 160));
+        //layer.setBackground(new Color(70, 60, 160));
         // -------------------
         this.add(layer);
         this.add(background);
