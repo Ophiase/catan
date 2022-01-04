@@ -1,8 +1,9 @@
-package gui;
+package gui.gamepanel;
 
 import javax.swing.JPanel;
 
 import game.*;
+import gui.MainWindow;
 
 public class GamePanel extends JPanel{
     MainWindow mainWindow;

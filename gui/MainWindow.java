@@ -6,6 +6,8 @@ import java.awt.event.*;
 
 import game.*;
 import gui.Assets.Menu;
+import gui.gamepanel.GamePanel;
+import gui.menupanel.MenuPanel;
 
 public class MainWindow extends JFrame {
     public boolean lookingAtMenu;
@@ -18,8 +20,11 @@ public class MainWindow extends JFrame {
         cli.Utils.debug("Window constructor.");
 
         this.setTitle("Catan");
-        this.setMinimumSize(new Dimension(700, 600));
-        this.setPreferredSize(new Dimension(1280, 720));
+
+        this.setMinimumSize(new Dimension(700, 800));
+        this.setPreferredSize(new Dimension(1280, 900));
+        this.setMaximumSize(new Dimension(1920, 1080));
+        
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 dispose();
