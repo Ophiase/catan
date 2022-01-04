@@ -2,12 +2,27 @@ package gui.menupanel;
 
 import gui.Assets;
 import java.awt.*;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.security.InvalidParameterException;
+import java.util.Arrays;
+
+import javax.swing.*;
+import java.awt.image.ImageObserver;
 
 public class ASCII {
-    public static final int zero = 48;
+    public static final int zero = 32;
     public static final BufferedImage[] ASCII = new BufferedImage[] {
+        // 32 decimal
+        Assets.Menu.char_s_032,
+        Assets.Menu.char_s_033,
+        null, null, null, null,
+        null, null, null, null,
+        null, null, null, null,   
+        Assets.Menu.char_s_046,
+        null, 
+
         // 48 decimal
         Assets.Menu.digit_0,
         Assets.Menu.digit_1,
@@ -19,9 +34,10 @@ public class ASCII {
         Assets.Menu.digit_7,
         Assets.Menu.digit_8,
         Assets.Menu.digit_9,
-        
-        null, null, null, 
-        null, null, null, 
+        // 58
+        Assets.Menu.char_s_058,
+        null, null, null, null, 
+        Assets.Menu.char_s_063,
         null,
         
         // 65 decimal
@@ -51,7 +67,8 @@ public class ASCII {
         Assets.Menu.char_u_x,
         Assets.Menu.char_u_y,
         Assets.Menu.char_u_z,
-
+        
+        // 91 decimal 
         null, null, null, 
         null, null, null,
 
@@ -83,17 +100,29 @@ public class ASCII {
         Assets.Menu.char_l_y,
         Assets.Menu.char_l_z,
 
+        // 123 decimal
+        null,
+        Assets.Menu.char_s_124,
+        null,
+        null,
+        null // 127 = DEL
     };
 
     // -----------------------------------------
 
     public static String padLeft(int i) { return padLeft(i, 3); }
-    public static String padLeft(int i, int length) { return padLeft(i+"", (i+"").length() + length, '0'); }
+    public static String padLeft(int i, int length) { return padLeft(i+"", length, '0'); }
     public static String padLeft(String s, int length, char c) {
-        StringBuilder o = new StringBuilder();
-        for (int i = s.length(); i < length; i++)
-            o.append(c);
-        return new String(o.append(s));
+        if (s.length() >= length)
+            return s;
+
+        StringBuilder sb = new StringBuilder();
+        final int deficite = length - s.length();
+        for (int i = 0; i < deficite; i++)
+            sb.append(c);
+        sb.append(s);
+
+        return sb.toString();
     }
 
 
@@ -102,12 +131,15 @@ public class ASCII {
     public static BufferedImage[] toImage(char[] str) {
         BufferedImage[] r = new BufferedImage[str.length];
 
-        for (int i = 0; i < str.length; i++)
-            r[i] = ASCII[str[i] + zero];
+        for (int i = 0; i < str.length; i++) {
+            r[i] = ASCII[str[i] - zero];
+
+            if (r[i]==null)
+                r[i] = ASCII[0];
+        }
 
         return r;
     }
-
 
     /** obsolète : decomposition en base 10 */
     public static BufferedImage[] toImage(int i) {
@@ -128,6 +160,54 @@ public class ASCII {
         };
     }
 
+    // ----------------------------------------------
 
+    private static final int overlap = 160; // px de l'image de base
+    private static final int charSize = 256;
+    private static final int overlapIncrement = charSize-overlap;
 
+    public static BufferedImage makeText(String text) {
+        if (text.length() == 0) return toImage(text)[0];
+
+        int sx = (text.length()*charSize) - ((text.length()-1)*overlap);
+        int sy = charSize;
+
+        BufferedImage image = new BufferedImage(sx, sy, BufferedImage.TYPE_4BYTE_ABGR);
+        Graphics g = image.createGraphics();
+
+        BufferedImage[] imgs = toImage(text);        
+        for (int i = 0, x = 0; i < imgs.length; i++, x += overlapIncrement)
+            g.drawImage(imgs[i], x, 0, null);
+
+   
+        return image;
+    }
+
+    public static void paintText(Graphics g, ImageObserver o, String text, int width, int height) { 
+        paintText(g,o, makeText(text), width, height); 
+    }
+    public static void paintText(Graphics g, ImageObserver o, BufferedImage text, int width, int height) {
+        final double cx = width*0.5;
+        final double cy = height*0.5;
+
+        final double fx = (double)width/(double)text.getWidth();    // scale factor to fit x
+        final double fy = (double)height/(double)text.getHeight(); // scale factor to fit y
+
+        final double scale = fx > fy ? fy : fx; // take the lowest scale factor to fit both
+        
+        final double sx = scale*text.getWidth();
+        final double sy = scale*text.getHeight();
+
+        final int x = (int)(cx-sx*0.5);
+        final int y = (int)(cy-sy*0.5);
+        
+        g.drawImage(text,x,y,(int)sx,(int)sy,o);
+    }
+    public static void paintText(
+        Graphics g, ImageObserver o, 
+        BufferedImage text, int x1, int y1, int x2, int y2
+        ) throws Exception 
+    {
+        throw new Exception("NOT IMPLEMENTED YET");
+    }
 }

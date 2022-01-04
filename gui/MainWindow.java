@@ -48,16 +48,16 @@ public class MainWindow extends JFrame {
 
         cli.Utils.debug("Switch view to game.");
         lookingAtMenu = false;
-        gamePanel.reset();
-        setContentPane(gamePanel);
         menuPanel.clear();
+        setContentPane(gamePanel);
+        gamePanel.reset();
     }
     public void focusOnMenu() {
         cli.Utils.debug("Switch view to menu.");
         lookingAtMenu = true;
-        menuPanel.reset();
-        setContentPane(menuPanel);
         gamePanel.clear();
+        setContentPane(menuPanel);
+        menuPanel.reset();
     }
     
 }

@@ -11,7 +11,7 @@ import gui.Assets;
 
 public class BtnPlus extends JComponent {
 
-    public BtnPlus () {
+    public BtnPlus() {
         addMouseListener(new MouseInputAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -22,6 +22,25 @@ public class BtnPlus extends JComponent {
             public void mouseExited(MouseEvent e) {
                 hover = false;
                 repaint();
+            }
+        });
+    }
+
+    public BtnPlus (CanIncrease target) {
+        addMouseListener(new MouseInputAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                hover = true;
+                repaint();
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                hover = false;
+                repaint();
+            }
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                target.plus();
             }
         });
     }

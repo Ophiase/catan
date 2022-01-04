@@ -46,18 +46,39 @@ public class Config {
 
     // ----------------------------------
 
+    private boolean valid() {
+        if (
+            (nBots+nPlayers) < MIN_N_PARTICIPANTS 
+         || (nBots+nPlayers) > MAX_N_PARTICIPANTS
+         || (nPlayers < MIN_PLAYER || nBots < MIN_BOT)
+         || (nDices < MIN_N_DICES)
+         || (sizeOfDices < MIN_SIZE_OF_DICES)
+        ) return false;
+        return true;
+    }
+
     public void setnBots(int nBots) throws InvalidParameterException {
         if (nBots < 0) throw new InvalidParameterException();
         
         this.nBots = nBots;
-        this.nPlayers = nParticipants - nBots;
+        if (!valid())
+            this.nPlayers = nParticipants - nBots;
+    }
+
+    public void setnParticipants(int nParticipants) {
+        if (nPlayers > nParticipants) throw new InvalidParameterException();
+
+        this.nParticipants = nParticipants;
+        this.nBots = nParticipants - nPlayers;
     }
 
     public void setnPlayers(int nPlayers) throws InvalidParameterException {
         if (nPlayers < 1) throw new InvalidParameterException();
+        if (nPlayers > nParticipants) throw new InvalidParameterException();
 
         this.nPlayers = nPlayers;
-        this.nBots = nParticipants - nPlayers;
+        if (!valid())
+            this.nBots = nParticipants - nPlayers;
     }
 
     public void setnDices(int nDices) throws InvalidParameterException {
@@ -123,4 +144,14 @@ public class Config {
     private void computeSizeOfMap() {
         sizeOfMap = (int)Math.round(Math.sqrt((float)nCases));
     }
+
+    // ----------------------------------
+
+    @Override
+    public String toString() {
+        return "Players: " + getnPlayers() + " | Bots: " + getnBots() + " | Participants: " + getnParticipants()
+            + " | NDices: " + getnDices() + " | SDices: " + getSizeOfDices()
+        ;
+    }
+
 }

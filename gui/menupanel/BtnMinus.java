@@ -11,7 +11,6 @@ import javax.swing.event.MouseInputListener;
 import gui.Assets;
 
 public class BtnMinus extends JComponent {
-    
     BtnMinus() {
         addMouseListener(new MouseInputAdapter() {
             @Override
@@ -23,6 +22,25 @@ public class BtnMinus extends JComponent {
             public void mouseExited(MouseEvent e) {
                 hover = false;
                 repaint();
+            }
+        });
+    }
+
+    BtnMinus(CanDecrease target) {
+        addMouseListener(new MouseInputAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                hover = true;
+                repaint();
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                hover = false;
+                repaint();
+            }
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                target.minus();
             }
         });
     }

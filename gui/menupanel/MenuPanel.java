@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
+import javax.swing.plaf.DimensionUIResource;
 import javax.swing.text.JTextComponent;
 
 import com.ibm.jvm.trace.format.api.Component;
@@ -26,25 +27,26 @@ public class MenuPanel extends JPanel{
 
     JComponent  background;
     JComponent  layer;
+    Dimension layersBound;
 
     JComponent layerNPlayers;
-    JComponent nPlayersText;
+    Counter nPlayersText;
     JComponent lessPlayerBtn;
     JComponent morePlayerBtn;
 
 
-    JComponent layerNBots;
-    JComponent nBotsText;
-    JComponent lessBotsBtn;
-    JComponent moreBotsBtn;
+    JComponent layerNParticipants;
+    Counter nParticipantsText;
+    JComponent lessParticipantsBtn;
+    JComponent moreParticipantsBtn;
     
     JComponent layerNdices;
-    JComponent nDicesText;
+    Counter nDicesText;
     JComponent moreNDicesBtn;
     JComponent lessNDicesBtn;
     
     JComponent layerSDices;
-    JComponent sDicesText;
+    Counter sDicesText;
     JComponent moreSDicesBtn;
     JComponent lessSDicesBtn;
 
@@ -134,9 +136,10 @@ public class MenuPanel extends JPanel{
 
         layer = new JComponent() {};
         layer.setLayout(new GridLayout(5, 1));
+        updateLayerBound();
 
         layerNPlayers   = new JComponent() {};
-        layerNBots      = new JComponent() {};
+        layerNParticipants      = new JComponent() {};
         layerNdices     = new JComponent() {};
         layerSDices     = new JComponent() {};
         playBtn = new JComponent() {
@@ -152,6 +155,12 @@ public class MenuPanel extends JPanel{
                         hover = false;
                         repaint();
                     }
+
+                    public void mouseClicked(MouseEvent e) {
+                        Utils.debug(conf.toString());
+                        mainWindow.conf = conf;
+                        mainWindow.focusOnGame();
+                    };
                 });
             }
 
@@ -159,28 +168,16 @@ public class MenuPanel extends JPanel{
 
             @Override
             public void paint(Graphics g) {
-                final BufferedImage b0 = Assets.Menu.btn_play;
-                final BufferedImage b1 = Assets.Menu.btn_play_click;
-                
-                final int sx = this.getSize().width;
-                final int sy = this.getSize().height;
-                final double cx = sx/2.0;
-                final double cy = sy/2.0;
-        
-                final int ssx = (int)((double)b0.getWidth()*( (double)sy/(double)b0.getHeight() ));
-                final int x = (int)(cx-(ssx/2.0));
-                
-                g.drawImage(
-                    hover ? (b1) : (b0),
-                    x,0,ssx,sy,
-                    this
+                ASCII.paintText(g, this, 
+                    hover ? Assets.Menu.btn_play_click : Assets.Menu.btn_play,
+                    getWidth(), getHeight() 
                 );
             }
         };
         
-        LayoutManager glh = new GridLayout(1, 3);
+        LayoutManager glh = null;
         for (JComponent j: new JComponent[] {
-            layerNPlayers, layerNBots, layerNdices, layerSDices, playBtn
+            layerNPlayers, layerNParticipants, layerNdices, layerSDices, playBtn
         }) {
             j.setLayout(glh);
             j.setVisible(true);
@@ -189,45 +186,54 @@ public class MenuPanel extends JPanel{
 
         // -------------------
 
-            layerNPlayers.add(lessPlayerBtn = new BtnMinus());
-            layerNPlayers.add(nPlayersText  = new JComponent() {
-                
-            });
-            layerNPlayers.add(morePlayerBtn = new BtnPlus());
+            String tnp = "Players      | ";
+            String tnb = "Participants | ";
+            String tnd = "Dices        | ";
+            String tsd = "Dices size   | ";
+
+            layerNPlayers.add(nPlayersText  = new Counter(
+                tnp, conf.getnPlayers(), Config.MIN_PLAYER, Config.MAX_N_PARTICIPANTS,
+                (x) -> { conf.setnPlayers(x); }
+            ));
+            layerNPlayers.add(lessPlayerBtn = new BtnMinus(nPlayersText));
+            layerNPlayers.add(morePlayerBtn = new BtnPlus(nPlayersText));
+
+            tripleLayout(layerNPlayers, layersBound);
         
             // -----------
             
-            layerNBots.add(lessBotsBtn = new BtnMinus());
-            layerNBots.add(nBotsText = new JComponent() {
-                
-            });
-            layerNBots.add(moreBotsBtn = new BtnPlus());
+            layerNParticipants.add(nParticipantsText = new Counter(
+                tnb, conf.getnParticipants(), Config.MIN_N_PARTICIPANTS, Config.MAX_N_PARTICIPANTS,
+                (x) -> { conf.setnParticipants(x); }
+            ));
+            layerNParticipants.add(lessParticipantsBtn = new BtnMinus(nParticipantsText));
+            layerNParticipants.add(moreParticipantsBtn = new BtnPlus(nParticipantsText));
+            
+            tripleLayout(layerNParticipants, layersBound);
         
             // -----------
 
-            layerNdices.add(lessNDicesBtn = new BtnMinus());
-            layerNdices.add(nDicesText  = new JComponent() {
-                
-            });
-            layerNdices.add(moreNDicesBtn = new BtnPlus());
+            layerNdices.add(nDicesText  = new Counter(
+                tnd, conf.getnDices(), Config.MIN_N_DICES, 6,
+                (x) -> { conf.setnDices(x); }
+            ));
+            
+            layerNdices.add(lessNDicesBtn = new BtnMinus(nDicesText));
+            layerNdices.add(moreNDicesBtn = new BtnPlus(nDicesText));
+
+            tripleLayout(layerNdices, layersBound);
         
             // -----------
 
-            layerSDices.add(lessSDicesBtn = new BtnMinus());
-            layerSDices.add(sDicesText  = new JComponent() {
-                // FAIRE UNE CLASS COUNTER !!!! LIS MOI AARON
-                // NE DORS PAS JEXSKITE SOUVEINS TOI
-                // FAIT UNE CLASSE ET PAS UN JCOMPONENNTNNTNTNTNT !!!!!!
-            });
-            layerSDices.add(moreSDicesBtn = new BtnPlus());
-        
-
-        // -------------------
-
-        layerNPlayers   .setBackground(Color.RED);
-        layerNBots      .setBackground(Color.BLACK);
-        layerNdices     .setBackground(Color.BLUE);
-        layerSDices     .setBackground(Color.GREEN);
+            layerSDices.add(sDicesText = new Counter(
+                tsd, conf.getSizeOfDices(), Config.MIN_SIZE_OF_DICES, 20,
+                (x) -> { conf.setSizeOfDices(x); }
+            ));
+            
+            layerSDices.add(lessSDicesBtn = new BtnMinus(sDicesText));
+            layerSDices.add(moreSDicesBtn = new BtnPlus(sDicesText));
+            
+            tripleLayout(layerSDices, layersBound);
 
         // -------------------
         //layer.setBackground(new Color(70, 60, 160));
@@ -235,6 +241,27 @@ public class MenuPanel extends JPanel{
         this.add(layer);
         this.add(background);
         this.setVisible(true);
+    }
+
+    private void tripleLayout(JComponent layer, Dimension layerDimension) {
+        final double middleRatio = 0.80;
+        final double sideRatio = (1.0 - middleRatio)*0.5;
+
+        final double middleSize = middleRatio*(double)layerDimension.getWidth();
+        final double sideSize = sideRatio*(double)layerDimension.getWidth();
+
+        layer.getComponents()[0].setBounds(
+            (int)sideSize,0,(int)middleSize,(int)layerDimension.getHeight()
+        );
+
+
+        layer.getComponents()[1].setBounds(
+            0,0,(int)sideSize,(int)layerDimension.getHeight()
+        );
+        layer.getComponents()[2].setBounds(
+            (int)(sideSize+middleSize),0,(int)sideSize,(int)layerDimension.getHeight()
+        );
+
     }
 
     public void reset() {
@@ -247,19 +274,24 @@ public class MenuPanel extends JPanel{
         setVisible(false);
     }
 
-    @Override
-    public void paint(Graphics g) {
-        Graphics2D g2 = (Graphics2D)g;
-
+    void updateLayerBound() {
         final int sx = this.getSize().width;
         final int sy = this.getSize().height;
 
         final int cx = sx/2;
         final int cy = sy/2;
 
-        final int lsx = 400, lsy = 250;
+        final int lsx = 320, lsy = 250;
         layer.setBounds(cx-lsx, (int)(sy*0.58)-lsy, 2*lsx, 2*lsy);
-        background.setBounds(0, 0, sx, sy);
+        layersBound = new DimensionUIResource(layer.getWidth(), layer.getHeight()/5);
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        Graphics2D g2 = (Graphics2D)g;
+
+        updateLayerBound();
+        background.setBounds(0, 0, getWidth(), getHeight());
 
         // ----------------
         super.paint(g);

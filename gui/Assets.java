@@ -51,6 +51,13 @@ public class Assets {
 
         // -----------------------------------------
 
+        public static BufferedImage char_s_032;
+        public static BufferedImage char_s_033;
+        public static BufferedImage char_s_046;
+        public static BufferedImage char_s_058;
+        public static BufferedImage char_s_063;
+        public static BufferedImage char_s_124; 
+
         public static BufferedImage char_u_a; 
         public static BufferedImage char_u_b;
         public static BufferedImage char_u_c;
@@ -142,6 +149,13 @@ public class Assets {
             digit_7 = loadImg("menu digit d7");
             digit_8 = loadImg("menu digit d8");
             digit_9 = loadImg("menu digit d9");
+
+            char_s_032 = loadImg("menu char s_032");
+            char_s_033 = loadImg("menu char s_033");
+            char_s_046 = loadImg("menu char s_046");
+            char_s_058 = loadImg("menu char s_058");
+            char_s_063 = loadImg("menu char s_063");
+            char_s_124 = loadImg("menu char s_124"); 
 
             char_u_a = loadImg("menu char u_a");
             char_u_b = loadImg("menu char u_b");
