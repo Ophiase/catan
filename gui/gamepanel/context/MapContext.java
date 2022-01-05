@@ -174,10 +174,17 @@ public class MapContext extends JComponent {
                 if (mouseH) {
                     mouseX = (int)x_d + offsetX;
                     mouseY = (int)y_d + offsetY;
+
+                    if (mouseX >= map.getSize()) mouseX = map.getSize()-1;
                 } else {
                     mouseX = (int)x_d;
                     mouseY = (int)y_d;
+
+                    if (mouseY >= map.getSize()) mouseY = map.getSize()-1;
                 }
+
+                if (mouseX < 0) mouseX = 0;
+                if (mouseY < 0) mouseY = 0;
 
             } break;
             case PUT_FIRST_COLONY_STATE : case PUT_COLONY_STATE : case PUT_CITY_STATE : {

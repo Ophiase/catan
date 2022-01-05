@@ -58,10 +58,24 @@ public class Assets {
 
         public static BufferedImage char_s_032;
         public static BufferedImage char_s_033;
+        public static BufferedImage char_s_034;
+        public static BufferedImage char_s_035;
+        public static BufferedImage char_s_036;
+        public static BufferedImage char_s_040;
+        public static BufferedImage char_s_041;
+        public static BufferedImage char_s_043;
+        public static BufferedImage char_s_045;
         public static BufferedImage char_s_046;
         public static BufferedImage char_s_058;
+        public static BufferedImage char_s_060;
+        public static BufferedImage char_s_061;
+        public static BufferedImage char_s_062;
         public static BufferedImage char_s_063;
-        public static BufferedImage char_s_124; 
+        public static BufferedImage char_s_091;
+        public static BufferedImage char_s_093;
+        public static BufferedImage char_s_095;
+        public static BufferedImage char_s_124;
+        public static BufferedImage char_s_126; 
 
         public static BufferedImage char_u_a; 
         public static BufferedImage char_u_b;
@@ -162,10 +176,24 @@ public class Assets {
 
             char_s_032 = loadImg("menu char s_032");
             char_s_033 = loadImg("menu char s_033");
+            char_s_034 = loadImg("menu char s_034");
+            char_s_035 = loadImg("menu char s_035");
+            char_s_036 = loadImg("menu char s_036");
+            char_s_040 = loadImg("menu char s_040");
+            char_s_041 = loadImg("menu char s_041");
+            char_s_043 = loadImg("menu char s_043");
+            char_s_045 = loadImg("menu char s_045");
             char_s_046 = loadImg("menu char s_046");
             char_s_058 = loadImg("menu char s_058");
+            char_s_060 = loadImg("menu char s_060");
+            char_s_061 = loadImg("menu char s_061");
+            char_s_062 = loadImg("menu char s_062");
             char_s_063 = loadImg("menu char s_063");
+            char_s_091 = loadImg("menu char s_091");
+            char_s_093 = loadImg("menu char s_093");
+            char_s_095 = loadImg("menu char s_095");
             char_s_124 = loadImg("menu char s_124"); 
+            char_s_126 = loadImg("menu char s_126");
 
             char_u_a = loadImg("menu char u_a");
             char_u_b = loadImg("menu char u_b");

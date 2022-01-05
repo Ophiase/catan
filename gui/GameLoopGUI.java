@@ -3,6 +3,7 @@ package gui;
 import game.Engine;
 import game.state.Player;
 import gui.gamepanel.GameScreen;
+import gui.gamepanel.context.ActionContext;
 import gui.gamepanel.context.MapContext;
 
 /**
@@ -22,7 +23,7 @@ public class GameLoopGUI {
 
     // ----------------------------------
 
-    private static final long BOT_SLEEP_TIME = 1000;
+    private static final long BOT_SLEEP_TIME = 400;
     private static final long DELAY = 300;
     private static final long LAG = 100;
 
@@ -116,7 +117,12 @@ public class GameLoopGUI {
 
         // -----------------------
 
-        gameloop();
+        publish("Init phase finished !");
+        delay();
+
+        while (gameloop());
+
+        gameScreen.gamePanel.mainWindow.focusOnMenu();
     }
 
     private void askUserFirstCity(Player p) {
@@ -166,9 +172,48 @@ public class GameLoopGUI {
         } catch (Exception e) {}
     }
 
-    public void gameloop () {
-        publish("Init phase finished !");
-        delay();
+    public boolean gameloop () {
+        int     time  = engine.getState().getTime();
+        int     focus = engine.getState().getFocus();
+        boolean isBot = engine.getState().focusOnBot();
+
+        gameScreen.repaint(); // dans le doute
+
+        // -------------------------------------
+
+        publish("Focus on " + engine.getState().getPlayer(focus) + ".");
+
+        if (isBot)
+            botTurn();
+        else
+            playerTurn();
+
+        // -------------------------------------
+
+        Player winner = engine.won();
+        if (winner != null) {
+            publish(winner + " won !!!");
+            return false;
+        }
+
+        engine.endTurn();
+        return true;
+    }
+
+    private void playerTurn() {
+        // dices
+
+        // play
+        interupFlow();
+        gameScreen.actionContext.contextState = ActionContext.FOCUS_STATE;
+        waitForFlow();
+    }
+
+    private void botTurn() {
+
+        try {
+            Thread.sleep(BOT_SLEEP_TIME);
+        } catch (Exception e) {}
     }
     
 }

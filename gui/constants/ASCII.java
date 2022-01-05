@@ -19,13 +19,18 @@ public class ASCII {
         // 32 decimal
         Assets.Menu.char_s_032,
         Assets.Menu.char_s_033,
-        null, null, null, null,
-        null, null,
+        Assets.Menu.char_s_034,
+        Assets.Menu.char_s_035,
+        Assets.Menu.char_s_036,
+        null, null, null,
         
-        Assets.Menu.char_s_124, // TEMPORAIRE
-        Assets.Menu.char_s_124, // TEMPORAIRE
+        Assets.Menu.char_s_040, // TEMPORAIRE
+        Assets.Menu.char_s_041, // TEMPORAIRE
         
-        null, null, null, null,   
+        null, 
+        Assets.Menu.char_s_043, 
+        null, 
+        Assets.Menu.char_s_045,
         Assets.Menu.char_s_046,
         null, 
 
@@ -42,7 +47,10 @@ public class ASCII {
         Assets.Menu.digit_9,
         // 58
         Assets.Menu.char_s_058,
-        null, null, null, null, 
+        null, 
+        Assets.Menu.char_s_060,
+        Assets.Menu.char_s_061,
+        Assets.Menu.char_s_062, 
         Assets.Menu.char_s_063,
         null,
         
@@ -75,8 +83,12 @@ public class ASCII {
         Assets.Menu.char_u_z,
         
         // 91 decimal 
-        null, null, null, 
-        null, null, null,
+        Assets.Menu.char_s_091,
+        null,
+        Assets.Menu.char_s_093, 
+        null, 
+        Assets.Menu.char_s_095,
+        null,
 
         // 97 decimal
         Assets.Menu.char_l_a,
@@ -110,7 +122,7 @@ public class ASCII {
         null,
         Assets.Menu.char_s_124,
         null,
-        null,
+        Assets.Menu.char_s_126,
         null // 127 = DEL
     };
 
