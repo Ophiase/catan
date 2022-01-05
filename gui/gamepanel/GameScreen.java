@@ -88,7 +88,7 @@ public class GameScreen extends JComponent {
     // -------------------------------------------------
     // Make map part
 
-    static void paintScaled(
+    public static void paintScaled(
         Graphics g, ImageObserver o, 
         BufferedImage text, double x1, double y1, double x2, double y2,
         double scale, double center 
@@ -100,7 +100,7 @@ public class GameScreen extends JComponent {
             (int)Geometry.scale(y2, scale, center));
     }
 
-    static void paintScaled(
+    public static void paintScaled(
         Graphics g, ImageObserver o, 
         String text, double x1, double y1, double x2, double y2,
         double scale, double center 
@@ -112,6 +112,9 @@ public class GameScreen extends JComponent {
             (int)Geometry.scale(y2, scale, center));
     }
 
+    public       double SCALE_MAP_DOWN_FACTOR = 1.0;
+    public final double SCALE_MAP_DOWN_CENTER = (double)(MAP_RES) * 0.5;
+    
     void makeMap() {
         mapImage = new BufferedImage(MAP_RES, MAP_RES, BufferedImage.TYPE_4BYTE_ABGR);
         Graphics g = mapImage.getGraphics();
@@ -133,8 +136,8 @@ public class GameScreen extends JComponent {
         final double tile_sx = (double)MAP_RES / (double)biomes.length;
         final double tile_sy = tile_sx;
 
-        final double scale_map_down_factor = (double)biomes.length / (double)(biomes.length+1); // scale map down
-        final double scale_map_down_center = (double)(MAP_RES) * 0.5;
+        final double scale_map_down_factor = (SCALE_MAP_DOWN_FACTOR = ((double)biomes.length / (double)(biomes.length+1)));
+        final double scale_map_down_center = (SCALE_MAP_DOWN_CENTER);
 
         // Make ports
         {

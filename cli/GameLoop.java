@@ -17,7 +17,7 @@ import game.utils.Offer;
  */
 public class GameLoop {
 
-    private static boolean ROBBER_ENABLED = true; // false for debug purpose (view bot vs bot)
+    private static boolean ROBBER_ENABLED = false; // false for debug purpose (view bot vs bot)
 
     // --------------------------------
 

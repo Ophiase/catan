@@ -23,7 +23,7 @@ public class GameLoopGUI {
     // ----------------------------------
 
     private static final long BOT_SLEEP_TIME = 1000;
-    private static final long DELAY = 1000;
+    private static final long DELAY = 300;
     private static final long LAG = 100;
 
     // ----------------------------------
@@ -94,6 +94,7 @@ public class GameLoopGUI {
                 askUserFirstCity(p);
 
             engine.endTurn();
+            gameScreen.mapContext.updateMap();
             gameScreen.updateContextes();
         }
 
@@ -109,6 +110,7 @@ public class GameLoopGUI {
                 askUserFirstCity(p);
 
             engine.endTurn();
+            gameScreen.mapContext.updateMap();
             gameScreen.updateContextes();
         }
 
@@ -119,7 +121,7 @@ public class GameLoopGUI {
 
     private void askUserFirstCity(Player p) {
         interupFlow();
-        gameScreen.mapContext.setState(MapContext.PUT_CITY_STATE);
+        gameScreen.mapContext.setState(MapContext.PUT_FIRST_COLONY_STATE);
         waitForFlow();
 
         interupFlow();
@@ -152,9 +154,9 @@ public class GameLoopGUI {
             engine.getState().addColony(who, cx, cy);
             engine.getState().addRoad(who, road.h, road.x, road.y);
             
-            System.out.println(p + " played.");
-            System.out.println("colony : "+cx +";"+cy);
-            System.out.println("road : "+(road.h?"horizontal":"vertical")+" "+road.x+";"+road.y);
+            cli.Utils.debug(p + " played.");
+            cli.Utils.debug("colony : "+cx +";"+cy);
+            cli.Utils.debug("road : "+(road.h?"horizontal":"vertical")+" "+road.x+";"+road.y);
 
             break;
         }

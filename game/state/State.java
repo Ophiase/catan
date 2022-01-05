@@ -67,7 +67,7 @@ public class State {
     }
 
     public void addColony(int who, int x, int y) {
-        int position = Fnc.conv2dto1d(x, y, map.getSize());
+        int position = Fnc.conv2dto1d(x, y, map.getSizePP());
         Player p = players[who];
         
         map.getColonies()[x][y] = Map.makeColony(false, who);
@@ -78,13 +78,15 @@ public class State {
         map.nearDicesToPlayer(p, x, y);
 
         p.getRessources()[0]++;
+
+        cli.Utils.debug(p + " buy colony on " + x + ":" + y);
     }
 
     public void improveColony (int who, int x, int y) {
         Player p = players[who];
 
         map.getColonies()[x][y] = Map.makeColony(true, who);
-        p.getCities().add(Fnc.conv2dto1d(x, y, map.getSize()));
+        p.getCities().add(Fnc.conv2dto1d(x, y, map.getSizePP()));
         
         map.nearDicesToPlayer(p, x, y);
 

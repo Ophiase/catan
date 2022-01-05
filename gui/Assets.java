@@ -258,6 +258,30 @@ public class Assets {
         public static BufferedImage tile_wheat;
         public static BufferedImage tile_wood;
 
+        // ---------------------------------
+
+        public static BufferedImage city_c0;
+        public static BufferedImage city_c1;
+        public static BufferedImage city_c2;
+        public static BufferedImage city_c3;
+
+        public static BufferedImage colony_c0;
+        public static BufferedImage colony_c1;
+        public static BufferedImage colony_c2;
+        public static BufferedImage colony_c3;
+
+        public static BufferedImage road_h_c0;
+        public static BufferedImage road_h_c1;
+        public static BufferedImage road_h_c2;
+        public static BufferedImage road_h_c3;
+
+        public static BufferedImage road_v_c0;
+        public static BufferedImage road_v_c1;
+        public static BufferedImage road_v_c2;
+        public static BufferedImage road_v_c3;
+
+        // ---------------------------------
+
         static void load() {
             port_brick  = loadImg("texture port brick");
             port_desert = loadImg("texture port desert");
@@ -272,6 +296,30 @@ public class Assets {
             tile_sheep  = loadImg("texture tile sheep");
             tile_wheat  = loadImg("texture tile wheat");
             tile_wood   = loadImg("texture tile wood");
+
+            // ---------------------------------
+
+            city_c0     = loadImg("texture entity city_c0");
+            city_c1     = loadImg("texture entity city_c1");
+            city_c2     = loadImg("texture entity city_c2");
+            city_c3     = loadImg("texture entity city_c3");
+
+            colony_c0   = loadImg("texture entity colony_c0");
+            colony_c1   = loadImg("texture entity colony_c1");
+            colony_c2   = loadImg("texture entity colony_c2");
+            colony_c3   = loadImg("texture entity colony_c3");
+
+            road_v_c0   = loadImg("texture entity road_v_c0");
+            road_v_c1   = loadImg("texture entity road_v_c1");
+            road_v_c2   = loadImg("texture entity road_v_c2");
+            road_v_c3   = loadImg("texture entity road_v_c3");
+
+            road_h_c0   = loadImg("texture entity road_h_c0");
+            road_h_c1   = loadImg("texture entity road_h_c1");
+            road_h_c2   = loadImg("texture entity road_h_c2");
+            road_h_c3   = loadImg("texture entity road_h_c3");
+
+            // ---------------------------------
 
             gameLoaded = true;
         }
