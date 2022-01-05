@@ -205,9 +205,44 @@ public class ASCII {
     }
     public static void paintText(
         Graphics g, ImageObserver o, 
+        String text, int x1, int y1, int x2, int y2
+    ) {
+        paintText(g, o, makeText(text), x1, y1, x2, y2);
+    }
+    public static void paintText(
+        Graphics g, ImageObserver o, 
         BufferedImage text, int x1, int y1, int x2, int y2
-        ) throws Exception 
-    {
-        throw new Exception("NOT IMPLEMENTED YET");
+    ) {
+        paintText(g, o, text, x1, y1, x2, y2, false);
+    }
+
+    public static void paintText(
+        Graphics g, ImageObserver o, 
+        BufferedImage text, int x1, int y1, int x2, int y2, boolean debug
+    ) {
+        final double width  = x2-x1;
+        final double height = y2-y1;
+
+        final double cx = (x1+x2)*0.5;
+        final double cy = (y1+y2)*0.5;
+
+        final double fx = (double)width/(double)text.getWidth();    // scale factor to fit x
+        final double fy = (double)height/(double)text.getHeight(); // scale factor to fit y
+
+        final double scale = fx > fy ? fy : fx; // take the lowest scale factor to fit both
+        
+        final double sx = scale*text.getWidth();
+        final double sy = scale*text.getHeight();
+
+        final double x = cx-(sx*0.5);
+        final double y = cy-(sy*0.5);
+
+        if (debug)
+        {
+            g.setColor(Color.red);
+            g.fillRect(x1, y1, (int)width, (int)height);
+        }
+        
+        g.drawImage(text,(int)(x),(int)(y),(int)sx,(int)sy,o);
     }
 }

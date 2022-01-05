@@ -142,7 +142,7 @@ public class Config {
     }
 
     private void computeSizeOfMap() {
-        sizeOfMap = (int)Math.round(Math.sqrt((float)nCases));
+        sizeOfMap = (int)Math.ceil(Math.sqrt((double)nCases));
     }
 
     // ----------------------------------
@@ -150,7 +150,8 @@ public class Config {
     @Override
     public String toString() {
         return "Players: " + getnPlayers() + " | Bots: " + getnBots() + " | Participants: " + getnParticipants()
-            + " | NDices: " + getnDices() + " | SDices: " + getSizeOfDices()
+            + " | NDices: " + getnDices() + " | SDices: " + getSizeOfDices() + " | nCases: " + getnCases()
+            + " | Size of Map: " + getSizeOfMap()
         ;
     }
 

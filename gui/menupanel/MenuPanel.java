@@ -265,6 +265,7 @@ public class MenuPanel extends JPanel{
     }
 
     public void reset() {
+        clear();
         conf = Config.DEFAULT();
         setVisible(true);
         repaint();

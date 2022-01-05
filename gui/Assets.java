@@ -36,6 +36,11 @@ public class Assets {
         public static BufferedImage background_menu;
         public static BufferedImage background_menu_2;
 
+        public static BufferedImage panel_top;
+        public static BufferedImage panel_right;
+        public static BufferedImage panel_bot;
+        public static BufferedImage panel_left;
+
         // -----------------------------------------
 
         public static BufferedImage digit_0;
@@ -137,6 +142,11 @@ public class Assets {
             background_menu         = loadImg("menu background menu");
             background_menu_2       = loadImg("menu background menu_2");
 
+            panel_top   = loadImg("menu background panel_top");
+            panel_right = loadImg("menu background panel_right");
+            panel_bot   = loadImg("menu background panel_bot");
+            panel_left  = loadImg("menu background panel_left");
+
             // -------------------------------
     
             digit_0 = loadImg("menu digit d0");
@@ -234,7 +244,7 @@ public class Assets {
 
     public static class Game {
         static void load() {
-
+            
 
             gameLoaded = true;
         }
