@@ -1,6 +1,8 @@
 package gui.constants;
 
 import gui.Assets;
+import gui.math.Geometry;
+
 import java.awt.*;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -18,7 +20,11 @@ public class ASCII {
         Assets.Menu.char_s_032,
         Assets.Menu.char_s_033,
         null, null, null, null,
-        null, null, null, null,
+        null, null,
+        
+        Assets.Menu.char_s_124, // TEMPORAIRE
+        Assets.Menu.char_s_124, // TEMPORAIRE
+        
         null, null, null, null,   
         Assets.Menu.char_s_046,
         null, 
@@ -167,7 +173,8 @@ public class ASCII {
     private static final int overlapIncrement = charSize-overlap;
 
     public static BufferedImage makeText(String text) {
-        if (text.length() == 0) return toImage(text)[0];
+        if (text.length() == 0) return new BufferedImage(0, 0, 0);
+        if (text.length() == 1) return toImage(text)[0];
 
         int sx = (text.length()*charSize) - ((text.length()-1)*overlap);
         int sy = charSize;
@@ -183,7 +190,8 @@ public class ASCII {
         return image;
     }
 
-    public static void paintText(Graphics g, ImageObserver o, String text, int width, int height) { 
+    public static void paintText(Graphics g, ImageObserver o, String text, int width, int height) {
+        if (text.length() == 0) return;
         paintText(g,o, makeText(text), width, height); 
     }
     public static void paintText(Graphics g, ImageObserver o, BufferedImage text, int width, int height) {
@@ -218,8 +226,9 @@ public class ASCII {
 
     public static void paintText(
         Graphics g, ImageObserver o, 
-        BufferedImage text, int x1, int y1, int x2, int y2, boolean debug
+        BufferedImage text, double x1, double y1, double x2, double y2, boolean debug
     ) {
+        /*
         final double width  = x2-x1;
         final double height = y2-y1;
 
@@ -242,7 +251,12 @@ public class ASCII {
             g.setColor(Color.red);
             g.fillRect(x1, y1, (int)width, (int)height);
         }
-        
+
         g.drawImage(text,(int)(x),(int)(y),(int)sx,(int)sy,o);
+        */
+
+        Rectangle rect = Geometry.fit(text,x1,y1,x2,y2);
+        g.drawImage(text,rect.x, rect.y, rect.width, rect.height,o);
+        
     }
 }

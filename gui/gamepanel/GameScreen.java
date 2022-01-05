@@ -2,6 +2,7 @@ package gui.gamepanel;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 
@@ -20,23 +21,33 @@ import gui.gamepanel.context.ActionContext;
 import gui.gamepanel.context.DataContext;
 import gui.gamepanel.context.InformationContext;
 import gui.gamepanel.context.InteractionContext;
+import gui.gamepanel.context.MapContext;
 import gui.gamepanel.context.PartyDataContext;
 import gui.math.Geometry;
 
+/**
+ * This class is the Graphical Interface of the game.
+ * This class is connected with a game engine.
+ */
 public class GameScreen extends JComponent {
-    GamePanel gamePanel;
-    Engine engine;
-    BufferedImage mapImage;
+    public static final int MAP_RES = 700;
 
     // ---------------------
 
-    GameLoopGUI gameLoop;
+    public GamePanel gamePanel;
+    public Engine engine;
+    public BufferedImage mapImage;
 
-    InteractionContext interactionContext;
-    ActionContext actionContext;
-    DataContext dataContext;
-    InformationContext informationContext;
-    PartyDataContext partyDataContext;
+    // ---------------------
+
+    public GameLoopGUI gameLoop;
+
+    public InteractionContext interactionContext;
+    public ActionContext actionContext;
+    public DataContext dataContext;
+    public InformationContext informationContext;
+    public PartyDataContext partyDataContext;
+    public MapContext mapContext;
 
     // ---------------------
     // INIT
@@ -52,13 +63,26 @@ public class GameScreen extends JComponent {
         dataContext         = new DataContext(this);
         informationContext  = new InformationContext(this);
         partyDataContext    = new PartyDataContext(this);
+        mapContext          = new MapContext(this);
+
+        this.add(interactionContext);
+        this.add(actionContext);
+        this.add(dataContext);
+        this.add(informationContext);
+        this.add(partyDataContext);
+        this.add(mapContext);
     }
 
     void loadEngine() {
         this.engine = gamePanel.engine;
         makeMap();
 
-        gameLoop = new GameLoopGUI(this);
+        interactionContext.init();
+        actionContext.init();
+        dataContext.init();
+        informationContext.init();
+        partyDataContext.init();
+        mapContext.init();
     }
 
     // -------------------------------------------------
@@ -89,7 +113,7 @@ public class GameScreen extends JComponent {
     }
 
     void makeMap() {
-        mapImage = new BufferedImage(700, 700, BufferedImage.TYPE_4BYTE_ABGR);
+        mapImage = new BufferedImage(MAP_RES, MAP_RES, BufferedImage.TYPE_4BYTE_ABGR);
         Graphics g = mapImage.getGraphics();
         
         if (false) // debug
@@ -106,11 +130,11 @@ public class GameScreen extends JComponent {
         int[][] biomes    = map.getBiomes();
         int[][] diceIndexes = map.getDiceIndexes();
 
-        final double tile_sx = (double)mapImage.getWidth()  / (double)biomes.length;
-        final double tile_sy = (double)mapImage.getHeight() / (double)biomes.length;
+        final double tile_sx = (double)MAP_RES / (double)biomes.length;
+        final double tile_sy = tile_sx;
 
         final double scale_map_down_factor = (double)biomes.length / (double)(biomes.length+1); // scale map down
-        final double scale_map_down_center = (double)(mapImage.getWidth()) * 0.5;
+        final double scale_map_down_center = (double)(MAP_RES) * 0.5;
 
         // Make ports
         {
@@ -206,13 +230,22 @@ public class GameScreen extends JComponent {
     // -------------------------------------------------
     // Paint
 
+    /** obsolète */
+    public void updateContextes() {
+        for (JComponent jc : new JComponent[] {
+            interactionContext, actionContext, dataContext, 
+            informationContext, partyDataContext
+        } )
+            jc.repaint();
+    }
+
     @Override
     public void paint(Graphics g) {
         final BufferedImage background = Assets.Menu.background_main;
         final BufferedImage foreground = Assets.Menu.background_menu_2; 
         
-        final int sx = this.getSize().width;
-        final int sy = this.getSize().height;
+        final int sx = getWidth();
+        final int sy = getHeight();
         final double cx = sx/2.0;
         final double cy = sy/2.0;
 
@@ -255,7 +288,9 @@ public class GameScreen extends JComponent {
                 final double x2 = getWidth()*(1-0.10);
                 final double y2 = getHeight()*(1-0.15);
 
-                ASCII.paintText(g, this, mapImage, (int)x1, (int)y1, (int)x2, (int)y2);
+                Rectangle rect = Geometry.fit(mapImage, x1, y1, x2, y2);
+                g.drawImage(mapImage, rect.x, rect.y, rect.width, rect.height, this);
+                mapContext.setBounds(rect.x, rect.y, rect.width, rect.height);
             }
         }
 
@@ -264,49 +299,83 @@ public class GameScreen extends JComponent {
 
         {
 
+            final double interaction_anchor = 0.20;
+            final double action_anchor = 0.85;
+            final double data_anchor = 0.75;
+            final double information_anchor = 0.3;
+            final double party_data_anchor = 0.12;
+
             // interaction
             {
-                final double anchor = 0.20;
+                final double anchor = interaction_anchor;
 
                 final double x = sx*anchor - (Assets.Menu.panel_left.getWidth());
                 final double y = cy - (Assets.Menu.panel_left.getHeight()*0.5);
 
                 g.drawImage(Assets.Menu.panel_left, (int)x, (int)y, this);
+
+                final double x1 = 0;
+                final double y1 = information_anchor*sy;
+                final double x2 = sx*anchor - x1;
+                final double y2 = sy*action_anchor - y1;
+
+                interactionContext.setBounds((int)x1 + 5, (int)y1 + 5, (int)x2 - 40, (int)y2 - 5);
             }
 
-            // playing options
+            // action
             {
-                final double anchor = 0.85;
+                final double anchor = action_anchor;
 
                 final double x = cx - (Assets.Menu.panel_bot.getWidth()*0.5);
                 final double y = sy*anchor;
 
                 g.drawImage(Assets.Menu.panel_bot, (int)x, (int)y, this);
+
+                final double x1 = 0;
+                final double y1 = y;
+                final double x2 = sx*data_anchor - x1;
+                final double y2 = sy - y1;
+
+                actionContext.setBounds((int)x1 + 5, (int)y1 + 35, (int)x2+10, (int)y2 - 40);
             }
 
-            // informations
+            // data
             {
-                final double anchor = 0.75;
+                final double anchor = data_anchor;
 
                 final double x = sx*anchor;
                 final double y = cy - (Assets.Menu.panel_right.getHeight()*0.5);
 
                 g.drawImage(Assets.Menu.panel_right, (int)x, (int)y, this);
+
+                final double x1 = x;
+                final double y1 = sy*information_anchor;
+                final double x2 = sx - x1;
+                final double y2 = sy - y1;
+
+                dataContext.setBounds((int)x1 + 40, (int)y1 - 10, (int)x2-45, (int)y2 - 0);
             }
 
-            // dialog 
+            // information (dialog) 
             {
-                final double anchor = 0.3;
+                final double anchor = information_anchor;
 
                 final double x = cx - (Assets.Menu.panel_top.getWidth()*0.5);
                 final double y = sy*anchor - (Assets.Menu.panel_top.getHeight());
 
                 g.drawImage(Assets.Menu.panel_top, (int)x, (int)y, this);
+                
+                final double x1 = 0;
+                final double y1 = party_data_anchor*sy;
+                final double x2 = sx - x1;
+                final double y2 = (sy*information_anchor) - y1;
+
+                informationContext.setBounds((int)x1 + 10, (int)y1, (int)x2 - 20, (int)y2 - 40);
             }
 
-            // upper Menu
+            // party data (upper menu)
             {
-                final double anchor = 0.12;
+                final double anchor = party_data_anchor;
 
                 final double ssx = sx;
                 final double ssy = sy*anchor;
@@ -323,15 +392,18 @@ public class GameScreen extends JComponent {
                     (int)(ssx*insetFactor),
                     (int)(ssy*insetFactor)
                 );
-            }
 
-            // upper Menu Text
-            {
+                final double x1 = 0;
+                final double y1 = 0;
+                final double x2 = sx - x1;
+                final double y2 = party_data_anchor*sy;
 
+                partyDataContext.setBounds((int)x1 + 10, (int)y1 + 5, (int)x2 - 20, (int)y2 - 40);
             }
         }
 
         // ------------------------------------------------------------
+        //if (gamePanel.gameLoaded) updateContextes(); // obsolète
         super.paint(g);
     }
     

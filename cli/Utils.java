@@ -39,7 +39,6 @@ public class Utils {
         delim();
     }
 
-
     public static void clear() {
         if (CLEAR_ENABLED)
         {
@@ -104,7 +103,12 @@ public class Utils {
     // ------------------------------------------
     // Debug
 
-    public static void debug(String str) {
+    public static void info(Object str) {
+        System.out.print("<info> ");
+        System.out.println(str);
+    }
+
+    public static void debug(Object str) {
         if (DEBUG_ENABLED)
         {
             System.out.print("<debug> ");

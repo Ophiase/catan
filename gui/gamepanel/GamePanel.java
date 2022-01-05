@@ -6,8 +6,11 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import game.*;
+import gui.GameLoopGUI;
 import gui.MainWindow;
 
+/** This class is kind of an interface to the game. 
+ * It manage the switch between Loading and the Game */
 public class GamePanel extends JPanel{
     public MainWindow mainWindow;
     public Engine engine;
@@ -41,12 +44,17 @@ public class GamePanel extends JPanel{
 
     public void gameReady() {
         cli.Utils.debug("Party ready.");
+        
         gameScreen.init();
         gameScreen.loadEngine();
+        
         this.removeAll();
         this.add(gameScreen);
         repaint();
         this.gameLoaded = true;
+
+        gameScreen.gameLoop = new GameLoopGUI(gameScreen);
+        gameScreen.gameLoop.init();
     }
 
     public void clear() {
