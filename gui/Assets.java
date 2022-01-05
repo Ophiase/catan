@@ -243,8 +243,35 @@ public class Assets {
     }
 
     public static class Game {
+
+        public static BufferedImage port_brick;
+        public static BufferedImage port_desert;
+        public static BufferedImage port_rock;
+        public static BufferedImage port_sheep;
+        public static BufferedImage port_wheat;
+        public static BufferedImage port_wood;
+
+        public static BufferedImage tile_brick;
+        public static BufferedImage tile_desert;
+        public static BufferedImage tile_rock;
+        public static BufferedImage tile_sheep;
+        public static BufferedImage tile_wheat;
+        public static BufferedImage tile_wood;
+
         static void load() {
-            
+            port_brick  = loadImg("texture port brick");
+            port_desert = loadImg("texture port desert");
+            port_rock   = loadImg("texture port rock");
+            port_sheep  = loadImg("texture port sheep");
+            port_wheat  = loadImg("texture port wheat");
+            port_wood   = loadImg("texture port wood");
+
+            tile_brick  = loadImg("texture tile brick");
+            tile_desert = loadImg("texture tile desert");
+            tile_rock   = loadImg("texture tile rock");
+            tile_sheep  = loadImg("texture tile sheep");
+            tile_wheat  = loadImg("texture tile wheat");
+            tile_wood   = loadImg("texture tile wood");
 
             gameLoaded = true;
         }

@@ -11,6 +11,7 @@ import javax.swing.event.MouseInputAdapter;
 
 import cli.Utils;
 import gui.Assets;
+import gui.constants.ASCII;
 public class Counter extends JComponent implements CanIncrease, CanDecrease {
     private final int lowerLIMIT;
     private final int upperLIMIT;

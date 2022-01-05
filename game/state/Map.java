@@ -158,13 +158,13 @@ public class Map {
             // Appliquer
             if (port == Port.DEFAULT)
             {
-                ports[Port.DEFAULT][defaultPointer++] = Fnc.conv2dto1d(x1, y1, size);
-                ports[Port.DEFAULT][defaultPointer++] = Fnc.conv2dto1d(x2, y2, size);
+                ports[Port.DEFAULT][defaultPointer++] = Fnc.conv2dto1d(x1, y1, sizePP);
+                ports[Port.DEFAULT][defaultPointer++] = Fnc.conv2dto1d(x2, y2, sizePP);
             }
             else
             {
-                ports[port][0] = Fnc.conv2dto1d(x1, y1, size);
-                ports[port][1] = Fnc.conv2dto1d(x2, y2, size);
+                ports[port][0] = Fnc.conv2dto1d(x1, y1, sizePP);
+                ports[port][1] = Fnc.conv2dto1d(x2, y2, sizePP);
             }
         }
 

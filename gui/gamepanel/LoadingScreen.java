@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 import game.*;
 import gui.Assets;
 import gui.MainWindow;
-import gui.menupanel.ASCII;
+import gui.constants.ASCII;
 
 public class LoadingScreen extends JComponent {
     GamePanel gamePanel;

@@ -1,4 +1,4 @@
-package gui.menupanel;
+package gui.constants;
 
 import gui.Assets;
 import java.awt.*;
