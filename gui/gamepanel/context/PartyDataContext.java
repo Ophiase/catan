@@ -28,6 +28,8 @@ public class PartyDataContext extends JComponent{
     }
     
     public void init() {
+        this.removeAll();
+
         this.engine = gameScreen.engine;
         this.state = engine.getState();
         this.nParticipants = "Participants: " + engine.getState().getnPlayers();

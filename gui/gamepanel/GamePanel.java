@@ -28,6 +28,8 @@ public class GamePanel extends JPanel{
         this.loadingScreen  = new LoadingScreen(this);
         this.gameScreen     = new GameScreen(this);
 
+        gameScreen.init();
+        
         this.setLayout(null);
         this.gameLoaded = false;
     }
@@ -45,7 +47,6 @@ public class GamePanel extends JPanel{
     public void gameReady() {
         cli.Utils.debug("Party ready.");
         
-        gameScreen.init();
         gameScreen.loadEngine();
         
         this.removeAll();

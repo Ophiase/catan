@@ -77,6 +77,9 @@ public class ActionContext extends JComponent{
     }
 
     public void init() {
+        this.removeAll();
+        contextState = DEFAULT_STATE;
+        //---------------------------------
 
         informationContext = gameScreen.informationContext;
         engine = gameScreen.engine;

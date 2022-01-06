@@ -80,6 +80,10 @@ public class InteractionContext extends JComponent{
     }
     
     public void init() {
+        this.removeAll();
+        contextState = DEFAULT_STATE;
+        //---------------------------------
+
         informationContext = gameScreen.informationContext;
         engine = gameScreen.engine;
         state = engine.getState();
@@ -604,12 +608,12 @@ public class InteractionContext extends JComponent{
 
         public void monopolyMode() {
             mode = MONOPOLY_MODE;
-            entity = "2 ressources to steal:";
+            entity = "Everyone";
             setVisible(false);
         }
 
         public void tradeMode() {
-            mode = PLENTY_MODE;
+            mode = TRADE_MODE;
             value = 0;
             entity = "Bank";
             setVisible(true);

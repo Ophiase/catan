@@ -21,6 +21,7 @@ public class InformationContext extends JComponent {
     }
     
     public void init() {
+        this.removeAll();
         setVisible(true);
     }
 

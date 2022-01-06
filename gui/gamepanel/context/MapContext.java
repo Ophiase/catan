@@ -61,6 +61,10 @@ public class MapContext extends JComponent {
     
     private double SCALE_MAP_UP_FACTOR = 1.0;
     public void init() {
+        this.removeAll();
+        contextState = DEFAULT_STATE;
+        //---------------------------------
+
         storedMapComponents = new BufferedImage(
             gameScreen.MAP_RES,
             gameScreen.MAP_RES,

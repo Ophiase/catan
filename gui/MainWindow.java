@@ -20,7 +20,8 @@ public class MainWindow extends JFrame {
         cli.Utils.debug("Window constructor.");
 
         this.setTitle("Catan");
-
+        this.setIconImage(Assets.Menu.icon_logo);
+        
         this.setMinimumSize(new Dimension(1000, 800));
         this.setPreferredSize(new Dimension(1280, 900));
         this.setMaximumSize(new Dimension(1920, 1080));

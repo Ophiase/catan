@@ -81,7 +81,9 @@ public class Offer {
         return true;
     }
 
-    public boolean isValidPurchase(game.state.State state) {        
+    public boolean isValidPurchase(game.state.State state) {  
+        // TODO: be able to purchase multiple ressources at once
+        
         if (state.getFocus() != p1)
             return false;
         if (-1 != p2)

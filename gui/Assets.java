@@ -151,6 +151,8 @@ public class Assets {
         public static BufferedImage separator_v_0;
         public static BufferedImage separator_v_1;
 
+        public static BufferedImage icon_logo;
+
         // -----------------------------------------
 
         static void load() {
@@ -272,6 +274,13 @@ public class Assets {
 
             separator_v_0 = loadImg("menu other separator_v_0");
             separator_v_1 = loadImg("menu other separator_v_1");
+
+            // -------------------------------
+    
+            icon_logo = loadImg("menu other logo");
+
+            // -------------------------------
+    
 
             menuLoaded = true;
         }

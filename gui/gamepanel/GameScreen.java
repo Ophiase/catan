@@ -58,6 +58,10 @@ public class GameScreen extends JComponent {
     }
 
     void init() {
+        // This.removeAll(); 
+        // This function is called once
+        // I delege removeAll to its components
+
         interactionContext  = new InteractionContext(this);
         actionContext       = new ActionContext(this);
         dataContext         = new DataContext(this);

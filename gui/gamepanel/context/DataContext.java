@@ -31,6 +31,7 @@ public class DataContext extends JComponent{
     }
 
     public void init() {
+        this.removeAll();
 
         engine = gameScreen.engine;
         state = engine.getState();

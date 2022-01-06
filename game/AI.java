@@ -3,6 +3,7 @@ package game;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import cli.Utils;
 import game.constants.Ressource;
@@ -33,19 +34,27 @@ public class AI {
         this.dices = dices;
     }
 
+    /**This function simulate the behavior of a bot (after he rolled the dices).*/
+    public void play(Player bot) { play(bot, null);}
+    
     /**
      * This function simulate the behavior of a bot 
      * (after he rolled the dices).
      *  
      * TODO: echanges spontanés 
+     * TODO: interactions (GUI)
      * 
      * */
-    public void play(Player bot) {
+    public void play(Player bot, Consumer<Object>[] interactions) {
+        // --------------------------------------
+
         /** loop on priority actions
          * priority of actions:
          * - improve random colony
          * - buy random colony
          * - buy random road
+         * 
+         * TODO: developpements/pick
          * */
         boolean hasPriorActions;
         boolean needRoads = false;
@@ -149,6 +158,9 @@ public class AI {
         return false;
     }
 
+    /**
+     * Try to do exchanges with other players
+     **/
     private void optimizeRessource(Player bot, int[] toOptimize) {
         int[] rsc = bot.getRessources();
         for (int i = 0; i < toOptimize.length; i++)

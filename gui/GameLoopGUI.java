@@ -23,19 +23,21 @@ public class GameLoopGUI {
     /**
      * <p>Cheap solution to make the gameloop wait when it need a response.
      * <p>
-     * <p>TODO: find a better solution that take 
-     * into account potentials multithreading issues
+     * <p>TODO: find a better solution that take into account potentials multithreading issues
      */
     public boolean flowing;
 
     // ----------------------------------
+    // TODO: give player ability to choose game speed (sleep time)
 
-    private static final long BOT_SLEEP_TIME = 100;
-    private static final long DELAY = 300;
+    private static final long BOT_SLEEP_TIME = 100; // 
+    private static final long SHORT_DELAY = 250;  // not essential
+    private static final long LONG_DELAY  = 1000; // player need to see it
     private static final long LAG = 100;
 
     private static final boolean ROBBER_ENABLED = true;
     private static final boolean DEBUG_DEVELOPPEMENT = false;
+    private static final boolean DEBUG_WINNER = false;
 
     // ----------------------------------
 
@@ -50,13 +52,15 @@ public class GameLoopGUI {
         gameScreen.informationContext.publish(s);
     }
 
-    /**
-     * TODO:
-     * differenciate readable delay and short delay
-     */
-    public void delay() {
+    public void short_delay() {
         try {
-            Thread.sleep(DELAY);
+            Thread.sleep(SHORT_DELAY);
+        } catch (Exception e) {}
+    }
+
+    public void long_delay() {
+        try {
+            Thread.sleep(LONG_DELAY);
         } catch (Exception e) {}
     }
 
@@ -87,9 +91,9 @@ public class GameLoopGUI {
         flowing = true;
 
         publish("Game started.");
-        delay();
+        long_delay();
         publish("Init phase !");
-        delay();
+        short_delay();
 
         // -----------------------
         
@@ -97,7 +101,7 @@ public class GameLoopGUI {
         for (Player p: engine.getState().getPlayers())
         {
             publish(p + " has to choose a road and a colony.");
-            delay();
+            short_delay();
 
             if (p.isBot())
                 askBotFirstCity(p);
@@ -113,7 +117,7 @@ public class GameLoopGUI {
         for (Player p: engine.getState().getPlayers())
         {
             publish(p + " has to choose a road and a colony.");
-            delay();
+            short_delay();
 
             if (p.isBot())
                 askBotFirstCity(p);
@@ -128,7 +132,7 @@ public class GameLoopGUI {
         // -----------------------
 
         publish("Init phase finished !");
-        delay();
+        short_delay();
 
         if (DEBUG_DEVELOPPEMENT)
         {
@@ -138,7 +142,7 @@ public class GameLoopGUI {
         }    
 
         while (gameloop());
-
+        
         gameScreen.gamePanel.mainWindow.focusOnMenu();
     }
 
@@ -209,8 +213,14 @@ public class GameLoopGUI {
         // -------------------------------------
 
         Player winner = engine.won();
-        if (winner != null) {
+        if (DEBUG_WINNER || winner != null) {
             publish(winner + " won !!!");
+            
+            // 2x le temps de savourer la victoire :p
+            long_delay();
+            long_delay();
+
+
             return false;
         }
 
@@ -244,7 +254,7 @@ public class GameLoopGUI {
     private int dicesRoll(int who) {
         int score = engine.getDices().roll();
         publish("Dices gave : " + score);
-        delay();
+        short_delay();
         
         if (ROBBER_ENABLED && score == engine.getDices().getRobberDice()) { // DEFAULT = 7
             retribution();

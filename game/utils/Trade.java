@@ -158,6 +158,8 @@ public class Trade {
     }
 
     public void buy(Offer offer) {
+        // TODO: be able to buy multiple ressources at once
+
         offer.proceed(state);
     }
 
