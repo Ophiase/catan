@@ -12,8 +12,6 @@ import javax.swing.event.MouseInputAdapter;
 import javax.swing.plaf.DimensionUIResource;
 import javax.swing.text.JTextComponent;
 
-import com.ibm.jvm.trace.format.api.Component;
-
 import cli.Utils;
 
 import game.Config;
