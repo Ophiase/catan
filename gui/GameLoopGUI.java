@@ -35,7 +35,7 @@ public class GameLoopGUI {
     private static final long LAG = 100;
 
     private static final boolean ROBBER_ENABLED = true;
-    private static final boolean DEBUG_DEVELOPPEMENT = FALSE;
+    private static final boolean DEBUG_DEVELOPPEMENT = false;
 
     // ----------------------------------
 
