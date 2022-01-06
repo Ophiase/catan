@@ -31,6 +31,11 @@ public class State {
         return focus;
     }
 
+    /** ONLY USE IS FOR GUI (tmp user have to accept) */
+    public void setFocus(int focus) {
+        this.focus = focus;
+    }
+
     public Player[] getPlayers() {
         return players;
     }

@@ -1,7 +1,12 @@
 package gui;
 
+import java.util.ArrayList;
+
 import game.Engine;
+import game.constants.Ressource;
+import game.state.Map;
 import game.state.Player;
+import game.utils.Fnc;
 import gui.gamepanel.GameScreen;
 import gui.gamepanel.context.ActionContext;
 import gui.gamepanel.context.MapContext;
@@ -23,9 +28,11 @@ public class GameLoopGUI {
 
     // ----------------------------------
 
-    private static final long BOT_SLEEP_TIME = 400;
+    private static final long BOT_SLEEP_TIME = 100;
     private static final long DELAY = 300;
     private static final long LAG = 100;
+
+    private static final boolean ROBBER_ENABLED = true;
 
     // ----------------------------------
 
@@ -131,7 +138,7 @@ public class GameLoopGUI {
         waitForFlow();
 
         interupFlow();
-        gameScreen.mapContext.setState(MapContext.PUT_ROAD_STATE);
+        gameScreen.mapContext.setState(MapContext.PUT_FIRST_ROAD_STATE);
         waitForFlow();
     }
 
@@ -177,6 +184,7 @@ public class GameLoopGUI {
         int     focus = engine.getState().getFocus();
         boolean isBot = engine.getState().focusOnBot();
 
+        gameScreen.mapContext.updateMap();
         gameScreen.repaint(); // dans le doute
 
         // -------------------------------------
@@ -202,7 +210,9 @@ public class GameLoopGUI {
 
     private void playerTurn() {
         // dices
-
+        int who = engine.getState().getFocus();
+        int score = dicesRoll(who);
+        
         // play
         interupFlow();
         gameScreen.actionContext.contextState = ActionContext.FOCUS_STATE;
@@ -210,10 +220,109 @@ public class GameLoopGUI {
     }
 
     private void botTurn() {
+        int who = engine.getState().getFocus();
+        int score = dicesRoll(who);
+        engine.getAI().play(engine.getState().getPlayer(who));
 
         try {
             Thread.sleep(BOT_SLEEP_TIME);
         } catch (Exception e) {}
+    }
+
+    // --------------------
+
+    private int dicesRoll(int who) {
+        int score = engine.getDices().roll();
+        publish("Dices gave : " + score);
+        delay();
+        
+        if (ROBBER_ENABLED && score == engine.getDices().getRobberDice()) { // DEFAULT = 7
+            retribution();
+            steal(who);
+        } else {
+            engine.getState().collect(score);
+        }
+
+        return score;
+    }
+
+    /**
+     * After a 7 at dices.
+     * Each player that have above 7 cards 
+     * has to abandon half of them.
+     */
+    private void retribution() {
+        int memFocus = engine.getState().getFocus();
+
+        for (Player p: engine.getState().getPlayers()) if (p.nCards() > engine.getDices().getRobberDice()) {
+            engine.getState().setFocus(p.getIndex());
+
+            if (p.isBot())
+            {
+                engine.getAI().retribution(p);
+                continue;
+            }
+
+            interupFlow();
+
+            publish("Choose "+(p.nCards()/2)+" cards to abandon");
+            // request rsc and devs
+
+            waitForFlow();
+
+            /*
+            for (int i : rsc)
+                p.getRessources()[i]--;
+            for (int i : devs)
+                p.getDeveloppements()[i]--;
+            */
+        }
+
+        engine.getState().setFocus(memFocus);
+    }
+
+    /**
+     * After a 7 at dices
+     * Player choose where to put the robber.
+     * And get steal a ressource.
+     */
+    private void steal(int who) {
+        Player currentPlayer = engine.getState().getPlayer(who);
+        Map map = engine.getMap();
+                
+        if (currentPlayer.isBot()) {
+            engine.getAI().steal(currentPlayer);
+            gameScreen.mapContext.updateMap();
+        } else {
+            interupFlow();
+            gameScreen.mapContext.setState(MapContext.PUT_ROBBER_STATE);
+            waitForFlow();
+        }
+
+        int idx = map.getRobberIndex();
+
+        // choose a victim
+        ArrayList<Player> victims = new ArrayList<Player>();
+        for(Player p: engine.getState().getPlayers())
+            if (p != currentPlayer && p.getDicesIdx().contains(idx))
+                victims.add(p);
+
+        if (victims.isEmpty())
+            return;
+
+        // stole him
+        Player victim = victims.get(Fnc.rand(victims.size()));
+        int[] rsc = victim.getRessources();
+        int[] priority = Fnc.randomIndexArray(rsc.length-1);
+        for (int i = 0, r = 0; i < priority.length; i++)
+            if (rsc[r=(priority[i]+1)]!=0)
+            {
+                rsc[r]--;
+                currentPlayer.getRessources()[r]++;
+                
+                publish(currentPlayer+" stole "+Ressource.toString(r).toLowerCase()+" to "+victim+".");
+                return;
+            }
     }
     
 }

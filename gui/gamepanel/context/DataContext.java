@@ -64,6 +64,7 @@ public class DataContext extends JComponent{
                 ASCII.padLeft(p + " " + p.getRessource(Ressource.POINT) + "$", 15, ' ')
                 
                 );
+        l.add(" ");
         l.add("Ressources:");
         for (int i = 1; i < Ressource.nRessources; i++)
             l.add(
@@ -71,6 +72,7 @@ public class DataContext extends JComponent{
                 (cli.Utils.makeFirstWord(Ressource.toString(i)) + " | " + 
                     ASCII.padLeft(focus.getRessource(i))
                 ,12, ' '));
+        l.add(" ");
         l.add("Developpements:");
         for (int i = 1; i < Developpement.nDeveloppements; i++)
             l.add(
@@ -78,7 +80,6 @@ public class DataContext extends JComponent{
                 (cli.Utils.makeFirstWord(Developpement.toString(i)) + " | " + 
                     ASCII.padLeft(focus.getDeveloppements()[i])
                 , 14, ' '));
-        l.add(sep);
 
         if (HIDE_WHEN_BOT && focus.isBot())
             for (int i = 0; i < l.size(); i++)

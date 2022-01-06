@@ -13,8 +13,8 @@ import cli.Utils;
 import gui.Assets;
 import gui.constants.ASCII;
 public class Counter extends JComponent implements CanIncrease, CanDecrease {
-    private final int lowerLIMIT;
-    private final int upperLIMIT;
+    private int lowerLIMIT;
+    private int upperLIMIT;
     private int value;
     private char[] text;
     private BufferedImage textImage;
@@ -33,6 +33,14 @@ public class Counter extends JComponent implements CanIncrease, CanDecrease {
         this.updater = updater;
 
         this.text = Arrays.copyOf(text.toCharArray(), text.length() + padding);
+        fillNumber(defaultValue);
+    }
+
+    public void reinit(int defaultValue, int lowerLIMIT, int upperLIMIT) {
+        this.lowerLIMIT = lowerLIMIT;
+        this.upperLIMIT = upperLIMIT;
+        this.value = defaultValue;
+
         fillNumber(defaultValue);
     }
 
@@ -79,6 +87,10 @@ public class Counter extends JComponent implements CanIncrease, CanDecrease {
 
         fillNumber(value-1);
         repaint();
+    }
+
+    public int getValue() {
+        return value;
     }
     
     @Override

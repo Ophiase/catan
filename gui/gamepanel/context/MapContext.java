@@ -15,6 +15,8 @@ import game.state.Map;
 import game.state.Player;
 import game.state.State;
 import game.utils.Fnc;
+import game.utils.Trade;
+import gui.Assets;
 import gui.GameLoopGUI;
 import gui.constants.ASCII;
 import gui.constants.EntityAsset;
@@ -24,11 +26,19 @@ import gui.math.Geometry;
 public class MapContext extends JComponent {
     
     public int contextState = 0;
+    
     public static final int DEFAULT_STATE = 0;
-    public static final int PUT_ROAD_STATE = 1;
-    public static final int PUT_FIRST_COLONY_STATE = 2;
-    public static final int PUT_COLONY_STATE = 3;
-    public static final int PUT_CITY_STATE = 4;
+    
+    public static final int PUT_FIRST_ROAD_STATE = 1;
+    public static final int PUT_FIRST_COLONY_STATE = 3;
+    
+    public static final int PUT_ROAD_STATE = 2;
+    public static final int PUT_COLONY_STATE = 4;
+    public static final int PUT_CITY_STATE = 5;
+
+    public static final int PUT_ROBBER_STATE = 6;
+    public static final int KNIGHT_STATE = 7;
+    
     // ------------------------------------------
     
     BufferedImage storedMapComponents;
@@ -36,6 +46,7 @@ public class MapContext extends JComponent {
     BufferedImage voidMap;
     State state;
     Map map;
+    Trade trade;
     
     // ------------------------------------------
 
@@ -66,6 +77,7 @@ public class MapContext extends JComponent {
         
         state   = gameScreen.engine.getState();
         map     = gameScreen.engine.getMap();
+        trade   = gameScreen.engine.getTrade();
         
         initConsts();
 
@@ -122,7 +134,7 @@ public class MapContext extends JComponent {
             case DEFAULT_STATE : {
                 // nothing
             } break;
-            case PUT_ROAD_STATE : {
+            case PUT_FIRST_ROAD_STATE : case PUT_ROAD_STATE : {
                 /**
                  * Ne chechez pas à comprendre cette partie du code,
                  * c'est le fruit de schémas paints fait à 5h du matin
@@ -197,6 +209,16 @@ public class MapContext extends JComponent {
                 if (mouseX > map.getSize()) mouseX = map.getSize();
                 if (mouseY > map.getSize()) mouseY = map.getSize();
             } break;
+            case PUT_ROBBER_STATE: case KNIGHT_STATE: {
+                mouseX = (int)Math.floor(x / tile_sx);
+                mouseY = (int)Math.floor(y / tile_sy);
+
+                if (mouseX < 0) mouseX = 0;
+                if (mouseY < 0) mouseY = 0;
+
+                if (mouseX >= map.getSize()) mouseX = map.getSize() - 1;
+                if (mouseY >= map.getSize()) mouseY = map.getSize() - 1;
+            } break;
         }
     }
 
@@ -212,13 +234,12 @@ public class MapContext extends JComponent {
                 tmpMapComponents, 0, 0, this
             );
             tmpMapComponents.setData(voidMap.getRaster());
+            updateMap();
 
             // return to default state
 
             stopListening();
             contextState = 0;
-            gameScreen.gameLoop.flowing = true;
-
             return;
         }
 
@@ -230,18 +251,18 @@ public class MapContext extends JComponent {
             case DEFAULT_STATE : {
                 // nothing
             } break;
-            case PUT_ROAD_STATE : {
+            case PUT_ROAD_STATE : case PUT_FIRST_ROAD_STATE: {
                 gameScreen.informationContext.publish("Choose a road.");
             } break;
-            case PUT_FIRST_COLONY_STATE : {
-                gameScreen.informationContext.publish("Choose a colony.");
-            } break;
-            case PUT_COLONY_STATE : {
+            case PUT_FIRST_COLONY_STATE : case PUT_COLONY_STATE : {
                 gameScreen.informationContext.publish("Choose a colony.");
             } break;
             case PUT_CITY_STATE : {
                 gameScreen.informationContext.publish("Choose a city.");
             } break;
+            case KNIGHT_STATE : case PUT_ROBBER_STATE : {
+                gameScreen.informationContext.publish("Choose where to put the robber.");
+            }
         }
     }
 
@@ -272,7 +293,8 @@ public class MapContext extends JComponent {
             case DEFAULT_STATE : {
                 // nothing
             } break;
-            case PUT_ROAD_STATE : {
+            
+            case PUT_FIRST_ROAD_STATE : {
                 if (!map.canBuyRoad(who, h, cx, cy)) 
                 {
                     gameScreen.informationContext.publish("Invalid road. Choose another one!");
@@ -287,7 +309,29 @@ public class MapContext extends JComponent {
                 outputH = h;    
                 outputState = PUT_ROAD_STATE;                
                 setState(DEFAULT_STATE);
+                gameScreen.gameLoop.flowing = true;
             } break;
+            case PUT_ROAD_STATE : {
+                if (!map.canBuyRoad(who, h, cx, cy)) 
+                {
+                    gameScreen.informationContext.publish("Invalid road. Choose another one!");
+                    return;
+                }
+                // ------------
+
+                trade.buyRoad(who, h, cx, cy);
+
+                outputX = cx;
+                outputY = cy;
+                outputH = h;    
+                outputState = PUT_ROAD_STATE;                
+                setState(DEFAULT_STATE);
+                gameScreen.actionContext.contextState = ActionContext.FOCUS_STATE;
+                gameScreen.informationContext.publish("Successfull.");
+                gameScreen.informationContext.publish("Choose an action.");
+            
+            } break;
+
             case PUT_FIRST_COLONY_STATE : {
                 if (map.hasColony(cx, cy) || map.hasNearColony(who, cx, cy))
                 {
@@ -315,6 +359,9 @@ public class MapContext extends JComponent {
                 outputH = h;    
                 outputState = PUT_FIRST_COLONY_STATE;
                 setState(DEFAULT_STATE);
+                
+                gameScreen.gameLoop.flowing = true;
+
             } break;
             case PUT_COLONY_STATE : {
                 if (map.hasColony(cx, cy) || map.hasNearColony(who, cx, cy))
@@ -323,26 +370,54 @@ public class MapContext extends JComponent {
                     return;
                 }
 
-                state.addColony(who, cx, cy);
+                trade.buyColony(who, cx, cy);
                 
                 outputX = cx;
                 outputY = cy;
                 outputH = h;    
                 outputState = PUT_COLONY_STATE;
                 setState(DEFAULT_STATE);
+                
+                gameScreen.actionContext.contextState = ActionContext.FOCUS_STATE;
+                gameScreen.informationContext.publish("Successfull.");
+                gameScreen.informationContext.publish("Choose an action.");
             } break;
+
             case PUT_CITY_STATE : {
                 if (!gameScreen.engine.getTrade().canImproveColony(who, cx, cy))
                 {
                     gameScreen.informationContext.publish("Invalid colony. Choose another one to improve!");
                     return;
                 }
+
+                trade.improveColony(who, cx, cy);
                 
                 outputX = cx;
                 outputY = cy;
                 outputH = h;    
                 outputState = PUT_CITY_STATE;
                 setState(DEFAULT_STATE);
+                gameScreen.actionContext.contextState = ActionContext.FOCUS_STATE;
+                gameScreen.informationContext.publish("Successfull.");
+                gameScreen.informationContext.publish("Choose an action.");
+            } break;
+
+            case PUT_ROBBER_STATE : {
+                map.moveRobber(mouseX, mouseY);
+
+                setState(DEFAULT_STATE);
+                gameScreen.actionContext.contextState = ActionContext.FOCUS_STATE;
+                gameScreen.informationContext.publish("Successfull.");
+                gameScreen.gameLoop.flowing = true;
+            } break;
+
+            case KNIGHT_STATE : {
+                map.moveRobber(mouseX, mouseY);
+
+                setState(DEFAULT_STATE);
+                gameScreen.actionContext.contextState = ActionContext.FOCUS_STATE;
+                gameScreen.informationContext.publish("Successfull.");
+                gameScreen.informationContext.publish("Choose an action.");
             } break;
         }
     }
@@ -355,7 +430,7 @@ public class MapContext extends JComponent {
             case DEFAULT_STATE : {
 
             } break;
-            case PUT_ROAD_STATE : 
+            case PUT_FIRST_ROAD_STATE : case PUT_ROAD_STATE :
             {
                 final double insetFactor = 1.0;
                 final double remainder   = (1.0 - insetFactor)*0.5;
@@ -376,6 +451,7 @@ public class MapContext extends JComponent {
                     gameScreen.SCALE_MAP_DOWN_FACTOR, gameScreen.SCALE_MAP_DOWN_CENTER
                 );
             } break;
+            
             case PUT_FIRST_COLONY_STATE : case PUT_COLONY_STATE : {
                 final double insetFactor = 0.6;
                 final double remainder   = (1.0 - insetFactor)*0.5;
@@ -397,6 +473,7 @@ public class MapContext extends JComponent {
                 );
 
             } break;
+            
             case PUT_CITY_STATE : {
                 final double insetFactor = 0.6;
                 final double remainder   = (1.0 - insetFactor)*0.5;
@@ -413,6 +490,27 @@ public class MapContext extends JComponent {
                 final double tile_y2 = tile_y1+ssy;
 
                 GameScreen.paintScaled(g, this, EntityAsset.city[focus],
+                    tile_x1, tile_y1, tile_x2, tile_y2, 
+                    gameScreen.SCALE_MAP_DOWN_FACTOR, gameScreen.SCALE_MAP_DOWN_CENTER
+                );
+            } break;
+
+            case PUT_ROBBER_STATE : case KNIGHT_STATE : if (map.getRobberIndex() != -1) {
+                final double insetFactor = 0.6;
+                final double remainder   = (1.0 - insetFactor)*0.5;
+                
+                final double ssx = tile_sx*insetFactor;
+                final double ssy = tile_sy*insetFactor;
+    
+                final double msx = ssx*0.5;
+                final double msy = ssy*0.5;
+
+                final double tile_x1 = (tile_sx*((double)mouseX + 0.5)) - msx;
+                final double tile_y1 = (tile_sy*((double)mouseY + 0.5)) - msy;
+                final double tile_x2 = tile_x1+ssx;
+                final double tile_y2 = tile_y1+ssy;
+
+                GameScreen.paintScaled(g, this, Assets.Game.robber,
                     tile_x1, tile_y1, tile_x2, tile_y2, 
                     gameScreen.SCALE_MAP_DOWN_FACTOR, gameScreen.SCALE_MAP_DOWN_CENTER
                 );
@@ -548,6 +646,31 @@ public class MapContext extends JComponent {
                         gameScreen.SCALE_MAP_DOWN_FACTOR, gameScreen.SCALE_MAP_DOWN_CENTER
                     );
                 }
+            }
+
+            // put robber
+            if (map.getRobberIndex() != -1) {
+                final double insetFactor = 0.6;
+                final double remainder   = (1.0 - insetFactor)*0.5;
+                
+                final double ssx = tile_sx*insetFactor;
+                final double ssy = tile_sy*insetFactor;
+    
+                final double msx = ssx*0.5;
+                final double msy = ssy*0.5;
+
+                final double robberX = Fnc.conv1dto2d_x(map.getRobberPosition(), size);
+                final double robberY = Fnc.conv1dto2d_y(map.getRobberPosition(), size);
+
+                final double tile_x1 = (tile_sx*((double)robberX + 0.5)) - msx;
+                final double tile_y1 = (tile_sy*((double)robberY + 0.5)) - msy;
+                final double tile_x2 = tile_x1+ssx;
+                final double tile_y2 = tile_y1+ssy;
+
+                GameScreen.paintScaled(g, this, Assets.Game.robber,
+                    tile_x1, tile_y1, tile_x2, tile_y2, 
+                    gameScreen.SCALE_MAP_DOWN_FACTOR, gameScreen.SCALE_MAP_DOWN_CENTER
+                );
             }
         }
 

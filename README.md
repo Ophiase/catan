@@ -9,7 +9,7 @@ Install the game.
 
 On Linux:
 
-    >bash Launcher.bash
+    >./Launcher.sh
 
 On Windows:
 
@@ -22,7 +22,7 @@ Launch the game.
 On Linux:
 
     type in console:
-    >bash Launcher.bash -ab
+    >./Launcher.sh -ab
 
 On Windows:
 

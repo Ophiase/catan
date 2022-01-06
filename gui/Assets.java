@@ -148,9 +148,13 @@ public class Assets {
         public static BufferedImage text_number_of_dices;
         public static BufferedImage text_size_of_dices;
 
+        public static BufferedImage separator_v_0;
+        public static BufferedImage separator_v_1;
+
         // -----------------------------------------
 
         static void load() {
+
             background_main         = loadImg("menu background main");
             background_main_blur    = loadImg("menu background main_blur");
             background_menu         = loadImg("menu background menu");
@@ -266,6 +270,9 @@ public class Assets {
             text_number_of_dices    = loadImg("menu text number_of_dices");
             text_size_of_dices      = loadImg("menu text size_of_dices");
 
+            separator_v_0 = loadImg("menu other separator_v_0");
+            separator_v_1 = loadImg("menu other separator_v_1");
+
             menuLoaded = true;
         }
     }
@@ -287,6 +294,8 @@ public class Assets {
         public static BufferedImage tile_wood;
 
         // ---------------------------------
+
+        public static BufferedImage robber;
 
         public static BufferedImage city_c0;
         public static BufferedImage city_c1;
@@ -311,6 +320,7 @@ public class Assets {
         // ---------------------------------
 
         static void load() {
+
             port_brick  = loadImg("texture port brick");
             port_desert = loadImg("texture port desert");
             port_rock   = loadImg("texture port rock");
@@ -326,6 +336,8 @@ public class Assets {
             tile_wood   = loadImg("texture tile wood");
 
             // ---------------------------------
+
+            robber = loadImg("texture entity robber");
 
             city_c0     = loadImg("texture entity city_c0");
             city_c1     = loadImg("texture entity city_c1");
