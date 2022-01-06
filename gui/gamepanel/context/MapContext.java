@@ -11,6 +11,7 @@ import javax.swing.event.MouseInputAdapter;
 import javax.swing.event.MouseInputListener;
 
 import cli.Utils;
+import game.constants.Developpement;
 import game.state.Map;
 import game.state.Player;
 import game.state.State;
@@ -31,6 +32,8 @@ public class MapContext extends JComponent {
     
     public static final int PUT_FIRST_ROAD_STATE = 1;
     public static final int PUT_FIRST_COLONY_STATE = 3;
+
+    public static final int DEV_ROAD_STATE = 8;
     
     public static final int PUT_ROAD_STATE = 2;
     public static final int PUT_COLONY_STATE = 4;
@@ -134,7 +137,7 @@ public class MapContext extends JComponent {
             case DEFAULT_STATE : {
                 // nothing
             } break;
-            case PUT_FIRST_ROAD_STATE : case PUT_ROAD_STATE : {
+            case PUT_FIRST_ROAD_STATE : case PUT_ROAD_STATE : case DEV_ROAD_STATE: {
                 /**
                  * Ne chechez pas à comprendre cette partie du code,
                  * c'est le fruit de schémas paints fait à 5h du matin
@@ -251,6 +254,15 @@ public class MapContext extends JComponent {
             case DEFAULT_STATE : {
                 // nothing
             } break;
+            case DEV_ROAD_STATE: {
+                outputNDevRoads = 0;
+                this.state.getPlayer(focus).useDeveloppement(Developpement.ROAD);
+                gameScreen.informationContext.publish(
+                    "Choose a road. Click on the card again if you want to quit "
+                    +"(warning: the card will still be consumed)."
+                    );
+                break;
+            }
             case PUT_ROAD_STATE : case PUT_FIRST_ROAD_STATE: {
                 gameScreen.informationContext.publish("Choose a road.");
             } break;
@@ -278,6 +290,7 @@ public class MapContext extends JComponent {
         tile_sy = tile_sx;
     }
 
+    public int outputNDevRoads = 0;
     public int outputState = 0;
     public int outputX     = 0;
     public int outputY     = 0;
@@ -291,7 +304,7 @@ public class MapContext extends JComponent {
 
         switch(contextState) {
             case DEFAULT_STATE : {
-                // nothing
+                gameScreen.repaint();
             } break;
             
             case PUT_FIRST_ROAD_STATE : {
@@ -310,6 +323,28 @@ public class MapContext extends JComponent {
                 outputState = PUT_ROAD_STATE;                
                 setState(DEFAULT_STATE);
                 gameScreen.gameLoop.flowing = true;
+            } break;
+            case DEV_ROAD_STATE : {
+                if (!map.canBuyRoad(who, h, cx, cy)) 
+                {
+                    gameScreen.informationContext.publish("Invalid road. Choose another one!");
+                    return;
+                }
+                // ------------
+
+                state.addRoad(who, h, cx, cy);
+                updateMap();
+
+                if (++outputNDevRoads == 2)
+                {
+                    outputX = cx;
+                    outputY = cy;
+                    outputH = h;    
+                    outputState = DEV_ROAD_STATE;        
+                    setState(DEFAULT_STATE);
+                    gameScreen.informationContext.publish("You put the two roads of your card.");
+                    gameScreen.actionContext.contextState = ActionContext.FOCUS_STATE;
+                }
             } break;
             case PUT_ROAD_STATE : {
                 if (!map.canBuyRoad(who, h, cx, cy)) 
@@ -416,6 +451,7 @@ public class MapContext extends JComponent {
 
                 setState(DEFAULT_STATE);
                 gameScreen.actionContext.contextState = ActionContext.FOCUS_STATE;
+                state.getPlayer(state.getFocus()).useDeveloppement(Developpement.KNIGHT);
                 gameScreen.informationContext.publish("Successfull.");
                 gameScreen.informationContext.publish("Choose an action.");
             } break;
@@ -430,7 +466,7 @@ public class MapContext extends JComponent {
             case DEFAULT_STATE : {
 
             } break;
-            case PUT_FIRST_ROAD_STATE : case PUT_ROAD_STATE :
+            case PUT_FIRST_ROAD_STATE : case PUT_ROAD_STATE : case DEV_ROAD_STATE:
             {
                 final double insetFactor = 1.0;
                 final double remainder   = (1.0 - insetFactor)*0.5;
@@ -495,7 +531,8 @@ public class MapContext extends JComponent {
                 );
             } break;
 
-            case PUT_ROBBER_STATE : case KNIGHT_STATE : if (map.getRobberIndex() != -1) {
+            case PUT_ROBBER_STATE : case KNIGHT_STATE : 
+            /*if (map.getRobberIndex() != -1)*/ {
                 final double insetFactor = 0.6;
                 final double remainder   = (1.0 - insetFactor)*0.5;
                 
@@ -674,7 +711,7 @@ public class MapContext extends JComponent {
             }
         }
 
-        repaint();
+        gameScreen.repaint();
     }
 
     /** 

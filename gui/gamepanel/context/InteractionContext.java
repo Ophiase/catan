@@ -246,7 +246,6 @@ public class InteractionContext extends JComponent{
                 {
                     publish("Trade was accepted");
                     trade.trade(in_offer);
-                    gameScreen.repaint();
                 }
                 else
                 {
@@ -285,7 +284,6 @@ public class InteractionContext extends JComponent{
 
                     trade.buy(in_offer);
                     publish("You bougth a ressource.");
-                    gameScreen.repaint();
 
                     gameScreen.actionContext.contextState = ActionContext.FOCUS_STATE;
                     setState(DEFAULT_STATE);
@@ -331,15 +329,62 @@ public class InteractionContext extends JComponent{
 
                 setState(DEFAULT_STATE);
                 gameScreen.gameLoop.flowing = true;
-                gameScreen.repaint();
             } break;
 
             case MONOPOLY_STATE: {
+                int[] rsc = new int[] {
+                    0,
+                    his_wood.getValue(),
+                    his_sheep.getValue(),
+                    his_wheat.getValue(),
+                    his_brick.getValue(),
+                    his_rock.getValue()
+                };
 
+                if (Fnc.arrSum(rsc) != 1) {
+                    publish("You have to choose exactly one ressource.");
+                    return;
+                }
+
+                int[] stolen = new int [Ressource.nRessources];
+                Player p = state.getPlayer(state.getFocus());
+                for (Player victim: state.getPlayers()) if (victim != p) {
+                    for (int i = 0; i < stolen.length; i++)
+                        if (rsc[i]==1)
+                        {
+                            stolen[i] += victim.getRessource(i);
+                            victim.getRessources()[i] = 0;
+                        }
+                }
+
+                publish("You stole the ressource to each player.");
+                p.useDeveloppement(Developpement.MONOPOLY);
+                setState(DEFAULT_STATE);
+                gameScreen.actionContext.contextState = ActionContext.FOCUS_STATE;
             } break;
 
             case PLENTY_STATE: {
+                int[] rsc = new int[] {
+                    0,
+                    his_wood.getValue(),
+                    his_sheep.getValue(),
+                    his_wheat.getValue(),
+                    his_brick.getValue(),
+                    his_rock.getValue()
+                };
 
+                if (Fnc.arrSum(rsc) != 2) {
+                    publish("You have to choose exactly two ressources.");
+                    return;
+                }
+
+                Player p = state.getPlayer(state.getFocus());
+                p.addRessources(rsc);
+
+                publish("Card successfuly used.");
+                p.useDeveloppement(Developpement.PLENTY);
+                setState(DEFAULT_STATE);
+                gameScreen.actionContext.contextState = ActionContext.FOCUS_STATE;
             } break;
         }
     }
@@ -356,6 +401,7 @@ public class InteractionContext extends JComponent{
         switch (state) {
             case DEFAULT_STATE : {
                 setVisible(false, false, false, false, false);
+                gameScreen.repaint();
             } break;
 
             case TRADE_WAIT_STATE : {
@@ -363,7 +409,6 @@ public class InteractionContext extends JComponent{
                     if (engine.getAI().consent(in_playerProposed, in_offer)) {
                         publish("Trade was accepted.");
                         trade.trade(in_offer);
-                        gameScreen.repaint();
                     } else {
                         publish("Trade was refused.");
                     }
@@ -378,6 +423,7 @@ public class InteractionContext extends JComponent{
             } break;
 
             case PROPOSE_TRADE_STATE : {
+                selectTo.tradeMode();
                 publish("Propose a trade|purchase.");
                 setVisible(true, false, true, false, true);
             } break;
@@ -387,13 +433,15 @@ public class InteractionContext extends JComponent{
             } break;
 
             case MONOPOLY_STATE : {
+                selectTo.monopolyMode();
                 publish("Choose 1 ressource to steal to every player.");
                 setVisible(true, false, false, false, true);
             } break;
 
             case PLENTY_STATE : {
+                selectTo.plentyMode();
                 publish("Choose 2 ressources from the bank.");
-                setVisible(true, false, true, false, true);
+                setVisible(true, false, false, false, true);
             } break;
         }
         
@@ -495,34 +543,40 @@ public class InteractionContext extends JComponent{
         
         public SelectEntity () {
             minus   = new gui.menupanel.BtnMinus(() -> {
-                value--;
-                if (value < -1)
-                    value = state.getnPlayers() -1;
-                
-                if (value==state.getFocus())
+                if (mode==TRADE_MODE)
                 {
                     value--;
                     if (value < -1)
                         value = state.getnPlayers() -1;
-                
-                }
+                    
+                    if (value==state.getFocus())
+                    {
+                        value--;
+                        if (value < -1)
+                            value = state.getnPlayers() -1;
+                    
+                    }
 
-                refreshName();
+                    refreshName();
+                }
             });
             plus    = new gui.menupanel.BtnPlus(() -> {
-                value++;
-                if (value >= state.getnPlayers())
-                    value = -1;
-
-                if (value==state.getFocus())
+                if (mode==TRADE_MODE)
                 {
                     value++;
                     if (value >= state.getnPlayers())
                         value = -1;
+
+                    if (value==state.getFocus())
+                    {
+                        value++;
+                        if (value >= state.getnPlayers())
+                            value = -1;
+                    }
+                    
+                    refreshName();
+                    refreshRessourceDependencies();
                 }
-                
-                refreshName();
-                refreshRessourceDependencies();
             });
 
             this.add(new JComponent() {
@@ -533,6 +587,32 @@ public class InteractionContext extends JComponent{
             });
             this.add(minus);
             this.add(plus);
+        }
+
+        int mode = 0;
+
+        final int TRADE_MODE = 0;
+        final int MONOPOLY_MODE = 1;
+        final int PLENTY_MODE = 2;
+
+        public void plentyMode() {
+            mode = PLENTY_MODE;
+            value = 0;
+            entity = "Bank";
+            setVisible(false);
+        }
+
+        public void monopolyMode() {
+            mode = MONOPOLY_MODE;
+            entity = "2 ressources to steal:";
+            setVisible(false);
+        }
+
+        public void tradeMode() {
+            mode = PLENTY_MODE;
+            value = 0;
+            entity = "Bank";
+            setVisible(true);
         }
 
         public void refreshName() {

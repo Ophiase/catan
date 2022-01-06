@@ -144,6 +144,7 @@ public class ActionContext extends JComponent{
                                 return;
                             }
 
+                            contextState = PUT_ROAD_STATE;
                             gameScreen.mapContext.setState(MapContext.PUT_ROAD_STATE);
                     } else if (contextState==PUT_ROAD_STATE) {
                         contextState = FOCUS_STATE;
@@ -176,7 +177,7 @@ public class ActionContext extends JComponent{
                                     "You don't have enough ressources. (1 Brick, 1 Wood, 1 Sheep, 1 Wheat)");
                                 return;
                             }
-                            contextState = PUT_ROAD_STATE;
+                            contextState = PUT_COLONY_STATE;
                             gameScreen.mapContext.setState(MapContext.PUT_COLONY_STATE);
                     } else if (contextState==PUT_COLONY_STATE) {
                         contextState = FOCUS_STATE;
@@ -267,14 +268,18 @@ public class ActionContext extends JComponent{
             }).addMouseListener(new MouseInputAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    if (contextState==FOCUS_STATE || contextState==DEV_ROAD_STATE) {
+                    if (contextState==FOCUS_STATE) {
                         Player p = state.getPlayer(state.getFocus());
                         if (!p.hasDeveloppement(Developpement.ROAD)) {
                             publish("You don't have this card.");
                             return;
                         }
 
-                        publish("Not implemented on GUI yet. (exist on cli)");
+                        gameScreen.mapContext.setState(MapContext.DEV_ROAD_STATE);
+                        contextState = DEV_ROAD_STATE;
+                    } else if (contextState==DEV_ROAD_STATE) {
+                        gameScreen.mapContext.setState(MapContext.DEFAULT_STATE);
+                        contextState = FOCUS_STATE;
                     }
                 }
             });
@@ -294,7 +299,8 @@ public class ActionContext extends JComponent{
                             return;
                         }
 
-                        publish("Not implemented on GUI yet. (exist on cli)");
+                        contextState = DEV_PLENTY_STATE;
+                        gameScreen.interactionContext.setState(InteractionContext.PLENTY_STATE);
                     }
                 }
             });
@@ -313,7 +319,8 @@ public class ActionContext extends JComponent{
                         return;
                     }
 
-                    publish("Not implemented on GUI yet. (exist on cli)");
+                    contextState = DEV_MONOPOLY_STATE;
+                    gameScreen.interactionContext.setState(InteractionContext.MONOPOLY_STATE);
                 }}
             });
 
@@ -332,7 +339,9 @@ public class ActionContext extends JComponent{
                         return;
                     }
 
+                    p.useDeveloppement(Developpement.POINT);
                     publish("You gained one point. Now you have :"+(++p.getRessources()[Ressource.POINT])+"$");
+                    gameScreen.repaint();
                 }}
             });
         }

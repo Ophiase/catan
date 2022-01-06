@@ -3,6 +3,7 @@ package gui;
 import java.util.ArrayList;
 
 import game.Engine;
+import game.constants.Developpement;
 import game.constants.Ressource;
 import game.state.Map;
 import game.state.Player;
@@ -34,6 +35,7 @@ public class GameLoopGUI {
     private static final long LAG = 100;
 
     private static final boolean ROBBER_ENABLED = true;
+    private static final boolean DEBUG_DEVELOPPEMENT = FALSE;
 
     // ----------------------------------
 
@@ -127,6 +129,13 @@ public class GameLoopGUI {
 
         publish("Init phase finished !");
         delay();
+
+        if (DEBUG_DEVELOPPEMENT)
+        {
+            for (Player p : engine.getState().getPlayers())
+                for (int i = 0; i < Developpement.nDeveloppements; i++)
+                    p.addDeveloppement(i);
+        }    
 
         while (gameloop());
 
@@ -244,6 +253,7 @@ public class GameLoopGUI {
             engine.getState().collect(score);
         }
 
+        gameScreen.repaint();
         return score;
     }
 
@@ -318,6 +328,8 @@ public class GameLoopGUI {
                 publish(currentPlayer+" stole "+Ressource.toString(r).toLowerCase()+" to "+victim+".");
                 return;
             }
+        
+        gameScreen.repaint();
     }
     
 }

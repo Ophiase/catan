@@ -14,13 +14,6 @@ import game.state.State;
 import game.utils.Offer;
 import game.utils.Trade;
 
-/**TODO:
- * void use :
- *      implements ROAD
- *      implements PLENTY
- *      implements MONOPOLY
- * */
-
 public class Actions {
 
     Scanner sc;

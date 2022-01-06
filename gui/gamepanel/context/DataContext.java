@@ -74,7 +74,7 @@ public class DataContext extends JComponent{
                 ,12, ' '));
         l.add(" ");
         l.add("Developpements:");
-        for (int i = 1; i < Developpement.nDeveloppements; i++)
+        for (int i = 0; i < Developpement.nDeveloppements; i++)
             l.add(
                 ASCII.padLeft
                 (cli.Utils.makeFirstWord(Developpement.toString(i)) + " | " + 
