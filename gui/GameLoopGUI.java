@@ -9,6 +9,7 @@ import game.state.Player;
 import game.utils.Fnc;
 import gui.gamepanel.GameScreen;
 import gui.gamepanel.context.ActionContext;
+import gui.gamepanel.context.InteractionContext;
 import gui.gamepanel.context.MapContext;
 
 /**
@@ -266,16 +267,10 @@ public class GameLoopGUI {
             interupFlow();
 
             publish("Choose "+(p.nCards()/2)+" cards to abandon");
-            // request rsc and devs
+            gameScreen.interactionContext.in_nCards = p.nCards()/2;
+            gameScreen.interactionContext.setState(InteractionContext.ROBBER_RESSOURCE_STATE);
 
             waitForFlow();
-
-            /*
-            for (int i : rsc)
-                p.getRessources()[i]--;
-            for (int i : devs)
-                p.getDeveloppements()[i]--;
-            */
         }
 
         engine.getState().setFocus(memFocus);

@@ -33,7 +33,6 @@ public class ActionContext extends JComponent{
     public static final int PUT_CITY_STATE = 4;
 
     public static final int TRADE_STATE = 5;
-    public static final int BUY_STATE = 6;
 
     public static final int DEV_KNIGHT_STATE = 7;
     public static final int DEV_ROAD_STATE = 8;
@@ -50,7 +49,7 @@ public class ActionContext extends JComponent{
     JComponent btn_putCity;
 
     JComponent btn_trade;
-    JComponent btn_buy;
+    //JComponent btn_buy;
 
     JComponent btn_devKnight;
     JComponent btn_devRoad;
@@ -227,22 +226,13 @@ public class ActionContext extends JComponent{
             }).addMouseListener(new MouseInputAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    if (contextState==FOCUS_STATE || contextState==TRADE_STATE) {
-                        gameScreen.informationContext.publish("trade");
-                    }
-                }
-            });
-            // --------
-            (btn_buy = new JComponent() {
-                @Override
-                public void paint(Graphics g) {
-                    ASCII.paintText(g, this, "|buy|", getWidth(), getHeight());
-                }
-            }).addMouseListener(new MouseInputAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    if (contextState==FOCUS_STATE || contextState==BUY_STATE) {
-                        gameScreen.informationContext.publish("buy");
+                    if (contextState==FOCUS_STATE) {
+                        gameScreen.interactionContext.setState(InteractionContext.PROPOSE_TRADE_STATE);
+                        contextState = TRADE_STATE;
+                    } else if (contextState==TRADE_STATE) {
+                        gameScreen.interactionContext.setState(InteractionContext.DEFAULT_STATE);
+                        gameScreen.informationContext.publish("Choose an action.");
+                        contextState = FOCUS_STATE;
                     }
                 }
             });
@@ -283,6 +273,8 @@ public class ActionContext extends JComponent{
                             publish("You don't have this card.");
                             return;
                         }
+
+                        publish("Not implemented on GUI yet. (exist on cli)");
                     }
                 }
             });
@@ -301,6 +293,8 @@ public class ActionContext extends JComponent{
                             publish("You don't have this card.");
                             return;
                         }
+
+                        publish("Not implemented on GUI yet. (exist on cli)");
                     }
                 }
             });
@@ -318,6 +312,8 @@ public class ActionContext extends JComponent{
                         publish("You don't have this card.");
                         return;
                     }
+
+                    publish("Not implemented on GUI yet. (exist on cli)");
                 }}
             });
 
@@ -370,7 +366,7 @@ public class ActionContext extends JComponent{
 
         for (JComponent jc : new JComponent[] {
             btn_devKnight, btn_devRoad, btn_devPlenty, btn_devMonopoly, btn_devPoint, sep_1,
-            btn_trade, btn_buy, btn_pick, sep_2,
+            btn_trade, btn_pick, sep_2,
             btn_putRoad, btn_putColony, btn_putCity, sep_3,
             btn_end
         }) this.add(jc);
@@ -379,30 +375,10 @@ public class ActionContext extends JComponent{
     }
 
     // ------------------------------------------
-
-    MouseInputAdapter mouseInputAdapter;
-    private void makeMouseListener() {
-        mouseInputAdapter = new MouseInputAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                applyState();
-            }
-        };
-    }
-
-    public void listen() {
-        this.addMouseListener(mouseInputAdapter);
-        this.addMouseMotionListener(mouseInputAdapter);
-    }
-
-    public void stopListening() {
-        this.removeMouseListener(mouseInputAdapter);
-        this.removeMouseMotionListener(mouseInputAdapter);
-    }
-
-    // ------------------------------------------
     public void applyState() {
-        switch(contextState) {}
+        switch(contextState) {
+
+        }
     }
     // ------------------------------------------
 

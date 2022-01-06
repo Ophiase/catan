@@ -34,6 +34,16 @@ public class Offer {
         return otp;
     }
 
+    public String toStringGUI() {
+        String otp = "";
+        for (int i = 0; i < r1.length; i++)
+            otp += "("+r1[i]+") "+Ressource.toString(i)+", ";
+        otp += " against";
+        for (int i = 0; i < r2.length; i++)
+            otp += "("+r2[i]+") "+Ressource.toString(i)+", ";
+        return otp;
+    }
+
     // -------------------------------------
 
     /**exemple: 
