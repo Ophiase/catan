@@ -3,6 +3,7 @@
 Projet Catan L2 MI1
 
 Authors : Aaron Berriche / Jie Zhou
+Binome : 198
 
 -------------------------------------
 Install the game.
