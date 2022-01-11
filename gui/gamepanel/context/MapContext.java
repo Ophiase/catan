@@ -165,25 +165,33 @@ public class MapContext extends JComponent {
 
                 // tout les cas sont symétriques
                 if (x_m < 0.5 && y_m < 0.5) { // supp gauche
-                    if (x_m+y_m<0.25) {
+                    final double x_s = x_m;
+                    final double y_s = y_m;
+                    if (aboveLimit(x_s, y_s)) {
                         offsetX = -1;
                         offsetY = 0;
                         mouseH = true;
                 } }
                 else  if (x_m > 0.5 && y_m < 0.5) { // supp droit
-                    if (0.5-x_m+y_m<0.25) {
+                    final double x_s = 1.0-x_m;
+                    final double y_s = y_m;
+                    if (aboveLimit(x_s, y_s)) {
                         offsetX = 0;
                         offsetY = 0;
                         mouseH = true;
                 } }
                 else  if (x_m < 0.5 && y_m > 0.5) { // inf gauche
-                    if (x_m+0.5-y_m<0.25) {
+                    final double x_s = x_m;
+                    final double y_s = 1.0-y_m;
+                    if (aboveLimit(x_s, y_s)) {
                         offsetX = -1;
                         offsetY = 1;
                         mouseH = true;
                 } }
                 else  if (x_m > 0.5 && y_m > 0.5) { // inf droit
-                    if (x_m+y_m>0.25) {
+                    final double x_s = 1.0-x_m;
+                    final double y_s = 1.0-y_m;
+                    if (aboveLimit(x_s, y_s)) {
                         offsetX = 0;
                         offsetY = 1;
                         mouseH = true;
@@ -227,6 +235,10 @@ public class MapContext extends JComponent {
                 if (mouseY >= map.getSize()) mouseY = map.getSize() - 1;
             } break;
         }
+    }
+
+    private static boolean aboveLimit (double x, double y) {
+        return (0.5-y) > x;
     }
 
     // ------------------------------------------
