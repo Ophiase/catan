@@ -8,6 +8,11 @@ import game.constants.*;
 import game.utils.Fnc;
 
 public class Player {
+
+    private static final boolean    DEBUG_RESSOURCES_BUFF           = false;
+    private static final int        DEBUG_RESSOURCES_BUFF_NUMBER    = 20;
+
+    // --------------
     
     private int         index;
     private boolean     isBot;
@@ -32,6 +37,11 @@ public class Player {
         this.dices = new int[mapSize][mapSize];
 
         ressources[Ressource.POINT] = 0;
+
+        if (DEBUG_RESSOURCES_BUFF) {
+            for (int i  = 1; i < Ressource.nRessources; i++)
+                ressources[i] = DEBUG_RESSOURCES_BUFF_NUMBER;
+        }
     }
 
     @Override

@@ -176,13 +176,13 @@ public class MapContext extends JComponent {
                         offsetY = 0;
                         mouseH = true;
                 } }
-                else  if (x_m > 0.5 && y_m < 0.5) { // inf gauche
+                else  if (x_m < 0.5 && y_m > 0.5) { // inf gauche
                     if (x_m+0.5-y_m<0.25) {
                         offsetX = -1;
                         offsetY = 1;
                         mouseH = true;
                 } }
-                else  if (x_m > 0.5 && y_m < 0.5) { // inf droit
+                else  if (x_m > 0.5 && y_m > 0.5) { // inf droit
                     if (x_m+y_m>0.25) {
                         offsetX = 0;
                         offsetY = 1;
